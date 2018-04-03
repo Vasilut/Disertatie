@@ -11,11 +11,11 @@ namespace GeekCoding
         static void Main(string[] args)
         {
 
-            string file = @"D:\Boian Nebun-20180329T111622Z-001\Boian Nebun\MiniApp\MiniApp\Program.cs";
+            string file = @"D:\Boian Nebun-20180329T111622Z-001\Boian Nebun\Reader\program.py";
             string text = File.ReadAllText(file);
 
             ICompilationFile compilationFile = new CompilationFile();
-            var compileResult = compilationFile.CompileFile(text, "C#", "magarieloca", "andrei");
+            var compileResult = compilationFile.CompileFile(text, "py", "pythonloca", "iuli");
 
 
 

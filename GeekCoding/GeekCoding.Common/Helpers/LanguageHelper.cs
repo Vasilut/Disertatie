@@ -6,9 +6,9 @@ namespace GeekCoding.Common.Helpers
 {
     public class LanguageHelper
     {
-        private static string[] CompileCommands = { "g++", "javac", "csc" };
-        private static string[] LanguageExtension = { ".cpp", ".java", ".cs" };
-        private static string[] LanguageExecutable = { ".exe" };
+        private static string[] CompileCommands = { "g++", "javac", "csc", "python" };
+        private static string[] LanguageExtension = { ".cpp", ".java", ".cs", ".py" };
+        private static string[] LanguageExecutable = { ".exe", "py" };
 
         public static string GetLanguageCompileCommand(string language, string fileToCompile,
                                                        string fileToExecute)
@@ -26,6 +26,10 @@ namespace GeekCoding.Common.Helpers
                 case "C#":
                     {
                         return $"{CompileCommands[2]} -out:{fileToExecute} {fileToCompile}";
+                    }
+                case "py":
+                    {
+                        return $"{CompileCommands[3]} {fileToCompile}";
                     }
                 default:
                     break;
@@ -49,6 +53,10 @@ namespace GeekCoding.Common.Helpers
                     {
                         return LanguageExtension[2];
                     }
+                case "py":
+                    {
+                        return LanguageExtension[3];
+                    }
                 default:
                     break;
             }
@@ -70,6 +78,10 @@ namespace GeekCoding.Common.Helpers
                 case "C#":
                     {
                         return LanguageExecutable[0];
+                    }
+                case "py":
+                    {
+                        return LanguageExecutable[1];
                     }
                 default:
                     break;
