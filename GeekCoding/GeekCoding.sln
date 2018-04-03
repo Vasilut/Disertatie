@@ -5,6 +5,10 @@ VisualStudioVersion = 15.0.27428.2011
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeekCoding", "GeekCoding\GeekCoding.csproj", "{30D7C7E1-211F-4D80-A44C-E7CF5E03A6CB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeekCoding.Compilation", "GeekCoding.Compilation\GeekCoding.Compilation.csproj", "{F40EA121-BA30-4FE6-B884-5D00EC34EE66}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeekCoding.Common", "GeekCoding.Common\GeekCoding.Common.csproj", "{028B65C4-5165-4A44-B66F-DA49044D48FC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{30D7C7E1-211F-4D80-A44C-E7CF5E03A6CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{30D7C7E1-211F-4D80-A44C-E7CF5E03A6CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{30D7C7E1-211F-4D80-A44C-E7CF5E03A6CB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F40EA121-BA30-4FE6-B884-5D00EC34EE66}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F40EA121-BA30-4FE6-B884-5D00EC34EE66}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F40EA121-BA30-4FE6-B884-5D00EC34EE66}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F40EA121-BA30-4FE6-B884-5D00EC34EE66}.Release|Any CPU.Build.0 = Release|Any CPU
+		{028B65C4-5165-4A44-B66F-DA49044D48FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{028B65C4-5165-4A44-B66F-DA49044D48FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{028B65C4-5165-4A44-B66F-DA49044D48FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{028B65C4-5165-4A44-B66F-DA49044D48FC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

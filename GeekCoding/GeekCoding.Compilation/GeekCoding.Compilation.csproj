@@ -2,14 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
-    <ApplicationIcon />
-    <OutputType>Exe</OutputType>
-    <StartupObject />
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\GeekCoding.Common\GeekCoding.Common.csproj" />
-    <ProjectReference Include="..\GeekCoding.Compilation\GeekCoding.Compilation.csproj" />
   </ItemGroup>
 
 </Project>
