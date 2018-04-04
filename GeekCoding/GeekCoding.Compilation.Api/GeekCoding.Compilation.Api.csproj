@@ -17,4 +17,9 @@
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\GeekCoding.Common\GeekCoding.Common.csproj" />
+    <ProjectReference Include="..\GeekCoding.Compilation\GeekCoding.Compilation.csproj" />
+  </ItemGroup>
+
 </Project>
