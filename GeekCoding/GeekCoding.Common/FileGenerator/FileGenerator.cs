@@ -11,6 +11,7 @@ namespace GeekCoding.Common
         private const string SOURCES = "sources";
         public void GenerateFile(string content, string language, string problemName, string userName)
         {
+            //create directory
             var goodDirectory = GetCurrentDirectory();
             if (!Directory.Exists(goodDirectory))
             {
@@ -22,12 +23,17 @@ namespace GeekCoding.Common
             sb.Append(problemFullName).Append(LanguageHelper.GetLanguageExtenstionType(language));
             string sourceName = sb.ToString();
 
+            //create file
             var fileToCreate = Path.Combine(goodDirectory, sourceName);
-
+            if(File.Exists(fileToCreate))
+            {
+                File.Delete(fileToCreate);
+            }
             if (!File.Exists(fileToCreate))
             {
                 using (FileStream fs = new FileStream(fileToCreate, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None))
                 {
+                    content = content.Trim();
                     StreamWriter writer = new StreamWriter(fs, Encoding.UTF8);
                     writer.WriteLine(content);
                     writer.Flush();
