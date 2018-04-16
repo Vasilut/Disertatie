@@ -8,7 +8,7 @@ namespace GeekCoding.Common.Helpers
     {
         private static string[] CompileCommands = { "g++", "javac", "csc", "python" };
         private static string[] LanguageExtension = { ".cpp", ".java", ".cs", ".py" };
-        private static string[] LanguageExecutable = { ".exe", "py" };
+        private static string[] LanguageExecutable = { ".exe", ".py" };
 
         public static string GetLanguageCompileCommand(string language, string fileToCompile,
                                                        string fileToExecute)
