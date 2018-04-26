@@ -2,8 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GeekCoding.Data.Models;
+using GeekCoding.Repository;
+using GeekCoding.Repository.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -22,6 +26,12 @@ namespace GeekCoding.MainApplication
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+            services.AddSingleton(Configuration);
+
+            var connectionString = Configuration.GetConnectionString("EvaluatorDatabase");
+
+            services.AddDbContext<EvaluatorContext>(option => option.UseSqlServer(connectionString));
+            services.AddScoped<IProblemRepository, ProblemRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
