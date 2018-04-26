@@ -1,6 +1,8 @@
-﻿using GeekCoding.Repository.Interfaces;
+﻿using GeekCoding.Data.Models;
+using GeekCoding.Repository.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 
@@ -8,8 +10,8 @@ namespace GeekCoding.Repository
 {
     public abstract class RepositoryBase<T> : IRepositoryBase<T> where T : class
     {
-        protected dynamic RepositoryContext { get; set; }
-        public RepositoryBase(dynamic repoContext)
+        protected EvaluatorContext RepositoryContext { get; set; }
+        public RepositoryBase(EvaluatorContext repoContext)
         {
             RepositoryContext = repoContext;
         }
