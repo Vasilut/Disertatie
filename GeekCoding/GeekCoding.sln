@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GeekCoding.Compilation.Api"
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{474C70B2-7DD4-49BC-8208-443F6447BB00}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeekCoding.MainApp", "..\GeekCoding.MainApp\GeekCoding.MainApp.csproj", "{D66567FE-18B4-4F79-82B4-C1AD11255857}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeekCoding.MainApplication", "GeekCoding.MainApplication\GeekCoding.MainApplication.csproj", "{06855FA5-28E5-4C58-A367-3F2CE17819ED}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,10 +41,10 @@ Global
 		{474C70B2-7DD4-49BC-8208-443F6447BB00}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{474C70B2-7DD4-49BC-8208-443F6447BB00}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{474C70B2-7DD4-49BC-8208-443F6447BB00}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D66567FE-18B4-4F79-82B4-C1AD11255857}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D66567FE-18B4-4F79-82B4-C1AD11255857}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D66567FE-18B4-4F79-82B4-C1AD11255857}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D66567FE-18B4-4F79-82B4-C1AD11255857}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06855FA5-28E5-4C58-A367-3F2CE17819ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06855FA5-28E5-4C58-A367-3F2CE17819ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06855FA5-28E5-4C58-A367-3F2CE17819ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06855FA5-28E5-4C58-A367-3F2CE17819ED}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
