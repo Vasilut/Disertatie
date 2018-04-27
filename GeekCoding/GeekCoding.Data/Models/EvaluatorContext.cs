@@ -1,10 +1,11 @@
 ﻿using System;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace GeekCoding.Data.Models
 {
-    public partial class EvaluatorContext : DbContext
+    public partial class EvaluatorContext : IdentityDbContext<User>
     {
         public virtual DbSet<Problem> Problem { get; set; }
 
