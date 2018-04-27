@@ -7,6 +7,7 @@ using GeekCoding.Repository;
 using GeekCoding.Repository.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,6 +32,7 @@ namespace GeekCoding.MainApplication
             var connectionString = Configuration.GetConnectionString("EvaluatorDatabase");
 
             services.AddDbContext<EvaluatorContext>(option => option.UseSqlServer(connectionString));
+            services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<EvaluatorContext>();
             services.AddScoped<IProblemRepository, ProblemRepository>();
         }
 
@@ -47,6 +49,7 @@ namespace GeekCoding.MainApplication
                 app.UseExceptionHandler("/Home/Error");
             }
 
+            app.UseAuthentication();
             app.UseStaticFiles();
 
             app.UseMvc(routes =>
