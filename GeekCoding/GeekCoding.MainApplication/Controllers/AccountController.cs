@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GeekCoding.Common.EmailGenerator;
 using GeekCoding.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -13,11 +14,14 @@ namespace GeekCoding.MainApplication.Controllers
     {
         private UserManager<User> _userManager;
         private SignInManager<User> _signInManager;
+        private IMessageBuilder _emailSender;
 
-        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager)
+        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager,
+                                 IMessageBuilder emailSender)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _emailSender = emailSender;
         }
 
         #region Register
@@ -46,12 +50,15 @@ namespace GeekCoding.MainApplication.Controllers
                     };
 
                     var result = await _userManager.CreateAsync(user, model.Password);
-                    if(result.Succeeded)
+                    if (result.Succeeded)
                     {
                         var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                         var confirmationEmail = Url.Action("ConfirmEmailAddress", "Account",
                             new { token, email = user.Email }, Request.Scheme);
-
+                        _emailSender.AddReceiver(user.Email)
+                                    .AddSubject("Confirmation to GeekCoding Site")
+                                    .AddBody("Please confirm the mail at " + confirmationEmail)
+                                    .BuildAndSend();
                         //send token via mail
                         return View("Success");
                     }
@@ -78,7 +85,7 @@ namespace GeekCoding.MainApplication.Controllers
 
                 if (result.Succeeded)
                 {
-                    return View("Success");
+                    return View("MailConfirmed");
                 }
             }
 
@@ -111,18 +118,46 @@ namespace GeekCoding.MainApplication.Controllers
         {
             if (ModelState.IsValid)
             {
-                var signInResult = await _signInManager.PasswordSignInAsync(model.UserName, model.Password,
-                    false, false);
+                var user = await _userManager.FindByNameAsync(model.UserName);
 
-                if (signInResult.Succeeded)
+                if (user != null)
                 {
-                    return RedirectToAction("Index", "Home");
+                    if (!await _userManager.IsEmailConfirmedAsync(user))
+                    {
+                        ModelState.AddModelError("", "Email is not confirmed");
+                        return View();
+                    }
+
+                    var signInResult = await _signInManager.PasswordSignInAsync(model.UserName, model.Password, false, false);
+                    if (signInResult.Succeeded)
+                    {
+                        return RedirectToAction("Index", "Home");
+                    }
+
+                    ModelState.AddModelError("", "Invalid UserName or Password");
                 }
 
                 ModelState.AddModelError("", "Invalid UserName or Password");
             }
 
             return View();
+
+            //login with _signInManager
+            //if (ModelState.IsValid)
+            //{
+
+            //    var signInResult = await _signInManager.PasswordSignInAsync(model.UserName, model.Password,
+            //        false, false);
+
+            //    if (signInResult.Succeeded)
+            //    {
+            //        return RedirectToAction("Index", "Home");
+            //    }
+
+            //    ModelState.AddModelError("", "Invalid UserName or Password");
+            //}
+
+            //return View();
         }
 
         #endregion
@@ -152,15 +187,22 @@ namespace GeekCoding.MainApplication.Controllers
                     var token = await _userManager.GeneratePasswordResetTokenAsync(user);
                     var resetUrl = Url.Action("ResetPassword", "Account",
                         new { token, email = user.Email }, Request.Scheme);
-
+                    _emailSender.AddReceiver(user.Email)
+                                    .AddSubject("Reset your password for GeekCoding Site")
+                                    .AddBody("Reset password link: " + resetUrl)
+                                    .BuildAndSend();
                     //send resetUrl via mail
                 }
                 else
                 {
                     // email user and inform them that they do not have an account
+                    _emailSender.AddReceiver(model.Email)
+                                    .AddSubject("Create account on GeekCoding Site")
+                                    .AddBody("You don't have any account on our site. Please register!")
+                                    .BuildAndSend();
                 }
 
-                return View("Success");
+                return View("ResetPasswordSent");
             }
             return View();
         }
@@ -190,7 +232,7 @@ namespace GeekCoding.MainApplication.Controllers
                         }
                         return View();
                     }
-                    return View("Success");
+                    return View("PasswordResetSuccess");
                 }
                 ModelState.AddModelError("", "Invalid Request");
             }

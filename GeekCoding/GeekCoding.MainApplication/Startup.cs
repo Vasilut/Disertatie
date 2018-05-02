@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GeekCoding.Common.EmailGenerator;
 using GeekCoding.Data.Models;
 using GeekCoding.Repository;
 using GeekCoding.Repository.Interfaces;
@@ -34,6 +35,7 @@ namespace GeekCoding.MainApplication
             services.AddDbContext<EvaluatorContext>(option => option.UseSqlServer(connectionString));
             services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<EvaluatorContext>().AddDefaultTokenProviders();
             services.AddScoped<IProblemRepository, ProblemRepository>();
+            services.AddScoped<IMessageBuilder, EmailBuilder>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
