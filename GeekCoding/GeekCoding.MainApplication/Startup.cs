@@ -32,7 +32,7 @@ namespace GeekCoding.MainApplication
             var connectionString = Configuration.GetConnectionString("EvaluatorDatabase");
 
             services.AddDbContext<EvaluatorContext>(option => option.UseSqlServer(connectionString));
-            services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<EvaluatorContext>();
+            services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<EvaluatorContext>().AddDefaultTokenProviders();
             services.AddScoped<IProblemRepository, ProblemRepository>();
         }
 
