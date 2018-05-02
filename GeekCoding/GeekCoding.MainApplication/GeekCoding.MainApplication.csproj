@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\GeekCoding.Common\GeekCoding.Common.csproj" />
     <ProjectReference Include="..\GeekCoding.Data\GeekCoding.Data.csproj" />
     <ProjectReference Include="..\GeekCoding.Repository\GeekCoding.Repository.csproj" />
   </ItemGroup>
