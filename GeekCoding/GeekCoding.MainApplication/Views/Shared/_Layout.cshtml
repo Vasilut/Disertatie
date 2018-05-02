@@ -17,32 +17,51 @@
     </environment>
 </head>
 <body>
-    <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
+                <button type="button" class="navbar-toggle pull-left" data-toggle="collapse" data-target=".navbar-collapse">
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">GeekCoding.MainApplication</a>
-            </div>
-            <div class="navbar navbar-nav navbar-right">
-                @Html.Partial("_LoginPartial")
+                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">GeekCoding</a>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="Index">Problems</a></li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="Index">Contest</a></li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="Index">Articles</a></li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="Index">Discuss</a></li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="Index">Interview</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    @*<li id="nav-user-app">
+            <div class="nav-login-base">
+                <a class="btn sign-up-btn" asp-controller="Account" asp-action="Register">
+                    <span>Sign up</span>
+                </a>
+                <span class="or">
+                    &nbsp;
+                    or
+                    &nbsp;
+                </span>
+                <a class="btn sign-in-btn" asp-controller="Account" asp-action="Login">
+                    <span>Sign in</span>
+                </a>
+            </div>
+        </li>*@
+                    @Html.Partial("_LoginPartial")
                 </ul>
             </div>
         </div>
-    </nav>
+    </div>
     <div class="container body-content">
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; 2018 - GeekCoding.MainApplication</p>
+            <p>&copy; 2018 - GeekCoding</p>
         </footer>
     </div>
 
