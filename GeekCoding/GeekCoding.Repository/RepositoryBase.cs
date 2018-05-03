@@ -24,14 +24,6 @@ namespace GeekCoding.Repository
             RepositoryContext.Set<T>().Add(entity);
         }
 
-        public virtual T Add(T t)
-        {
-
-            RepositoryContext.Set<T>().Add(t);
-            RepositoryContext.SaveChanges();
-            return t;
-        }
-
         public virtual async Task<T> AddAsync(T t)
         {
             RepositoryContext.Set<T>().Add(t);
@@ -118,6 +110,7 @@ namespace GeekCoding.Repository
         }
         #endregion
 
+        #region save
         public void Save()
         {
             RepositoryContext.SaveChanges();
@@ -127,5 +120,6 @@ namespace GeekCoding.Repository
         {
            await RepositoryContext.SaveChangesAsync();
         }
+        #endregion
     }
 }

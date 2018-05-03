@@ -11,16 +11,13 @@ namespace GeekCoding.MainApplication.Controllers
 {
     public class HomeController : Controller
     {
-        private IProblemRepository _repository;
 
-        public HomeController(IProblemRepository repository )
+        public HomeController()
         {
-            _repository = repository;
         }
 
         public IActionResult Index()
         {
-            var lst = _repository.GetAll().ToList();
             return View();
         }
         
