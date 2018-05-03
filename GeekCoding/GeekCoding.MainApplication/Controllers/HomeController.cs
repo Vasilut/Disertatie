@@ -20,7 +20,7 @@ namespace GeekCoding.MainApplication.Controllers
 
         public IActionResult Index()
         {
-            var lst = _repository.FindAll().ToList();
+            var lst = _repository.GetAll().ToList();
             return View();
         }
         

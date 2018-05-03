@@ -36,6 +36,9 @@ namespace GeekCoding.MainApplication
             services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<EvaluatorContext>().AddDefaultTokenProviders();
             services.AddScoped<IProblemRepository, ProblemRepository>();
             services.AddScoped<IMessageBuilder, EmailBuilder>();
+            services.AddScoped<ISolutionRepository, SolutionRepository>();
+            services.AddScoped<ISubmisionRepository, SubmisionRepository>();
+            services.AddScoped<IProgressStatusRepository, ProgresStatusRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

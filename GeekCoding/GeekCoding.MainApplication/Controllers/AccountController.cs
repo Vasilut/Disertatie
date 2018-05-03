@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using GeekCoding.Common.EmailGenerator;
 using GeekCoding.Data.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,13 +26,13 @@ namespace GeekCoding.MainApplication.Controllers
         }
 
         #region Register
-
+        
         [HttpGet]
         public IActionResult Register()
         {
             return View();
         }
-
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterModel model)
@@ -141,7 +142,6 @@ namespace GeekCoding.MainApplication.Controllers
             }
 
             return View();
-
             //login with _signInManager
             //if (ModelState.IsValid)
             //{
