@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GeekCoding.MainApplication.Controllers
 {
-    public class ProblemSetController : Controller
+    public class DiscussController : Controller
     {
         public IActionResult Index()
         {
