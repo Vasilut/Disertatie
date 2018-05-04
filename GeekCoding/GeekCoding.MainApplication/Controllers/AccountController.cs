@@ -15,24 +15,26 @@ namespace GeekCoding.MainApplication.Controllers
     {
         private UserManager<User> _userManager;
         private SignInManager<User> _signInManager;
+        private RoleManager<IdentityRole> _roleManager;
         private IMessageBuilder _emailSender;
 
         public AccountController(UserManager<User> userManager, SignInManager<User> signInManager,
-                                 IMessageBuilder emailSender)
+                                 IMessageBuilder emailSender, RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _roleManager = roleManager;
             _emailSender = emailSender;
+            
         }
-
         #region Register
-        
+
         [HttpGet]
         public IActionResult Register()
         {
             return View();
         }
-        
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterModel model)
@@ -86,6 +88,7 @@ namespace GeekCoding.MainApplication.Controllers
 
                 if (result.Succeeded)
                 {
+                    await _userManager.AddToRoleAsync(user, "Member");
                     return View("MailConfirmed");
                 }
             }
@@ -132,6 +135,7 @@ namespace GeekCoding.MainApplication.Controllers
                     var signInResult = await _signInManager.PasswordSignInAsync(model.UserName, model.Password, false, false);
                     if (signInResult.Succeeded)
                     {
+
                         return RedirectToAction("Index", "Home");
                     }
 
