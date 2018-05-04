@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GeekCoding.Data.Models
 {
@@ -19,6 +20,8 @@ namespace GeekCoding.Data.Models
         public int GoodSubmision { get; set; }
         public int BadSubmission { get; set; }
         public bool Visible { get; set; }
+        [NotMapped]
+        public double AverageAcceptance { get; set; }
 
         public ICollection<ProgresStatus> ProgresStatus { get; set; }
         public ICollection<Solution> Solution { get; set; }

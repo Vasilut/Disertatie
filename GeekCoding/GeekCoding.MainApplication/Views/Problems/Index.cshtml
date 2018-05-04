@@ -1,24 +1,58 @@
-﻿<!DOCTYPE html>
+﻿@model IEnumerable<GeekCoding.Data.Models.Problem>
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Index</title>
-</head>
-<body>
+@if (User.IsInRole("Admin"))
+{
+    <li><a asp-area="" asp-controller="Problems" asp-action="Add">Create Problem</a></li>
+}
 
-    <table class="table table-condensed">
-        @for(int i =0; i < 10; i++)
-    {
-        <tr>
-            @for(int j = 0; j < 5; j++)
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr class="reactable-column-header">
+                <th>
+                    @Html.DisplayNameFor(model => model.ProblemName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ProblemContent)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Dificulty)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.AverageAcceptance)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody class="reactable-data">
+            @foreach (var item in Model)
             {
-            <td>H1</td>
-
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ProblemName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ProblemContent)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Dificulty)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AverageAcceptance)%
+                    </td>
+                    <td>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <a asp-action="Edit" asp-route-id="@item.ProblemId">Edit</a>
+                        }
+                        <a asp-action="Details" asp-route-id="@item.ProblemId">Details</a>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <a asp-action="Delete" asp-route-id="@item.ProblemId">Delete</a>
+                        }
+                    </td>
+                </tr>
             }
-        </tr>
-
-    }
+        </tbody>
     </table>
-</body>
-</html>
+</div>

@@ -1,0 +1,52 @@
+﻿@model GeekCoding.Data.Models.Problem
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Add</title>
+</head>
+<body>
+
+<h4>Problem</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Add">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="ProblemName" class="control-label"></label>
+                <input asp-for="ProblemName" class="form-control" />
+                <span asp-validation-for="ProblemName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProblemContent" class="control-label"></label>
+                <input asp-for="ProblemContent" class="form-control" />
+                <span asp-validation-for="ProblemContent" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Dificulty" class="control-label"></label>
+                <input asp-for="Dificulty" class="form-control" />
+                <span asp-validation-for="Dificulty" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        <input asp-for="Visible" /> @Html.DisplayNameFor(model => model.Visible)
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+</body>
+</html>
