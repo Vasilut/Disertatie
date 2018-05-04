@@ -22,7 +22,8 @@ namespace GeekCoding.MainApplication
                 try
                 {
                     var serviceProvider = services.GetRequiredService<IServiceProvider>();
-                    Seed.CreateRoles(serviceProvider).Wait();
+                    var configuration = services.GetRequiredService<IConfiguration>();
+                    Seed.CreateRoles(serviceProvider, configuration).Wait();
                 }
                 catch (Exception)
                 {

@@ -11,7 +11,7 @@ namespace GeekCoding.MainApplication
 {
     public static class Seed
     {
-        public static async Task CreateRoles(IServiceProvider serviceProvider)
+        public static async Task CreateRoles(IServiceProvider serviceProvider, IConfiguration configuration)
         {
             var _roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             var _userManager = serviceProvider.GetRequiredService<UserManager<User>>();
@@ -27,7 +27,7 @@ namespace GeekCoding.MainApplication
             }
 
             //prepare admin user
-            const string userName = "lucian.vasilut10@gmail.com";
+            string userName = configuration.GetSection("UserSettings")["UserName"];
             var user = await _userManager.FindByNameAsync(userName);
             if (user != null)
             {
