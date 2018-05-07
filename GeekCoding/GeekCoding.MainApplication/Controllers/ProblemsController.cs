@@ -66,6 +66,13 @@ namespace GeekCoding.MainApplication.Controllers
             return View(problem);
         }
 
+        [AllowAnonymous]
+        [HttpGet]
+        public async Task<PartialViewResult> Submissions()
+        {
+            return PartialView();
+        }
+
         [Authorize(Roles = "Admin")]
         [HttpDelete]
         public IActionResult Delete(Guid id)

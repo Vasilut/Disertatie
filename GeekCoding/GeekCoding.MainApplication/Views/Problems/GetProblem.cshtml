@@ -1,0 +1,37 @@
+﻿@model GeekCoding.Data.Models.Problem
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>
+    </title>
+</head>
+<body>
+
+    <div class="container">
+        <h2>@Model.ProblemName</h2>
+        <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#home">Description</a></li>
+            <li><a data-toggle="tab" href="#submissions">Submissions</a></li>
+            <li><a data-toggle="tab" href="#solutions">Solution</a></li>
+        </ul>
+
+        <div class="tab-content">
+            <div id="home" class="tab-pane fade in active">
+                <p>@Model.ProblemName</p>
+            </div>
+            <div id="submissions" class="tab-pane fade">
+                @Html.Partial("Submissions")
+            </div>
+            <div id="solutions" class="tab-pane fade">
+                <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
+            </div>
+        </div>
+    </div>
+    <div>
+        <a asp-action="Index">Back to List</a>
+    </div>
+</body>
+</html>
