@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GeekCoding.Data.Models;
+using GeekCoding.MainApplication.ViewModels;
 using GeekCoding.Repository.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -50,12 +51,19 @@ namespace GeekCoding.MainApplication.Controllers
 
         [Authorize(Roles = "Admin")]
         [HttpPost]
-        public IActionResult Add([FromForm] Problem problem)
+        public IActionResult Add([FromForm] ProblemViewModel problem)
         {
             if (ModelState.IsValid)
             {
-                problem.ProblemId = Guid.NewGuid();
-                _problemRepository.Create(problem);
+                var problemNew = new Problem
+                {
+                    ProblemId = Guid.NewGuid(),
+                    ProblemContent = problem.ProblemContent,
+                    Dificulty = problem.Dificulty,
+                    Visible = problem.Visible
+
+                };
+                _problemRepository.Create(problemNew);
                 _problemRepository.Save();
                 return RedirectToAction("Index");
             }
