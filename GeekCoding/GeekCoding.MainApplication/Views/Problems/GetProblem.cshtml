@@ -1,29 +1,88 @@
 ﻿@model GeekCoding.Data.Models.Problem
 
-<div class="container">
-    <h2>@Model.ProblemName</h2>
+<div class="panel panel-default">
+    <div class="panel-body">
+        @Model.ProblemName
+    </div>
+</div>
+@*<div class="question-title clearfix">
+        <h2>@Model.ProblemName</h2>
+    </div>*@
+<div class="container question-detail-container">
     <ul class="nav nav-tabs">
-        <li class="active"><a data-toggle="tab" href="#home">Description</a></li>
-        <li><a data-toggle="tab" id="submissie" href="#submissions">Submissions</a></li>
-        <li><a data-toggle="tab" id="sol" href="#solutions">Solution</a></li>
+        <li class="active"><a data-toggle="tab" href="#home"><i class="glyphicon glyphicon-file"></i> &nbsp; Description</a></li>
+        <li class="nav-item"><a asp-action="Submissions" asp-route-id="@Model.ProblemId"><i class="glyphicon glyphicon-cd"></i> &nbsp; Submissions</a></li>
+        <li class="nav-item"><a asp-action="Solution" asp-route-id="@Model.ProblemId"><i class="glyphicon glyphicon-scale"></i> &nbsp; Solution</a></li>
     </ul>
 
     <div class="tab-content">
         <div id="home" class="tab-pane fade in active">
-            <p>@Model.ProblemName</p>
+            <p>@Model.ProblemContent</p>
+            <p>@Model.ProblemContent</p>
+            <p>@Model.ProblemContent</p>
+            <p>@Model.ProblemContent</p>
+            <p>@Model.ProblemContent</p>
+            <p>@Model.ProblemContent</p>
+            <p>@Model.ProblemContent</p>
         </div>
-        <div id="submissions" class="tab-pane fade">
-            @*<script>
-                    var id = '@Model.ProblemId';
-                    var confirmUrl = '@Html.Raw(@Url.Action("Submissions", "Problems"))';
-            </script>*@
-            @*@await Html.PartialAsync("Submissions")*@
-        </div>
-        <div id="solutions" class="tab-pane fade">
-            <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
-        </div>
+        @*<div id="submissions" class="tab-pane fade">
+                <script>
+                            var id = '@Model.ProblemId';
+                            var confirmUrl = '@Html.Raw(@Url.Action("Submissions", "Problems"))';
+                    </script>
+                @await Html.PartialAsync("Submissions")
+            </div>*@
+        @*<div id="solutions" class="tab-pane fade">
+                <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
+            </div>*@
     </div>
 </div>
+
+
+
+
+@*<div class="container">
+            <h2>@Model.ProblemName</h2>
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#">Description</a>
+                    @Model.ProblemContent
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-action="Submissions" asp-route-id="@Model.ProblemId">Submissions</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-action="Solution" asp-route-id="@Model.ProblemId">Solution</a>
+                </li>
+            </ul>
+           <--navbar
+        <div class="row">
+        <div class="col-sm-3">
+            <div class="sidebar-nav">
+                <div class="navbar navbar-default" role="navigation">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-navbar-collapse">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <span class="visible-xs navbar-brand">Sidebar menu</span>
+                    </div>
+                    <div class="navbar-collapse collapse sidebar-navbar-collapse">
+                        <ul class="nav navbar-nav">
+                            <li class="active"><a href="#">Menu Item 1</a></li>
+                            <li><a href="#">Menu Item 2</a></li>
+                            <li><a href="#">Menu Item 4</a></li>
+                            <li><a href="#">Reviews <span class="badge">1,118</span></a></li>
+                        </ul>
+                    </div><!--/.nav-collapse -->
+                </div>
+            </div>
+        </div>
+    </div>
+        </div>*@
+
 <div>
     <a asp-action="Index">Back to List</a>
 </div>

@@ -14,11 +14,13 @@ namespace GeekCoding.MainApplication.Controllers
     {
         private IProblemRepository _problemRepository;
         private ISubmisionRepository _submisionRepository;
+        private ISolutionRepository _solutionRepository;
 
-        public ProblemsController(IProblemRepository problemRepository, ISubmisionRepository submisionRepository)
+        public ProblemsController(IProblemRepository problemRepository, ISubmisionRepository submisionRepository, ISolutionRepository solutionRepository)
         {
             _problemRepository = problemRepository;
             _submisionRepository = submisionRepository;
+            _solutionRepository = solutionRepository;
         }
 
         [AllowAnonymous]
@@ -70,12 +72,22 @@ namespace GeekCoding.MainApplication.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-        public async Task<PartialViewResult> Submissions(Guid id)
+        public async Task<IActionResult> Submissions(Guid id)
         {
             var listOfSubmission = await _submisionRepository.GetAllAsync();
             var submisionList = listOfSubmission.Where(sub => sub.ProblemId == id).ToList();
             
-            return PartialView(submisionList);
+            return View(submisionList);
+        }
+
+        [AllowAnonymous]
+        [HttpGet]
+        public async Task<IActionResult> Solution(Guid id)
+        {
+            var solutions = await _solutionRepository.GetAllAsync();
+            var solution = solutions.Where(sol => sol.ProblemId == id).FirstOrDefault();
+
+            return View(solution);
         }
 
         [Authorize(Roles = "Admin")]

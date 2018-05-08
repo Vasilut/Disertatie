@@ -1,4 +1,12 @@
-﻿@model GeekCoding.Data.Models.Submision
+﻿@model IEnumerable<GeekCoding.Data.Models.Submision>
 
+@if(User.Identity.IsAuthenticated)
+{
+    <p>Show the submissions</p>
+}
+else
+{
+    
+}
 
 <p>Salut boss</p>
