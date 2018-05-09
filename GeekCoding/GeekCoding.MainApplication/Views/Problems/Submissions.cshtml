@@ -2,11 +2,74 @@
 
 @if(User.Identity.IsAuthenticated)
 {
-    <p>Show the submissions</p>
+<table class="table table-striped">
+    <thead>
+        <tr class="reactable-column-header">
+            <th>
+                @Html.DisplayNameFor(model => model.UserName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DataOfSubmision)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SourceSize)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Score)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StateOfSubmision)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Compilator)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MessageOfSubmision)
+            </th>
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody class="reactable-data">
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DataOfSubmision)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SourceSize)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Score)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StateOfSubmision)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Compilator)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MessageOfSubmision)
+                </td>
+
+                <td>
+                <a asp-action="Details" asp-controller="Submission" asp-route-id="@item.SubmisionId">Details</a>
+                    
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
 }
 else
 {
-    
+<div class="panel panel-danger">
+    <div class="panel-heading">
+        You have not signed in. You cannot see your submissions.
+    </div>
+</div>
 }
-
-<p>Salut boss</p>

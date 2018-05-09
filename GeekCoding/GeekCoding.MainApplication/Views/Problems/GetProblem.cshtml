@@ -1,8 +1,12 @@
-﻿@model GeekCoding.Data.Models.Problem
+﻿@model Tuple<GeekCoding.Data.Models.Problem, List<SelectListItem>>
+
+    @*<div class="panel panel-success">
+        <div class="panel-heading">The solution was saved successfully!</div>
+    </div>*@
 
 <div class="panel panel-default">
     <div class="panel-body">
-        @Model.ProblemName
+        @Model.Item1.ProblemName
     </div>
 </div>
 @*<div class="question-title clearfix">
@@ -11,19 +15,19 @@
 <div class="container question-detail-container">
     <ul class="nav nav-tabs">
         <li class="active"><a data-toggle="tab" href="#home"><i class="glyphicon glyphicon-file"></i> &nbsp; Description</a></li>
-        <li class="nav-item"><a asp-action="Submissions" asp-route-id="@Model.ProblemId"><i class="glyphicon glyphicon-cd"></i> &nbsp; Submissions</a></li>
-        <li class="nav-item"><a asp-action="Solution" asp-route-id="@Model.ProblemId"><i class="glyphicon glyphicon-scale"></i> &nbsp; Solution</a></li>
+        <li class="nav-item"><a asp-action="Submissions" asp-route-id="@Model.Item1.ProblemId"><i class="glyphicon glyphicon-cd"></i> &nbsp; Submissions</a></li>
+        <li class="nav-item"><a asp-action="Solution" asp-route-id="@Model.Item1.ProblemId"><i class="glyphicon glyphicon-scale"></i> &nbsp; Solution</a></li>
     </ul>
 
     <div class="tab-content">
         <div id="home" class="tab-pane fade in active">
-            <p>@Model.ProblemContent</p>
-            <p>@Model.ProblemContent</p>
-            <p>@Model.ProblemContent</p>
-            <p>@Model.ProblemContent</p>
-            <p>@Model.ProblemContent</p>
-            <p>@Model.ProblemContent</p>
-            <p>@Model.ProblemContent</p>
+            <p>@Model.Item1.ProblemContent</p>
+            <p>@Model.Item1.ProblemContent</p>
+            <p>@Model.Item1.ProblemContent</p>
+            <p>@Model.Item1.ProblemContent</p>
+            <p>@Model.Item1.ProblemContent</p>
+            <p>@Model.Item1.ProblemContent</p>
+            <p>@Model.Item1.ProblemContent</p>
         </div>
         @*<div id="submissions" class="tab-pane fade">
                 <script>
@@ -83,13 +87,41 @@
     </div>
         </div>*@
 
+@if (User.Identity.IsAuthenticated)
+{
+    <form class="form-inline" asp-action="ProblemExecute" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <div class="col-md-10">
+                <input type="file" name="file" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="Compilator">Compilator</label>
+            <select asp-items="@Model.Item2" class="control-label" name="Compilator"></select>
+        </div>
+        <input type="hidden" name="ProblemId" value="@Model.Item1.ProblemId" />
+        <input type="hidden" name="ProblemName" value="@Model.Item1.ProblemName" />
+        <button type="submit" class="btn btn-default">Submit</button>
+    </form>
+}
+else
+{
+    <div class="panel panel-danger">
+        <div class="panel-heading">
+            You have not signed in. Cannot submit your code
+        </div>
+    </div>
+
+}
+
+
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
 
 @section script_variables{
     <script type="text/javascript">
-    var id = '@Model.ProblemId';
+    var id = '@Model.Item1.ProblemId';
     var confirmUrl = '@Html.Raw(@Url.Action("Submissions", "Problems"))';
     </script>
 

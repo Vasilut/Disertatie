@@ -1,11 +1,82 @@
-﻿<!DOCTYPE html>
+﻿@model IEnumerable<GeekCoding.Data.Models.Submision>
+
+<!DOCTYPE html>
 
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>Index</title>
+    <title>View</title>
 </head>
 <body>
-    Hello from submission
+    <p>
+        <a asp-action="Create">Create New</a>
+    </p>
+    <table class="table table-striped">
+        <thead>
+            <tr class="reactable-column-header">
+                <th>
+                    @Html.DisplayNameFor(model => model.UserName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.DataOfSubmision)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.SourceSize)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Score)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.StateOfSubmision)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Compilator)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.MessageOfSubmision)
+                </th>
+
+                <th></th>
+            </tr>
+        </thead>
+        <tbody  class="reactable-data">
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UserName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DataOfSubmision)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SourceSize)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Score)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.StateOfSubmision)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Compilator)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.MessageOfSubmision)
+                    </td>
+
+                    <td>
+
+                        <a asp-action="Details" asp-route-id="@item.SubmisionId">Details</a>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <a asp-action="Delete" asp-route-id="@item.SubmisionId">Delete</a>
+                        }
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </body>
 </html>
