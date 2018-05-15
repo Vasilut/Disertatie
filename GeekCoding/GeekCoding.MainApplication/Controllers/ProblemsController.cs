@@ -73,6 +73,9 @@ namespace GeekCoding.MainApplication.Controllers
                     Visible = problem.Visible
 
                 };
+
+                //create problem directory via api (linux hosted)
+
                 _problemRepository.Create(problemNew);
                 _problemRepository.Save();
                 return RedirectToAction("Index");
@@ -116,7 +119,7 @@ namespace GeekCoding.MainApplication.Controllers
             //read the content of the file
             string fileContent = await FileHelpers.ProcessFormFile(model.File, ModelState);
 
-            //compile file
+            //compile file (linux)
             var url = @"http://localhost:32529/api/compilation";
             var client = new HttpClient();
             var compilationModel = new CompilationModel { Content = fileContent, Language = model.Compilator, ProblemName = model.ProblemName, Username = User.Identity.Name };
@@ -127,7 +130,7 @@ namespace GeekCoding.MainApplication.Controllers
             var result = await response.Content.ReadAsStringAsync();
             var content = JsonConvert.DeserializeObject<ResponseModel>(result);
 
-            //call the api to execute... not done yet..
+            //call the api to execute... not done yet.. (linux)
 
 
             //save the submission
