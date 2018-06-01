@@ -43,7 +43,7 @@ namespace GeekCoding.Common
 
         public string GetCurrentDirectory()
         {
-            var myDoc = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            var myDoc = "/usr/local/etc/";
             var goodDirectory = Path.Combine(myDoc, SOURCES);
             return goodDirectory;
         }
