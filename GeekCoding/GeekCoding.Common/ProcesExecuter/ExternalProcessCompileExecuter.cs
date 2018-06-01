@@ -29,14 +29,15 @@ namespace GeekCoding.Common.ProcesExecuter
             }
         }
 
-        public Tuple<Verdict, string> GetVerdictForFile(string argument)
+        public Tuple<Verdict, string> GetVerdictForFile(string argument,string workingDirectory)
         {
             Process process = new Process();
-            process.StartInfo.FileName = "cmd.exe";
-            process.StartInfo.Arguments = $"/c {argument}";
+            process.StartInfo.FileName = "/bin/bash";
+            process.StartInfo.Arguments = $"-c \"{argument}\"";
             process.StartInfo.UseShellExecute = false;
             process.StartInfo.RedirectStandardOutput = true;
             process.StartInfo.RedirectStandardError = true;
+            process.StartInfo.WorkingDirectory = workingDirectory;
             process.Start();
             //* Read the output (or the error)
 

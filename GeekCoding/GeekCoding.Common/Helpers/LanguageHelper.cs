@@ -6,7 +6,15 @@ namespace GeekCoding.Common.Helpers
 {
     public class LanguageHelper
     {
-        private static string[] CompileCommands = { "g++", "javac", "csc", "python" };
+
+        //compile under linux
+        /*
+         * c# ==> mcs -out:prob.exe Prob.cs
+         * c++ ==> g++ -Wall -o prog Prob.cpp
+         * java ==> javac Prob.java
+         * python ==> python program.py
+         */
+        private static string[] CompileCommands = { "g++", "javac", "mcs", "python" };
         private static string[] LanguageExtension = { ".cpp", ".java", ".cs", ".py" };
         private static string[] LanguageExecutable = { ".exe", ".py" };
 
@@ -17,7 +25,7 @@ namespace GeekCoding.Common.Helpers
             {
                 case "C++":
                     {
-                        return $"{CompileCommands[0]} -o {fileToExecute} {fileToCompile}";
+                        return $"{CompileCommands[0]} -Wall -o {fileToExecute} {fileToCompile}";
                     }
                 case "Java":
                     {

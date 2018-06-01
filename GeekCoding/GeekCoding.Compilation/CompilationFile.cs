@@ -24,10 +24,11 @@ namespace GeekCoding.Compilation
             string fullFilePath = _fileGenerator.GetFileFullName(problemName, userName, language);
             string fullFileToCompile = new StringBuilder(fullFilePath).Append(LanguageHelper.GetLanguageExtenstionType(language)).ToString();
             string fullFileExecutable = new StringBuilder(fullFilePath).Append(LanguageHelper.GetLanguageExecutableType(language)).ToString();
+            string workingDirectory = _fileGenerator.GetCurrentDirectory();
 
             string argument = LanguageHelper.GetLanguageCompileCommand(language, fullFileToCompile, fullFileExecutable);
             var compilationProcess = ExternalProcessCompileExecuter.Instance;
-            return compilationProcess.GetVerdictForFile(argument);
+            return compilationProcess.GetVerdictForFile(argument, workingDirectory);
         }
     }
 }
