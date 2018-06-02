@@ -12,6 +12,7 @@ using GeekCoding.Repository.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 
 namespace GeekCoding.MainApplication.Controllers
@@ -22,15 +23,22 @@ namespace GeekCoding.MainApplication.Controllers
         private IProblemRepository _problemRepository;
         private ISubmisionRepository _submisionRepository;
         private ISolutionRepository _solutionRepository;
+        private IConfiguration _configuration;
         private List<SelectListItem> _compilers = new List<SelectListItem>();
         public object lockOBj = new object();
+        private string _compilationApi;
 
-        public ProblemsController(IProblemRepository problemRepository, ISubmisionRepository submisionRepository, ISolutionRepository solutionRepository)
+        public ProblemsController(IProblemRepository problemRepository, ISubmisionRepository submisionRepository, 
+                                  ISolutionRepository solutionRepository, IConfiguration configuration)
         {
             _problemRepository = problemRepository;
             _submisionRepository = submisionRepository;
             _solutionRepository = solutionRepository;
+            _configuration = configuration;
             _compilers = Compilator.Compilers;
+
+            //intialize compilation and running api
+            _compilationApi = _configuration.GetSection("Api")["CompilationApi"];
         }
 
         [AllowAnonymous]
@@ -117,16 +125,16 @@ namespace GeekCoding.MainApplication.Controllers
         public async Task<IActionResult> ProblemExecute([FromForm] FileExecutionViewModel model)
         {
             //read the content of the file
-            string fileContent = await FileHelpers.ProcessFormFile(model.File, ModelState);
+            Tuple<string,long> fileContent = await FileHelpers.ProcessFormFile(model.File, ModelState);
+            double sizeOfFile = (fileContent.Item2) % 1000;
 
             //compile file (linux)
-            var url = @"http://172.25.192.168/api/compilation";
             var client = new HttpClient();
-            var compilationModel = new CompilationModel { Content = fileContent, Language = model.Compilator, ProblemName = model.ProblemName, Username = User.Identity.Name };
+            var compilationModel = new CompilationModel { Content = fileContent.Item1, Language = model.Compilator, ProblemName = model.ProblemName, Username = User.Identity.Name };
             var serializedData = JsonConvert.SerializeObject(compilationModel);
             var httpContent = new StringContent(serializedData, Encoding.UTF8, "application/json");
 
-            var response = await client.PostAsync(url, httpContent);
+            var response = await client.PostAsync(_compilationApi, httpContent);
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 var result = await response.Content.ReadAsStringAsync();
@@ -139,10 +147,10 @@ namespace GeekCoding.MainApplication.Controllers
                 var submission = new Submision
                 {
                     SubmisionId = Guid.NewGuid(),
-                    DataOfSubmision = DateTime.Today,
+                    DataOfSubmision = DateTime.Now,
                     Compilator = model.Compilator,
                     ProblemId = Guid.Parse(model.ProblemId),
-                    SourceSize = "2kb",
+                    SourceSize = sizeOfFile.ToString(),
                     StateOfSubmision = "Compiled",
                     UserName = User.Identity.Name,
                     MessageOfSubmision = content.CompilationResponse,

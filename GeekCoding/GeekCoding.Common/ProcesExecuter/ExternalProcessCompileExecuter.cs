@@ -49,18 +49,18 @@ namespace GeekCoding.Common.ProcesExecuter
             process.Close();
 
             Verdict verdict = Verdict.SUCCESS;
+            StringBuilder sb = new StringBuilder();
 
             if(!string.IsNullOrEmpty(err))
             {
                 verdict = Verdict.ERROR;
+                sb.Append("CompilationErrors: ").Append(err);
             }
-
-            StringBuilder sb = new StringBuilder("Output: ").Append(output);
-            if(verdict == Verdict.ERROR)
+            else
             {
-                sb.AppendLine().Append("CompilationErrors: ").Append(err);
+                sb.Append("Output: ").Append(output);
             }
-
+            
             return new Tuple<Verdict, string>(verdict, sb.ToString());
 
         }

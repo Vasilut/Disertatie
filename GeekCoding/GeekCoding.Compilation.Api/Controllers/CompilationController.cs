@@ -23,7 +23,7 @@ namespace GeekCoding.Compilation.Api.Controllers
         [HttpGet]
         public IEnumerable<string> Get()
         {
-            return new string[] { "compileLuciAAAA", "compileAlinaAAAAAAA" };
+            return new string[] { "compileLuci", "compileAlina" };
         }
 
         

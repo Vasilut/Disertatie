@@ -12,9 +12,9 @@ namespace GeekCoding.Common.Helpers
 {
     public class FileHelpers
     {
-        public static async Task<string> ProcessFormFile(IFormFile formFile, ModelStateDictionary modelState)
+        public static async Task<Tuple<string, long>> ProcessFormFile(IFormFile formFile, ModelStateDictionary modelState)
         {
-            
+
 
             // Use Path.GetFileName to obtain the file name, which will
             // strip any path information passed as part of the
@@ -66,7 +66,7 @@ namespace GeekCoding.Common.Helpers
                         // empty after removing the BOM.
                         if (fileContents.Length > 0)
                         {
-                            return fileContents;
+                            return new Tuple<string, long>(fileContents, formFile.Length);
                         }
                         else
                         {
@@ -84,7 +84,7 @@ namespace GeekCoding.Common.Helpers
                 }
             }
 
-            return string.Empty;
+            return new Tuple<string, long>(string.Empty, 0);
         }
     }
 }
