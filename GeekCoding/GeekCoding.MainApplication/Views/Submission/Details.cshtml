@@ -1,0 +1,66 @@
+﻿@model GeekCoding.Data.Models.Submision
+
+@{
+    ViewData["Title"] = "View";
+}
+
+<h2>View</h2>
+
+<div>
+    <h4>Submision</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.UserName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.UserName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.DataOfSubmision)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.DataOfSubmision)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.SourceSize)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.SourceSize)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Score)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Score)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.StateOfSubmision)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.StateOfSubmision)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Compilator)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Compilator)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.MessageOfSubmision)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.MessageOfSubmision)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Problem.ProblemName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Problem.ProblemName)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.SubmisionId">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
