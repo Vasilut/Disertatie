@@ -120,36 +120,41 @@ namespace GeekCoding.MainApplication.Controllers
             string fileContent = await FileHelpers.ProcessFormFile(model.File, ModelState);
 
             //compile file (linux)
-            var url = @"http://localhost:32529/api/compilation";
+            var url = @"http://172.25.192.168/api/compilation";
             var client = new HttpClient();
             var compilationModel = new CompilationModel { Content = fileContent, Language = model.Compilator, ProblemName = model.ProblemName, Username = User.Identity.Name };
             var serializedData = JsonConvert.SerializeObject(compilationModel);
             var httpContent = new StringContent(serializedData, Encoding.UTF8, "application/json");
 
             var response = await client.PostAsync(url, httpContent);
-            var result = await response.Content.ReadAsStringAsync();
-            var content = JsonConvert.DeserializeObject<ResponseModel>(result);
-
-            //call the api to execute... not done yet.. (linux)
-
-
-            //save the submission
-            var submission = new Submision
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
-                SubmisionId = Guid.NewGuid(),
-                DataOfSubmision = DateTime.Today,
-                Compilator = model.Compilator,
-                ProblemId = Guid.Parse(model.ProblemId),
-                SourceSize = "2kb",
-                StateOfSubmision = "Compiled",
-                UserName = User.Identity.Name,
-                MessageOfSubmision = content.CompilationResponse,
-                Score = 100
-            };
+                var result = await response.Content.ReadAsStringAsync();
+                var content = JsonConvert.DeserializeObject<ResponseModel>(result);
 
-            await _submisionRepository.AddAsync(submission);
+                //call the api to execute... not done yet.. (linux)
 
-            ViewData["subbmited"] = true;
+
+                //save the submission
+                var submission = new Submision
+                {
+                    SubmisionId = Guid.NewGuid(),
+                    DataOfSubmision = DateTime.Today,
+                    Compilator = model.Compilator,
+                    ProblemId = Guid.Parse(model.ProblemId),
+                    SourceSize = "2kb",
+                    StateOfSubmision = "Compiled",
+                    UserName = User.Identity.Name,
+                    MessageOfSubmision = content.CompilationResponse,
+                    Score = 100
+                };
+
+                await _submisionRepository.AddAsync(submission);
+
+                ViewData["subbmited"] = true;
+                return RedirectToAction("GetProblem", new { id = Guid.Parse(model.ProblemId) });
+            }
+
             return RedirectToAction("GetProblem", new { id = Guid.Parse(model.ProblemId) });
         }
 
