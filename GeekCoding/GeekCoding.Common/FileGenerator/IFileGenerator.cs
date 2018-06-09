@@ -10,6 +10,6 @@ namespace GeekCoding.Common
                                 string problemName, string userName);
         string GetCurrentDirectory();
 
-        string GetFileFullName(string problemName, string userName, string language);
+        string GetFileFullName(string problemName, string userName);
     }
 }

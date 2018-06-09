@@ -64,5 +64,21 @@ namespace GeekCoding.Common.ProcesExecuter
             return new Tuple<Verdict, string>(verdict, sb.ToString());
 
         }
+
+        public void SandboxOperation(string argument, string workingDirectory)
+        {
+            Process process = new Process();
+            process.StartInfo.FileName = "/bin/bash";
+            process.StartInfo.Arguments = $"-c \"{argument}\"";
+            process.StartInfo.UseShellExecute = false;
+            process.StartInfo.RedirectStandardOutput = true;
+            process.StartInfo.RedirectStandardError = true;
+            process.StartInfo.WorkingDirectory = workingDirectory;
+            process.Start();
+
+            Console.WriteLine("");
+            process.WaitForExit();
+            process.Close();
+        }
     }
 }

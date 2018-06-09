@@ -48,7 +48,7 @@ namespace GeekCoding.Common
             return goodDirectory;
         }
 
-        public string GetFileFullName(string problemName, string userName, string language)
+        public string GetFileFullName(string problemName, string userName)
         {
             var goodDirectory = GetCurrentDirectory();
 

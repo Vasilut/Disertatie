@@ -17,6 +17,7 @@ namespace GeekCoding.Common.Helpers
         private static string[] CompileCommands = { "g++", "javac", "mcs", "python" };
         private static string[] LanguageExtension = { ".cpp", ".java", ".cs", ".py" };
         private static string[] LanguageExecutable = { ".exe", ".py" };
+        private static string[] SandboxOperation = { "--init", "--clean" };
 
         public static string GetLanguageCompileCommand(string language, string fileToCompile,
                                                        string fileToExecute)
@@ -95,6 +96,32 @@ namespace GeekCoding.Common.Helpers
                     break;
             }
             return string.Empty;
+        }
+
+        public static string GetSandboxOperation(string operation)
+        {
+            switch (operation)
+            {
+                case "INIT":
+                    {
+                        return $"./isolate --{SandboxOperation[0]}";
+                    }
+                case "CLEAN":
+                    {
+                        return $"./isolate --{SandboxOperation[1]}";
+                    }
+                default:
+                    break;
+            }
+            return string.Empty;
+        }
+
+        public static string SandboxArguments(string timeLimit, string memoryLimit, string resultFile, string fileToExecute)
+        {
+            //result file = /tmp/logo3.txt
+            //memory in kb (for example 4600)
+            //time 1.5 seconds
+            return $"./isolate --cg --meta={resultFile} --cg-mem={memoryLimit} --time={timeLimit} --run -- {fileToExecute}";
         }
     }
 }

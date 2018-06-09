@@ -140,9 +140,6 @@ namespace GeekCoding.MainApplication.Controllers
                 var result = await response.Content.ReadAsStringAsync();
                 var content = JsonConvert.DeserializeObject<ResponseModel>(result);
 
-                //call the api to execute... not done yet.. (linux)
-
-
                 //save the submission
                 var submission = new Submision
                 {
@@ -158,6 +155,13 @@ namespace GeekCoding.MainApplication.Controllers
                 };
 
                 await _submisionRepository.AddAsync(submission);
+
+                if (content.CompilationResponse == "SUCCESS")
+                {
+                    //call the api to execute... not done yet.. (linux)
+
+                }
+                
 
                 ViewData["subbmited"] = true;
                 return RedirectToAction("GetProblem", new { id = Guid.Parse(model.ProblemId) });

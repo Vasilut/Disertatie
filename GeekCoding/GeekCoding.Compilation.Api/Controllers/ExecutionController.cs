@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GeekCoding.Compilation.Api.Model;
+using GeekCoding.Compilation.Execution;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,15 +13,30 @@ namespace GeekCoding.Compilation.Api.Controllers
     [Route("api/Execution")]
     public class ExecutionController : Controller
     {
-        public ExecutionController()
-        {
+        private IExecutionFile _executeFile;
 
+        public ExecutionController(IExecutionFile executeFile)
+        {
+            _executeFile = executeFile;
         }
 
         [HttpGet]
         public IEnumerable<string> Get()
         {
             return new string[] { "exec1", "exec2" };
+        }
+
+        [HttpPost]
+        // POST api/<controller>
+        public string Post([FromBody]ExecutionModel item)
+        {
+            if (ModelState.IsValid)
+            {
+                _executeFile.Execute(item.ProblemName, item.UserName, "C++", item.TimeLimit, item.MemoryLimit);
+                return "OK";
+            }
+
+            return "Failed response";
         }
     }
 }

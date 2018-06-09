@@ -21,7 +21,7 @@ namespace GeekCoding.Compilation
                                         problemName, userName);
 
             //get files path
-            string fullFilePath = _fileGenerator.GetFileFullName(problemName, userName, language);
+            string fullFilePath = _fileGenerator.GetFileFullName(problemName, userName);
             string fullFileToCompile = new StringBuilder(fullFilePath).Append(LanguageHelper.GetLanguageExtenstionType(language)).ToString();
             string fullFileExecutable = new StringBuilder(fullFilePath).Append(LanguageHelper.GetLanguageExecutableType(language)).ToString();
             string workingDirectory = _fileGenerator.GetCurrentDirectory();
