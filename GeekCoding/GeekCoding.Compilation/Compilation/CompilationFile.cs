@@ -2,7 +2,6 @@
 using GeekCoding.Common.Helpers;
 using GeekCoding.Common.ProcesExecuter;
 using System;
-using System.Collections.Generic;
 using System.Text;
 
 namespace GeekCoding.Compilation
@@ -10,9 +9,9 @@ namespace GeekCoding.Compilation
     public class CompilationFile : ICompilationFile
     {
         private IFileGenerator _fileGenerator;
-        public CompilationFile()
+        public CompilationFile(IFileGenerator fileGenerator)
         {
-            _fileGenerator = new FileGenerator();
+            _fileGenerator = fileGenerator;
         }
         public Tuple<Verdict, string> CompileFile(string content, string language, string problemName, string userName)
         {

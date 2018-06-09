@@ -2,7 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+<<<<<<< HEAD
 using GeekCoding.Compilation.Execution;
+=======
+using GeekCoding.Common;
+>>>>>>> origin/master
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -26,8 +30,11 @@ namespace GeekCoding.Compilation.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped<ICompilationFile, CompilationFile>();
-            services.AddScoped<IFileGenerator, FileGenerator>();
+<<<<<<< HEAD
             services.AddScoped<IExecutionFile, ExecutionFile>();
+=======
+            services.AddScoped<IFileGenerator, FileGenerator>();
+>>>>>>> origin/master
             services.AddMvc();
         }
 
