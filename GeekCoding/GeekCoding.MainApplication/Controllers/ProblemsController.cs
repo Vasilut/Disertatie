@@ -26,7 +26,9 @@ namespace GeekCoding.MainApplication.Controllers
         private IConfiguration _configuration;
         private List<SelectListItem> _compilers = new List<SelectListItem>();
         public object lockOBj = new object();
+
         private string _compilationApi;
+        private string _executionApi;
 
         public ProblemsController(IProblemRepository problemRepository, ISubmisionRepository submisionRepository, 
                                   ISolutionRepository solutionRepository, IConfiguration configuration)
@@ -39,6 +41,7 @@ namespace GeekCoding.MainApplication.Controllers
 
             //intialize compilation and running api
             _compilationApi = _configuration.GetSection("Api")["CompilationApi"];
+            _executionApi = _configuration.GetSection("Api")["ExecutionApi"];
         }
 
         [AllowAnonymous]
@@ -159,6 +162,15 @@ namespace GeekCoding.MainApplication.Controllers
                 if (content.CompilationResponse == "SUCCESS")
                 {
                     //call the api to execute... not done yet.. (linux)
+                    var executionModel = new ExecutionModel { MemoryLimit = "10000", ProblemName = model.ProblemName, UserName = User.Identity.Name, TimeLimit = "2" };
+                    var serializedExecutionData = JsonConvert.SerializeObject(executionModel);
+                    var httpContentExecution = new StringContent(serializedExecutionData, Encoding.UTF8, "application/json");
+                    var responseExecution = await client.PostAsync(_executionApi, httpContent);
+                    if(responseExecution.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        var resultEx = await responseExecution.Content.ReadAsStringAsync();
+                        var x = 2;
+                    }
 
                 }
                 

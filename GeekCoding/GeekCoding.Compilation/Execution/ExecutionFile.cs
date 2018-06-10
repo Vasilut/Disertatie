@@ -46,6 +46,7 @@ namespace GeekCoding.Compilation.Execution
 
             //step 3
             string executionArgument = LanguageHelper.SandboxArguments(timeLimit, memoryLimit, "/tmp/logogood.txt", fileToExecute);
+            executionProcess.SandboxOperation(executionArgument, _isolateDirectory);
 
 
             //step 4
