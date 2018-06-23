@@ -104,11 +104,11 @@ namespace GeekCoding.Common.Helpers
             {
                 case "INIT":
                     {
-                        return $"./isolate --{SandboxOperation[0]}";
+                        return $"./isolate {SandboxOperation[0]}";
                     }
                 case "CLEAN":
                     {
-                        return $"./isolate --{SandboxOperation[1]}";
+                        return $"./isolate {SandboxOperation[1]}";
                     }
                 default:
                     break;

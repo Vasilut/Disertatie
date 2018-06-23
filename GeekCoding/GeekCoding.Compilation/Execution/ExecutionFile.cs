@@ -12,8 +12,9 @@ namespace GeekCoding.Compilation.Execution
     {
         private IFileGenerator _fileGenerator;
         private const string _isolateDirectory = "/usr/local/bin";
-        private const string _sandboxDirectory = "/tmp/box/0/box";
+        private const string _sandboxDirectory = "/tmp/box/0/box/";
         private string[] _sandboxOperations = { "INIT", "CLEAN" };
+        private const string _downloadDirectory = "Downloads";
         public ExecutionFile()
         {
             _fileGenerator = new FileGenerator();
@@ -30,7 +31,7 @@ namespace GeekCoding.Compilation.Execution
             //we have next steps:
             /*
              * 1. initialize the sandbox. ./isolate --init
-             * 2. copy the file in sandbox environment: cp /usr/local/etc/sources/file /tmp/box/0/box
+             * 2. copy the file in sandbox environment: cp /usr/local/etc/sources/file /tmp/box/0/box/
              * 3. run the file in sanxbox: ./isolate --cg --meta=/tmp/result.txt --cg-mem=5000 --time=1.5 --run -- program
              * 4. clean sandbox: ./isolate --clean
              */
@@ -42,10 +43,10 @@ namespace GeekCoding.Compilation.Execution
 
             //step 2
             string copyArgument = $"cp {fullFileExecutable} {_sandboxDirectory}";
-            executionProcess.SandboxOperation(copyArgument, sourcesDirectory); //not sure if the directory is sourcesDirectory
+            executionProcess.SandboxOperation(copyArgument, _downloadDirectory);
 
             //step 3
-            string executionArgument = LanguageHelper.SandboxArguments(timeLimit, memoryLimit, "/tmp/logogood.txt", fileToExecute);
+            string executionArgument = LanguageHelper.SandboxArguments(timeLimit, memoryLimit, "/tmp/results.txt", fileToExecute);
             executionProcess.SandboxOperation(executionArgument, _isolateDirectory);
 
 
