@@ -1,5 +1,8 @@
 ﻿using GeekCoding.Compilation.Api.Model;
+using GeekCoding.Data.Models;
 using GeekCoding.MainApplication.Hubs;
+using GeekCoding.MainApplication.Utilities;
+using GeekCoding.Repository.Interfaces;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -13,15 +16,21 @@ namespace GeekCoding.MainApplication.Jobs
     public class SubmissionRequest
     {
         private SubmissionHub _submissionHub;
+        private ISubmisionRepository _submissionRepository;
 
-        public SubmissionRequest(SubmissionHub submissionHub)
+        public SubmissionRequest(SubmissionHub submissionHub, ISubmisionRepository submissionRepository)
         {
             _submissionHub = submissionHub;
+            _submissionRepository = submissionRepository;
         }
-        public async Task MakeSubmissionRequestAsync(CompilationModel compilationModel, string _compilationApi,
-                                                     string userName, string _executionApi,
-                                                     string submissionId)
+        public async Task MakeSubmissionRequestAsync(SubmisionDto submision, string _compilationApi,
+                                                     string _executionApi)
         {
+            //update the status of the submission
+            UpdateSubmissionStatus(submision.SubmissionId, SubmissionStatus.Compiling);
+
+            var compilationModel = new CompilationModel { Content = submision.Content, Language = submision.Compilator,
+                                                          ProblemName = submision.ProblemName, Username = submision.UserName };
             var client = new HttpClient();
             var serializedData = JsonConvert.SerializeObject(compilationModel);
             var httpContent = new StringContent(serializedData, Encoding.UTF8, "application/json");
@@ -33,12 +42,16 @@ namespace GeekCoding.MainApplication.Jobs
                 var content = JsonConvert.DeserializeObject<ResponseModel>(result);
 
                 //update with signal r the response for the submission
-                await _submissionHub.SendMessageToCaller("Muie Steaua", submissionId);
+                //await _submissionHub.SendMessageToCaller("Muie Steaua", submissionId);
 
                 if (content.CompilationResponse == "SUCCESS")
                 {
+
+                    //update the status of the submission
+                    UpdateSubmissionStatus(submision.SubmissionId, SubmissionStatus.Compiled);
+
                     //call the api to execute... not done yet.. (linux)
-                    var executionModel = new ExecutionModel { MemoryLimit = "10000", ProblemName = compilationModel.ProblemName, UserName = userName, TimeLimit = "2" };
+                    var executionModel = new ExecutionModel { MemoryLimit = "10000", ProblemName = compilationModel.ProblemName, UserName = submision.UserName, TimeLimit = "2" };
                     var serializedExecutionData = JsonConvert.SerializeObject(executionModel);
                     var httpContentExecution = new StringContent(serializedExecutionData, Encoding.UTF8, "application/json");
                     var responseExecution = await client.PostAsync(_executionApi, httpContent);
@@ -46,13 +59,31 @@ namespace GeekCoding.MainApplication.Jobs
                     {
                         var resultEx = await responseExecution.Content.ReadAsStringAsync();
                         //another signal r notification
-                        await _submissionHub.SendScoreMessageToCaller("Executat", submissionId, "70");
+                        //await _submissionHub.SendScoreMessageToCaller("Executat", submissionId, "70");
 
                         var x = 2;
                     }
 
                 }
+                else
+                {
+                    //update status not compiled
+                    UpdateSubmissionStatus(submision.SubmissionId, SubmissionStatus.CompilationError);
+                }
             }
         }
+
+        private void UpdateSubmissionStatus(Guid submissionId, SubmissionStatus submissionStatus)
+        {
+            var submissionToUpdate = _submissionRepository.GetItem(submissionId);
+            if (submissionToUpdate != null)
+            {
+                submissionToUpdate.StateOfSubmision = submissionStatus.ToString();
+                _submissionRepository.Update(submissionToUpdate);
+                _submissionRepository.Save();
+
+            }
+        }
+        
     }
 }

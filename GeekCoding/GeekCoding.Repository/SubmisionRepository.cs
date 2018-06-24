@@ -20,5 +20,11 @@ namespace GeekCoding.Repository
         {
             return await RepositoryContext.Submision.Where(x => x.SubmisionId == id).Include(x => x.Problem).FirstOrDefaultAsync();
         }
+
+        public override Submision GetItem(Guid id)
+        {
+            return RepositoryContext.Submision.Where(x => x.SubmisionId == id).Include(x => x.Problem).FirstOrDefault();
+        }
+
     }
 }

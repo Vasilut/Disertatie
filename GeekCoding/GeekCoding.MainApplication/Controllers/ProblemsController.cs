@@ -8,6 +8,7 @@ using GeekCoding.Common.Helpers;
 using GeekCoding.Compilation.Api.Model;
 using GeekCoding.Data.Models;
 using GeekCoding.MainApplication.Jobs;
+using GeekCoding.MainApplication.Utilities;
 using GeekCoding.MainApplication.ViewModels;
 using GeekCoding.Repository.Interfaces;
 using Hangfire;
@@ -132,6 +133,7 @@ namespace GeekCoding.MainApplication.Controllers
             //read the content of the file
             Tuple<string,long> fileContent = await FileHelpers.ProcessFormFile(model.File, ModelState);
             double sizeOfFile = (fileContent.Item2) % 1000;
+            var compilationModel = new CompilationModel { Content = fileContent.Item1, Language = model.Compilator, ProblemName = model.ProblemName, Username = User.Identity.Name };
 
             //save the submission
             var submission = new Submision
@@ -141,20 +143,22 @@ namespace GeekCoding.MainApplication.Controllers
                 Compilator = model.Compilator,
                 ProblemId = Guid.Parse(model.ProblemId),
                 SourceSize = sizeOfFile.ToString(),
-                StateOfSubmision = "NotCompiled",
+                StateOfSubmision = SubmissionStatus.NotCompiled.ToString(),
                 UserName = User.Identity.Name,
                 MessageOfSubmision = string.Empty,
-                Score = 0
+                Score = 0,
+                JobQueued = false,
+                SourceCode = fileContent.Item1
             };
 
             await _submisionRepository.AddAsync(submission);
 
             //compile file (linux)
-            var compilationModel = new CompilationModel { Content = fileContent.Item1, Language = model.Compilator, ProblemName = model.ProblemName, Username = User.Identity.Name };
-            BackgroundJob.Enqueue<SubmissionRequest>(x => x.MakeSubmissionRequestAsync(compilationModel, _compilationApi,
+            
+            /*BackgroundJob.Enqueue<SubmissionRequest>(x => x.MakeSubmissionRequestAsync(compilationModel, _compilationApi,
                                                                                        User.Identity.Name, _executionApi,
                                                                                        submission.SubmisionId.ToString()));
-
+                                                                                       */
             //var client = new HttpClient();
             //var serializedData = JsonConvert.SerializeObject(compilationModel);
             //var httpContent = new StringContent(serializedData, Encoding.UTF8, "application/json");

@@ -50,7 +50,7 @@ namespace GeekCoding.Repository
         #endregion
 
         #region get
-        public T GetItem(Guid id)
+        public virtual T GetItem(Guid id)
         {
             return RepositoryContext.Set<T>().Find(id);
         }

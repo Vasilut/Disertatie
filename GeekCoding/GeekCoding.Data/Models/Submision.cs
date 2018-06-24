@@ -18,5 +18,8 @@ namespace GeekCoding.Data.Models
         [NotMapped]
         public string SourceLocation { get; set; }
         public Problem Problem { get; set; }
+        public bool? JobQueued { get; set; }
+        public string SourceCode { get; set; }
+
     }
 }
