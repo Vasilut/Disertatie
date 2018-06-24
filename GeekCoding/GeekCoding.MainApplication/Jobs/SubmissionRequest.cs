@@ -1,4 +1,5 @@
 ﻿using GeekCoding.Compilation.Api.Model;
+using GeekCoding.MainApplication.Hubs;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,15 @@ namespace GeekCoding.MainApplication.Jobs
 {
     public class SubmissionRequest
     {
-        public async Task MakeSubmissionRequestAsync(CompilationModel compilationModel, string _compilationApi, string userName, string _executionApi)
+        private SubmissionHub _submissionHub;
+
+        public SubmissionRequest(SubmissionHub submissionHub)
+        {
+            _submissionHub = submissionHub;
+        }
+        public async Task MakeSubmissionRequestAsync(CompilationModel compilationModel, string _compilationApi,
+                                                     string userName, string _executionApi,
+                                                     string submissionId)
         {
             var client = new HttpClient();
             var serializedData = JsonConvert.SerializeObject(compilationModel);
@@ -24,6 +33,7 @@ namespace GeekCoding.MainApplication.Jobs
                 var content = JsonConvert.DeserializeObject<ResponseModel>(result);
 
                 //update with signal r the response for the submission
+                await _submissionHub.SendMessageToCaller("Muie Steaua", submissionId);
 
                 if (content.CompilationResponse == "SUCCESS")
                 {
@@ -36,6 +46,8 @@ namespace GeekCoding.MainApplication.Jobs
                     {
                         var resultEx = await responseExecution.Content.ReadAsStringAsync();
                         //another signal r notification
+                        await _submissionHub.SendScoreMessageToCaller("Executat", submissionId, "70");
+
                         var x = 2;
                     }
 

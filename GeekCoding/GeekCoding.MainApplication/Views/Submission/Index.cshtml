@@ -6,6 +6,28 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>View</title>
+
+    <script scr="~/lib/signalr/signalr.js"></script>
+
+    <script type="text/javascript">
+
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/submissionhub")
+            .build();
+        connection.start().catch(err => console.error(err.toString()));
+
+
+        connection.on("SubmissionMessage", (message, subbmisionId) => {
+
+            console.log(message);
+        });
+
+        connection.on("ExecutionMessage", (message, submissionId, score) => {
+            console.log(score);
+        });
+
+    </script>
+
 </head>
 <body>
     <p>
@@ -42,7 +64,7 @@
         <tbody  class="reactable-data">
             @foreach (var item in Model)
             {
-                <tr>
+                <tr id="@item.SubmisionId">
                     <td>
                         @Html.DisplayFor(modelItem => item.UserName)
                     </td>

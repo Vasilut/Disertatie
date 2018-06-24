@@ -13,6 +13,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.SignalR;
+using GeekCoding.MainApplication.Hubs;
 
 namespace GeekCoding.MainApplication
 {
@@ -34,6 +36,7 @@ namespace GeekCoding.MainApplication
             {
                 configuration.UseSqlServerStorage(hangfireConnectionString);
             });
+            services.AddSignalR();
             services.AddMvc();
 
             var connectionString = Configuration.GetConnectionString("EvaluatorDatabase");
@@ -44,6 +47,7 @@ namespace GeekCoding.MainApplication
             services.AddScoped<ISolutionRepository, SolutionRepository>();
             services.AddScoped<ISubmisionRepository, SubmisionRepository>();
             services.AddScoped<IProgressStatusRepository, ProgresStatusRepository>();
+            services.AddTransient<SubmissionHub>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -70,6 +74,11 @@ namespace GeekCoding.MainApplication
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
+            });
+
+            app.UseSignalR(route =>
+            {
+                route.MapHub<SubmissionHub>("/submissionhub");
             });
         }
     }

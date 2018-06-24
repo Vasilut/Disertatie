@@ -133,9 +133,27 @@ namespace GeekCoding.MainApplication.Controllers
             Tuple<string,long> fileContent = await FileHelpers.ProcessFormFile(model.File, ModelState);
             double sizeOfFile = (fileContent.Item2) % 1000;
 
+            //save the submission
+            var submission = new Submision
+            {
+                SubmisionId = Guid.NewGuid(),
+                DataOfSubmision = DateTime.Now,
+                Compilator = model.Compilator,
+                ProblemId = Guid.Parse(model.ProblemId),
+                SourceSize = sizeOfFile.ToString(),
+                StateOfSubmision = "NotCompiled",
+                UserName = User.Identity.Name,
+                MessageOfSubmision = string.Empty,
+                Score = 0
+            };
+
+            await _submisionRepository.AddAsync(submission);
+
             //compile file (linux)
             var compilationModel = new CompilationModel { Content = fileContent.Item1, Language = model.Compilator, ProblemName = model.ProblemName, Username = User.Identity.Name };
-            BackgroundJob.Enqueue<SubmissionRequest>(x => x.MakeSubmissionRequestAsync(compilationModel, _compilationApi, User.Identity.Name, _executionApi));
+            BackgroundJob.Enqueue<SubmissionRequest>(x => x.MakeSubmissionRequestAsync(compilationModel, _compilationApi,
+                                                                                       User.Identity.Name, _executionApi,
+                                                                                       submission.SubmisionId.ToString()));
 
             //var client = new HttpClient();
             //var serializedData = JsonConvert.SerializeObject(compilationModel);
@@ -147,21 +165,7 @@ namespace GeekCoding.MainApplication.Controllers
             //    var result = await response.Content.ReadAsStringAsync();
             //    var content = JsonConvert.DeserializeObject<ResponseModel>(result);
 
-                //save the submission
-                var submission = new Submision
-                {
-                    SubmisionId = Guid.NewGuid(),
-                    DataOfSubmision = DateTime.Now,
-                    Compilator = model.Compilator,
-                    ProblemId = Guid.Parse(model.ProblemId),
-                    SourceSize = sizeOfFile.ToString(),
-                    StateOfSubmision = "NotCompiled",
-                    UserName = User.Identity.Name,
-                    MessageOfSubmision = string.Empty,
-                    Score = 0
-                };
-
-                await _submisionRepository.AddAsync(submission);
+                
 
                 //if (content.CompilationResponse == "SUCCESS")
                 //{
