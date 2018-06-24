@@ -3,6 +3,7 @@ using GeekCoding.Data.Models;
 using GeekCoding.MainApplication.Hubs;
 using GeekCoding.MainApplication.Utilities;
 using GeekCoding.Repository.Interfaces;
+using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -17,11 +18,14 @@ namespace GeekCoding.MainApplication.Jobs
     {
         private SubmissionHub _submissionHub;
         private ISubmisionRepository _submissionRepository;
+        private IHubContext<SubmissionHub> _hubContext;
 
-        public SubmissionRequest(SubmissionHub submissionHub, ISubmisionRepository submissionRepository)
+        public SubmissionRequest(SubmissionHub submissionHub, ISubmisionRepository submissionRepository, IHubContext<SubmissionHub> hubContext)
         {
             _submissionHub = submissionHub;
             _submissionRepository = submissionRepository;
+            _hubContext = hubContext;
+           
         }
         public async Task MakeSubmissionRequestAsync(SubmisionDto submision, string _compilationApi,
                                                      string _executionApi)
@@ -42,11 +46,15 @@ namespace GeekCoding.MainApplication.Jobs
                 var content = JsonConvert.DeserializeObject<ResponseModel>(result);
 
                 //update with signal r the response for the submission
-                //await _submissionHub.SendMessageToCaller("Muie Steaua", submissionId);
+                var task =  _hubContext.Clients.All.SendAsync("SubmissionMessage", "Salut Dinamo", submision.SubmissionId.ToString());
+                if(task != null)
+                {
+                    await task;
+                }
 
                 if (content.CompilationResponse == "SUCCESS")
                 {
-
+                    
                     //update the status of the submission
                     UpdateSubmissionStatus(submision.SubmissionId, SubmissionStatus.Compiled);
 
@@ -59,8 +67,12 @@ namespace GeekCoding.MainApplication.Jobs
                     {
                         var resultEx = await responseExecution.Content.ReadAsStringAsync();
                         //another signal r notification
-                        //await _submissionHub.SendScoreMessageToCaller("Executat", submissionId, "70");
-
+                        var taskExecution = _hubContext.Clients.All.SendAsync("ExecutionMessage", "Executat", submision.SubmissionId.ToString(), "70");
+                        if (taskExecution != null)
+                        {
+                            await taskExecution;
+                        }
+                        
                         var x = 2;
                     }
 

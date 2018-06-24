@@ -36,7 +36,6 @@ namespace GeekCoding.MainApplication
             {
                 configuration.UseSqlServerStorage(hangfireConnectionString);
             });
-            services.AddSignalR();
             services.AddMvc();
 
             var connectionString = Configuration.GetConnectionString("EvaluatorDatabase");
@@ -48,6 +47,8 @@ namespace GeekCoding.MainApplication
             services.AddScoped<ISubmisionRepository, SubmisionRepository>();
             services.AddScoped<IProgressStatusRepository, ProgresStatusRepository>();
             services.AddTransient<SubmissionHub>();
+
+            services.AddSignalR();
         }
 
        
@@ -70,6 +71,11 @@ namespace GeekCoding.MainApplication
             app.UseAuthentication();
             app.UseStaticFiles();
 
+            app.UseSignalR(route =>
+            {
+                route.MapHub<SubmissionHub>("/hubs/submission");
+            });
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
@@ -77,10 +83,7 @@ namespace GeekCoding.MainApplication
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
 
-            app.UseSignalR(route =>
-            {
-                route.MapHub<SubmissionHub>("/submissionhub");
-            });
+            
         }
     }
 }

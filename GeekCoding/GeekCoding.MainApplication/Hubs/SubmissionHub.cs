@@ -10,12 +10,22 @@ namespace GeekCoding.MainApplication.Hubs
     {
         public Task SendMessageToCaller(string message, string subbmisionId)
         {
-            return Clients.Caller.SendAsync("SubmissionMessage", subbmisionId, message);
+            if (Clients !=  null && Clients.Caller != null)
+            {
+                return Clients.Caller.SendAsync("SubmissionMessage", subbmisionId, message);
+            }
+
+            return null;
+            
         }
 
         public Task SendScoreMessageToCaller(string message, string submissionId, string score)
         {
-            return Clients.Caller.SendAsync("ExecutionMessage", submissionId, message, score);
+            if (Clients != null && Clients.Caller != null)
+            {
+                return Clients.Caller.SendAsync("ExecutionMessage", submissionId, message, score);
+            }
+            return null;
         }
     }
 }

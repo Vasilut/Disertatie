@@ -4,11 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using GeekCoding.Compilation.Api.Model;
 using GeekCoding.Data.Models;
+using GeekCoding.MainApplication.Hubs;
 using GeekCoding.MainApplication.Jobs;
 using GeekCoding.MainApplication.Utilities;
 using GeekCoding.Repository.Interfaces;
 using Hangfire;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 
 namespace GeekCoding.MainApplication.Controllers
@@ -22,7 +24,8 @@ namespace GeekCoding.MainApplication.Controllers
         private string _compilationApi;
         private string _executionApi;
 
-        public SubmissionController(ISubmisionRepository submisionRepository, IConfiguration configuration, IProblemRepository problemRepository)
+        public SubmissionController(ISubmisionRepository submisionRepository, IConfiguration configuration,
+                                    IProblemRepository problemRepository)
         {
             _submisionRepository = submisionRepository;
             _configuration = configuration;

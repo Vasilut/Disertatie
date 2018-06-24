@@ -7,27 +7,6 @@
     <meta name="viewport" content="width=device-width" />
     <title>View</title>
 
-    @*<script scr="~/lib/signalr/signalr.js"></script>
-
-    <script type="text/javascript">
-
-        const connection = new signalR.HubConnectionBuilder()
-            .withUrl("/submissionhub")
-            .build();
-        connection.start().catch(err => console.error(err.toString()));
-
-
-        connection.on("SubmissionMessage", (message, subbmisionId) => {
-
-            console.log(message);
-        });
-
-        connection.on("ExecutionMessage", (message, submissionId, score) => {
-            console.log(score);
-        });
-
-    </script>*@
-
 </head>
 <body>
     <p>
@@ -61,7 +40,7 @@
                 <th></th>
             </tr>
         </thead>
-        <tbody  class="reactable-data">
+        <tbody class="reactable-data">
             @foreach (var item in Model)
             {
                 <tr id="@item.SubmisionId">
@@ -102,3 +81,30 @@
     </table>
 </body>
 </html>
+
+@section Scripts {
+<script src="/lib/signalr/signalr.js"></script>
+
+    <script type="text/javascript">
+        
+
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/hubs/submission")
+            .configureLogging(signalR.LogLevel.Information)
+            .build();
+
+
+        connection.on("SubmissionMessage", (message, subbmisionId) => {
+
+            console.log(message);
+        });
+
+        connection.on("ExecutionMessage", (message, submissionId, score) => {
+            console.log(score);
+        });
+        
+
+        connection.start().catch(err => console.error(err.toString()));
+
+    </script>
+    }
