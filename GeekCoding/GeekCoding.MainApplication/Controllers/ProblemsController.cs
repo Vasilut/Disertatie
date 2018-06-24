@@ -7,8 +7,10 @@ using System.Threading.Tasks;
 using GeekCoding.Common.Helpers;
 using GeekCoding.Compilation.Api.Model;
 using GeekCoding.Data.Models;
+using GeekCoding.MainApplication.Jobs;
 using GeekCoding.MainApplication.ViewModels;
 using GeekCoding.Repository.Interfaces;
+using Hangfire;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -132,16 +134,18 @@ namespace GeekCoding.MainApplication.Controllers
             double sizeOfFile = (fileContent.Item2) % 1000;
 
             //compile file (linux)
-            var client = new HttpClient();
             var compilationModel = new CompilationModel { Content = fileContent.Item1, Language = model.Compilator, ProblemName = model.ProblemName, Username = User.Identity.Name };
-            var serializedData = JsonConvert.SerializeObject(compilationModel);
-            var httpContent = new StringContent(serializedData, Encoding.UTF8, "application/json");
+            BackgroundJob.Enqueue<SubmissionRequest>(x => x.MakeSubmissionRequestAsync(compilationModel, _compilationApi, User.Identity.Name, _executionApi));
 
-            var response = await client.PostAsync(_compilationApi, httpContent);
-            if (response.StatusCode == System.Net.HttpStatusCode.OK)
-            {
-                var result = await response.Content.ReadAsStringAsync();
-                var content = JsonConvert.DeserializeObject<ResponseModel>(result);
+            //var client = new HttpClient();
+            //var serializedData = JsonConvert.SerializeObject(compilationModel);
+            //var httpContent = new StringContent(serializedData, Encoding.UTF8, "application/json");
+
+            //var response = await client.PostAsync(_compilationApi, httpContent);
+            //if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            //{
+            //    var result = await response.Content.ReadAsStringAsync();
+            //    var content = JsonConvert.DeserializeObject<ResponseModel>(result);
 
                 //save the submission
                 var submission = new Submision
@@ -151,36 +155,36 @@ namespace GeekCoding.MainApplication.Controllers
                     Compilator = model.Compilator,
                     ProblemId = Guid.Parse(model.ProblemId),
                     SourceSize = sizeOfFile.ToString(),
-                    StateOfSubmision = "Compiled",
+                    StateOfSubmision = "NotCompiled",
                     UserName = User.Identity.Name,
-                    MessageOfSubmision = content.CompilationResponse,
-                    Score = 100
+                    MessageOfSubmision = string.Empty,
+                    Score = 0
                 };
 
                 await _submisionRepository.AddAsync(submission);
 
-                if (content.CompilationResponse == "SUCCESS")
-                {
-                    //call the api to execute... not done yet.. (linux)
-                    var executionModel = new ExecutionModel { MemoryLimit = "10000", ProblemName = model.ProblemName, UserName = User.Identity.Name, TimeLimit = "2" };
-                    var serializedExecutionData = JsonConvert.SerializeObject(executionModel);
-                    var httpContentExecution = new StringContent(serializedExecutionData, Encoding.UTF8, "application/json");
-                    var responseExecution = await client.PostAsync(_executionApi, httpContent);
-                    if(responseExecution.StatusCode == System.Net.HttpStatusCode.OK)
-                    {
-                        var resultEx = await responseExecution.Content.ReadAsStringAsync();
-                        var x = 2;
-                    }
+                //if (content.CompilationResponse == "SUCCESS")
+                //{
+                //    //call the api to execute... not done yet.. (linux)
+                //    var executionModel = new ExecutionModel { MemoryLimit = "10000", ProblemName = model.ProblemName, UserName = User.Identity.Name, TimeLimit = "2" };
+                //    var serializedExecutionData = JsonConvert.SerializeObject(executionModel);
+                //    var httpContentExecution = new StringContent(serializedExecutionData, Encoding.UTF8, "application/json");
+                //    var responseExecution = await client.PostAsync(_executionApi, httpContent);
+                //    if(responseExecution.StatusCode == System.Net.HttpStatusCode.OK)
+                //    {
+                //        var resultEx = await responseExecution.Content.ReadAsStringAsync();
+                //        var x = 2;
+                //    }
 
-                }
+                //}
                 
 
                 ViewData["subbmited"] = true;
                 return RedirectToAction("GetProblem", new { id = Guid.Parse(model.ProblemId) });
             }
 
-            return RedirectToAction("GetProblem", new { id = Guid.Parse(model.ProblemId) });
-        }
+        //    return RedirectToAction("GetProblem", new { id = Guid.Parse(model.ProblemId) });
+        //}
 
 
         [Authorize(Roles = "Admin")]
