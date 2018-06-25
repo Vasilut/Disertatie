@@ -31,7 +31,9 @@ namespace GeekCoding.MainApplication.Jobs
                                                      string _executionApi)
         {
             //update the status of the submission
-            UpdateSubmissionStatus(submision.SubmissionId, SubmissionStatus.Compiling);
+            UpdateSubmissionStatus(submision.SubmissionId, SubmissionStatus.Compiling,string.Empty);
+            //notify signal r to compiling status
+            //await NotifyResponse(MessageType.CompilationMessage, SubmissionStatus.Compiling.ToString(), submision.SubmissionId.ToString(), "0");
 
             var compilationModel = new CompilationModel { Content = submision.Content, Language = submision.Compilator,
                                                           ProblemName = submision.ProblemName, Username = submision.UserName };
@@ -46,6 +48,7 @@ namespace GeekCoding.MainApplication.Jobs
                 var content = JsonConvert.DeserializeObject<ResponseModel>(result);
 
                 //update with signal r the response for the submission
+                //await NotifyResponse(MessageType.CompilationMessage, SubmissionStatus.Compiled.ToString(), submision.SubmissionId.ToString(), "0");
                 var task =  _hubContext.Clients.All.SendAsync("SubmissionMessage", "Salut Dinamo", submision.SubmissionId.ToString());
                 if(task != null)
                 {
@@ -54,9 +57,12 @@ namespace GeekCoding.MainApplication.Jobs
 
                 if (content.CompilationResponse == "SUCCESS")
                 {
-                    
                     //update the status of the submission
-                    UpdateSubmissionStatus(submision.SubmissionId, SubmissionStatus.Compiled);
+                    UpdateSubmissionStatus(submision.SubmissionId, SubmissionStatus.Compiled,content.CompilationResponse);
+
+                    //notify with signal r
+                    //await NotifyResponse(MessageType.CompilationMessage, SubmissionStatus.Compiled.ToString(), submision.SubmissionId.ToString(), "0");
+
 
                     //call the api to execute... not done yet.. (linux)
                     var executionModel = new ExecutionModel { MemoryLimit = "10000", ProblemName = compilationModel.ProblemName, UserName = submision.UserName, TimeLimit = "2" };
@@ -72,7 +78,10 @@ namespace GeekCoding.MainApplication.Jobs
                         {
                             await taskExecution;
                         }
-                        
+
+                        //notify with signalR
+                        //await NotifyResponse(MessageType.ExecutionMessage, SubmissionStatus.Executed.ToString(), submision.SubmissionId.ToString(), "70");
+
                         var x = 2;
                     }
 
@@ -80,20 +89,44 @@ namespace GeekCoding.MainApplication.Jobs
                 else
                 {
                     //update status not compiled
-                    UpdateSubmissionStatus(submision.SubmissionId, SubmissionStatus.CompilationError);
+                    UpdateSubmissionStatus(submision.SubmissionId, SubmissionStatus.CompilationError,content.OutputMessage);
+
+                    //notify with signal r
+                    //await NotifyResponse(MessageType.CompilationMessage, SubmissionStatus.CompilationError.ToString(), submision.SubmissionId.ToString(), "0");
                 }
             }
         }
 
-        private void UpdateSubmissionStatus(Guid submissionId, SubmissionStatus submissionStatus)
+        private void UpdateSubmissionStatus(Guid submissionId, SubmissionStatus submissionStatus, string messageOfCompilation)
         {
             var submissionToUpdate = _submissionRepository.GetItem(submissionId);
             if (submissionToUpdate != null)
             {
                 submissionToUpdate.StateOfSubmision = submissionStatus.ToString();
+                submissionToUpdate.MessageOfSubmision = messageOfCompilation;
                 _submissionRepository.Update(submissionToUpdate);
                 _submissionRepository.Save();
 
+            }
+        }
+
+        private async Task NotifyResponse(MessageType messageType, string message, string submissionId, string score)
+        {
+            if(messageType == MessageType.CompilationMessage)
+            {
+                var task = _hubContext.Clients.All.SendAsync("SubmissionMessage", message, submissionId);
+                if(task != null)
+                {
+                    await task;
+                }
+            }
+            else
+            {
+                var taskExecution = _hubContext.Clients.All.SendAsync("ExecutionMessage", message, submissionId, score);
+                if(taskExecution != null)
+                {
+                    await taskExecution;
+                }
             }
         }
         

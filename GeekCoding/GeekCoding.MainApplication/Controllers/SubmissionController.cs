@@ -58,7 +58,7 @@ namespace GeekCoding.MainApplication.Controllers
                 
             }
             _submisionRepository.Save();
-            return View(submisionList);
+            return View(submisionList.OrderByDescending(sub => sub.DataOfSubmision));
         }
 
         [HttpGet]
