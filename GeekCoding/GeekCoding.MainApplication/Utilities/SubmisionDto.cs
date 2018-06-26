@@ -12,6 +12,8 @@ namespace GeekCoding.MainApplication.Utilities
         public string UserName { get; set; }
         public string Content { get; set; }
         public string Compilator { get; set; }
+        public string MemoryLimit { get; set; }
+        public string TimeLimit { get; set; }
 
         
     }

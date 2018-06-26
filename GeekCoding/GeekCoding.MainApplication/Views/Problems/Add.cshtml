@@ -26,6 +26,16 @@
                 <textarea asp-for="ProblemContent"></textarea>
             </div>
             <div class="form-group">
+                <label asp-for="MemoryLimit" class="control-label"></label>
+                <input asp-for="MemoryLimit" class="form-control" />
+                <span asp-validation-for="MemoryLimit" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TimeLimit" class="control-label"></label>
+                <input asp-for="TimeLimit" class="form-control" />
+                <span asp-validation-for="TimeLimit" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="Dificulty" class="control-label"></label>
                 <input asp-for="Dificulty" class="form-control" />
                 <span asp-validation-for="Dificulty" class="text-danger"></span>

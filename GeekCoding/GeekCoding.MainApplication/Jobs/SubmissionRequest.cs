@@ -33,7 +33,7 @@ namespace GeekCoding.MainApplication.Jobs
             //update the status of the submission
             UpdateSubmissionStatus(submision.SubmissionId, SubmissionStatus.Compiling,string.Empty);
             //notify signal r to compiling status
-            await NotifyResponse(MessageType.CompilationMessage, SubmissionStatus.Compiling.ToString(), submision.SubmissionId.ToString(), "0");
+            //await NotifyResponse(MessageType.CompilationMessage, SubmissionStatus.Compiling.ToString(), submision.SubmissionId.ToString(), "0");
 
             var compilationModel = new CompilationModel { Content = submision.Content, Language = submision.Compilator,
                                                           ProblemName = submision.ProblemName, Username = submision.UserName };
@@ -64,26 +64,8 @@ namespace GeekCoding.MainApplication.Jobs
                     //await NotifyResponse(MessageType.CompilationMessage, SubmissionStatus.Compiled.ToString(), submision.SubmissionId.ToString(), "0");
 
 
-                    //call the api to execute... not done yet.. (linux)
-                    var executionModel = new ExecutionModel { MemoryLimit = "10000", ProblemName = compilationModel.ProblemName, UserName = submision.UserName, TimeLimit = "2" };
-                    var serializedExecutionData = JsonConvert.SerializeObject(executionModel);
-                    var httpContentExecution = new StringContent(serializedExecutionData, Encoding.UTF8, "application/json");
-                    var responseExecution = await client.PostAsync(_executionApi, httpContent);
-                    if (responseExecution.StatusCode == System.Net.HttpStatusCode.OK)
-                    {
-                        var resultEx = await responseExecution.Content.ReadAsStringAsync();
-                        //another signal r notification
-                        var taskExecution = _hubContext.Clients.All.SendAsync("ExecutionMessage", "Executat", submision.SubmissionId.ToString(), "70");
-                        if (taskExecution != null)
-                        {
-                            await taskExecution;
-                        }
-
-                        //notify with signalR
-                        //await NotifyResponse(MessageType.ExecutionMessage, SubmissionStatus.Executed.ToString(), submision.SubmissionId.ToString(), "70");
-
-                        var x = 2;
-                    }
+                    //call the api to execute
+                    await ExecuteSubmission(submision, _executionApi);
 
                 }
                 else
@@ -94,6 +76,32 @@ namespace GeekCoding.MainApplication.Jobs
                     //notify with signal r
                     //await NotifyResponse(MessageType.CompilationMessage, SubmissionStatus.CompilationError.ToString(), submision.SubmissionId.ToString(), "0");
                 }
+            }
+        }
+
+        private async Task ExecuteSubmission(SubmisionDto submision, string _executionApi)
+        {
+            var client = new HttpClient();
+
+            var executionModel = new ExecutionModel { MemoryLimit = submision.MemoryLimit, ProblemName = submision.ProblemName,
+                                                      UserName = submision.UserName, TimeLimit = submision.TimeLimit};
+            var serializedExecutionData = JsonConvert.SerializeObject(executionModel);
+            var httpContentExecution = new StringContent(serializedExecutionData, Encoding.UTF8, "application/json");
+            var responseExecution = await client.PostAsync(_executionApi, httpContentExecution);
+            if (responseExecution.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                var resultEx = await responseExecution.Content.ReadAsStringAsync();
+                //another signal r notification
+                var taskExecution = _hubContext.Clients.All.SendAsync("ExecutionMessage", "Executat", submision.SubmissionId.ToString(), "70");
+                if (taskExecution != null)
+                {
+                    await taskExecution;
+                }
+
+                //notify with signalR
+                //await NotifyResponse(MessageType.ExecutionMessage, SubmissionStatus.Executed.ToString(), submision.SubmissionId.ToString(), "70");
+
+                var x = 2;
             }
         }
 

@@ -19,6 +19,8 @@ namespace GeekCoding.Data.Models
         public string Dificulty { get; set; }
         public int GoodSubmision { get; set; }
         public int BadSubmission { get; set; }
+        public string MemoryLimit { get; set; }
+        public string TimeLimit { get; set; }
         public bool Visible { get; set; }
         [NotMapped]
         public double AverageAcceptance { get; set; }

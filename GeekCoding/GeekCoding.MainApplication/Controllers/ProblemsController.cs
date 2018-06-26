@@ -84,7 +84,9 @@ namespace GeekCoding.MainApplication.Controllers
                     ProblemName = problem.ProblemName,
                     ProblemContent = problem.ProblemContent,
                     Dificulty = problem.Dificulty,
-                    Visible = problem.Visible
+                    Visible = problem.Visible,
+                    MemoryLimit = problem.MemoryLimit,
+                    TimeLimit = problem.TimeLimit
 
                 };
 
@@ -155,10 +157,6 @@ namespace GeekCoding.MainApplication.Controllers
 
             //compile file (linux)
             
-            /*BackgroundJob.Enqueue<SubmissionRequest>(x => x.MakeSubmissionRequestAsync(compilationModel, _compilationApi,
-                                                                                       User.Identity.Name, _executionApi,
-                                                                                       submission.SubmisionId.ToString()));
-                                                                                       */
             //var client = new HttpClient();
             //var serializedData = JsonConvert.SerializeObject(compilationModel);
             //var httpContent = new StringContent(serializedData, Encoding.UTF8, "application/json");

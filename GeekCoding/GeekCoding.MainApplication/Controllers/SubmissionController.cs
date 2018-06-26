@@ -51,7 +51,10 @@ namespace GeekCoding.MainApplication.Controllers
                     var problem = _problemRepository.GetItem(submission.ProblemId);
                     string problemName = problem.ProblemName;
 
-                    var submissionDtoModel = new SubmisionDto { Compilator = submission.Compilator, ProblemName = problemName, Content = submission.SourceCode, SubmissionId = submission.SubmisionId, UserName = User.Identity.Name };
+                    var submissionDtoModel = new SubmisionDto { Compilator = submission.Compilator, ProblemName = problemName, Content = submission.SourceCode,
+                                                                SubmissionId = submission.SubmisionId, UserName = User.Identity.Name, MemoryLimit = problem.MemoryLimit,
+                                                                TimeLimit = problem.TimeLimit
+                                                                };
                     BackgroundJob.Enqueue<SubmissionRequest>(x => x.MakeSubmissionRequestAsync(submissionDtoModel, _compilationApi,_executionApi));
                     submission.JobQueued = true;
                 }
