@@ -6,6 +6,6 @@ namespace GeekCoding.Compilation.Execution
 {
     public interface IExecutionFile
     {
-        void Execute(string problemName, string userName, string language,string timeLimit, string memoryLimit);
+        string Execute(string problemName, string userName, string language,string timeLimit, string memoryLimit);
     }
 }

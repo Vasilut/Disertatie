@@ -9,6 +9,7 @@ namespace GeekCoding.Common
     public class FileGenerator : IFileGenerator
     {
         private const string SOURCES = "sources";
+        private const string ExecutionFileResult = "/tmp/results.txt";
         public void GenerateFile(string content, string language, string problemName, string userName)
         {
             //create directory
@@ -25,7 +26,7 @@ namespace GeekCoding.Common
 
             //create file
             var fileToCreate = Path.Combine(goodDirectory, sourceName);
-            if(File.Exists(fileToCreate))
+            if (File.Exists(fileToCreate))
             {
                 File.Delete(fileToCreate);
             }
@@ -59,6 +60,22 @@ namespace GeekCoding.Common
 
             var fileToCreate = Path.Combine(goodDirectory, sourceName);
             return fileToCreate;
+        }
+
+        public string ReadExectutionResult()
+        {
+            string line;
+            StringBuilder executionResult = new StringBuilder();
+            using (FileStream fs = new FileStream(ExecutionFileResult, FileMode.OpenOrCreate, FileAccess.Read, FileShare.None))
+            {
+                StreamReader fileReader = new StreamReader(fs, Encoding.UTF8);
+                while ((line = fileReader.ReadLine()) != null)
+                {
+                    executionResult.Append(line);
+                    executionResult.Append("---");
+                }
+            }
+            return executionResult.ToString();
         }
     }
 }

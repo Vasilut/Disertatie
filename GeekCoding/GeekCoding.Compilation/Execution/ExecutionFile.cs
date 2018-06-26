@@ -20,7 +20,7 @@ namespace GeekCoding.Compilation.Execution
             _fileGenerator = new FileGenerator();
         }
         
-        public void Execute(string problemName, string userName, string language, string timeLimit, string memoryLimit)
+        public string Execute(string problemName, string userName, string language, string timeLimit, string memoryLimit)
         {
             string sourcesDirectory = _fileGenerator.GetCurrentDirectory();
             string fileName = Builder.BuildProblemName(problemName, userName);
@@ -32,7 +32,8 @@ namespace GeekCoding.Compilation.Execution
             /*
              * 1. initialize the sandbox. ./isolate --init
              * 2. copy the file in sandbox environment: cp /usr/local/etc/sources/file /tmp/box/0/box/
-             * 3. run the file in sanxbox: ./isolate --cg --meta=/tmp/result.txt --cg-mem=5000 --time=1.5 --run -- program
+             * 3. run the file in sanxbox: ./isolate --cg --meta=/tmp/result.txt --cg-mem=5000 --time=1.5 --run -- program --> run over all the tests
+             * ./isolate --cg --meta=/tmp/muc2.txt --stdin=test1.in --stdout=fis1.out --cg-mem=3000 --time=2 --run -- prog
              * 4. clean sandbox: ./isolate --clean
              */
             var executionProcess = ExternalProcessCompileExecuter.Instance;
@@ -49,10 +50,13 @@ namespace GeekCoding.Compilation.Execution
             string executionArgument = LanguageHelper.SandboxArguments(timeLimit, memoryLimit, "/tmp/results.txt", fileToExecute);
             executionProcess.SandboxOperation(executionArgument, _isolateDirectory);
 
+            string executionResult = _fileGenerator.ReadExectutionResult();
 
             //step 4
             //string cleanArgument = LanguageHelper.GetSandboxOperation(_sandboxOperations[1]);
             //executionProcess.SandboxOperation(cleanArgument, _isolateDirectory);
+
+            return executionResult;
 
         }
     }

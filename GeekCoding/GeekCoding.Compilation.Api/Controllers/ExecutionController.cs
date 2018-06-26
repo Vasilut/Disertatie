@@ -19,7 +19,7 @@ namespace GeekCoding.Compilation.Api.Controllers
         [HttpGet]
         public IEnumerable<string> Get()
         {
-            return new string[] { "exec1LuciCB1", "exec2LuciCC2" };
+            return new string[] { "exec1LuciCB2", "exec2LuciCC3" };
         }
 
         [HttpPost]
@@ -28,8 +28,8 @@ namespace GeekCoding.Compilation.Api.Controllers
         {
             if (ModelState.IsValid)
             {
-                _executeFile.Execute(item.ProblemName, item.UserName, "C++", item.TimeLimit, item.MemoryLimit);
-                return "OK";
+                string executionRespone = _executeFile.Execute(item.ProblemName, item.UserName, "C++", item.TimeLimit, item.MemoryLimit);
+                return executionRespone;
             }
 
             return "Failed response";
