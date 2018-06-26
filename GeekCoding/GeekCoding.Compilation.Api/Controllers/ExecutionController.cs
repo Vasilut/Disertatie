@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
 using GeekCoding.Compilation.Api.Model;
 using GeekCoding.Compilation.Execution;
 using Microsoft.AspNetCore.Mvc;
@@ -19,7 +21,7 @@ namespace GeekCoding.Compilation.Api.Controllers
         [HttpGet]
         public IEnumerable<string> Get()
         {
-            return new string[] { "exec1LuciCB2", "exec2LuciCC3" };
+            return new string[] { "exec1LuciBlana", "exec2LuciTareDetot" };
         }
 
         [HttpPost]
@@ -28,8 +30,8 @@ namespace GeekCoding.Compilation.Api.Controllers
         {
             if (ModelState.IsValid)
             {
-                string executionRespone = _executeFile.Execute(item.ProblemName, item.UserName, "C++", item.TimeLimit, item.MemoryLimit);
-                return executionRespone;
+                Tuple<string,string> executionResponse = _executeFile.Execute(item.ProblemName, item.UserName, "C++", item.TimeLimit, item.MemoryLimit);
+                return new StringBuilder(executionResponse.Item1).Append(" ").Append("Response: ").Append(executionResponse.Item2).ToString();
             }
 
             return "Failed response";

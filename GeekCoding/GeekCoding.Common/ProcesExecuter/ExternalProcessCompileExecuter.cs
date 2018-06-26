@@ -76,7 +76,7 @@ namespace GeekCoding.Common.ProcesExecuter
 
         }
 
-        public void SandboxOperation(string argument, string workingDirectory)
+        public string SandboxOperation(string argument, string workingDirectory)
         {
             Process process = new Process();
             process.StartInfo.FileName = "/bin/bash";
@@ -87,9 +87,13 @@ namespace GeekCoding.Common.ProcesExecuter
             process.StartInfo.WorkingDirectory = workingDirectory;
             process.Start();
 
+            string output = process.StandardOutput.ReadToEnd();
+
             Console.WriteLine("");
             process.WaitForExit();
             process.Close();
+
+            return output;
         }
     }
 }

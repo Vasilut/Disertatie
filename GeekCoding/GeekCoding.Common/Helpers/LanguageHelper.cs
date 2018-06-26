@@ -116,12 +116,12 @@ namespace GeekCoding.Common.Helpers
             return string.Empty;
         }
 
-        public static string SandboxArguments(string timeLimit, string memoryLimit, string resultFile, string fileToExecute)
+        public static string SandboxArguments(string timeLimit, string memoryLimit, string resultFile, string fileToExecute, string inputFile, string outputFile)
         {
             //result file = /tmp/logo3.txt
             //memory in kb (for example 4600)
             //time 1.5 seconds
-            return $"./isolate --cg --meta={resultFile} --cg-mem={memoryLimit} --time={timeLimit} --run -- {fileToExecute}";
+            return $"./isolate --cg --meta={resultFile} --stdin={inputFile} --stdout={outputFile} --cg-mem={memoryLimit} --time={timeLimit} --run -- {fileToExecute}";
         }
     }
 }
