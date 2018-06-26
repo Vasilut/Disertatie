@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Text;
 
 namespace GeekCoding.Common.ProcesExecuter
@@ -9,6 +10,7 @@ namespace GeekCoding.Common.ProcesExecuter
     //implement like singleton
     public sealed class ExternalProcessCompileExecuter
     {
+        private List<string> _errorPosibilities = new List<string> { "error", "fatal error " };
         private static readonly ExternalProcessCompileExecuter instance = new ExternalProcessCompileExecuter();
 
         static ExternalProcessCompileExecuter()
@@ -53,8 +55,17 @@ namespace GeekCoding.Common.ProcesExecuter
 
             if(!string.IsNullOrEmpty(err))
             {
-                verdict = Verdict.ERROR;
-                sb.Append("CompilationErrors: ").Append(err);
+                bool b = _errorPosibilities.Any(s => err.Contains(s));
+                if (b)
+                {
+                    verdict = Verdict.ERROR;
+                    sb.Append("CompilationErrors: ").Append(err);
+                }
+                else
+                {
+                    verdict = Verdict.SUCCESS;
+                    sb.Append("Output: ").Append(err);
+                }
             }
             else
             {

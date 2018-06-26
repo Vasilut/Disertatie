@@ -33,7 +33,7 @@ namespace GeekCoding.MainApplication.Jobs
             //update the status of the submission
             UpdateSubmissionStatus(submision.SubmissionId, SubmissionStatus.Compiling,string.Empty);
             //notify signal r to compiling status
-            //await NotifyResponse(MessageType.CompilationMessage, SubmissionStatus.Compiling.ToString(), submision.SubmissionId.ToString(), "0");
+            await NotifyResponse(MessageType.CompilationMessage, SubmissionStatus.Compiling.ToString(), submision.SubmissionId.ToString(), "0");
 
             var compilationModel = new CompilationModel { Content = submision.Content, Language = submision.Compilator,
                                                           ProblemName = submision.ProblemName, Username = submision.UserName };

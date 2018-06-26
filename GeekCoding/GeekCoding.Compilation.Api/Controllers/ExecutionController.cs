@@ -19,7 +19,7 @@ namespace GeekCoding.Compilation.Api.Controllers
         [HttpGet]
         public IEnumerable<string> Get()
         {
-            return new string[] { "exec1LuciCB", "exec2LuciCC" };
+            return new string[] { "exec1LuciCB1", "exec2LuciCC2" };
         }
 
         [HttpPost]

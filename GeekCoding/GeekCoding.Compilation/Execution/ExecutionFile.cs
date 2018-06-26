@@ -14,7 +14,7 @@ namespace GeekCoding.Compilation.Execution
         private const string _isolateDirectory = "/usr/local/bin";
         private const string _sandboxDirectory = "/tmp/box/0/box/";
         private string[] _sandboxOperations = { "INIT", "CLEAN" };
-        private const string _downloadDirectory = "Downloads";
+        private const string _homeDirectory = "/home";
         public ExecutionFile()
         {
             _fileGenerator = new FileGenerator();
@@ -42,8 +42,8 @@ namespace GeekCoding.Compilation.Execution
             executionProcess.SandboxOperation(initArgument, _isolateDirectory);
 
             //step 2
-            string copyArgument = $"cp {fullFileExecutable} {_sandboxDirectory}";
-            executionProcess.SandboxOperation(copyArgument, _downloadDirectory);
+            string copyArgument = $"cp -a {fullFileExecutable} {_sandboxDirectory}";
+            executionProcess.SandboxOperation(copyArgument, _homeDirectory);
 
             //step 3
             string executionArgument = LanguageHelper.SandboxArguments(timeLimit, memoryLimit, "/tmp/results.txt", fileToExecute);
@@ -51,8 +51,8 @@ namespace GeekCoding.Compilation.Execution
 
 
             //step 4
-            string cleanArgument = LanguageHelper.GetSandboxOperation(_sandboxOperations[1]);
-            executionProcess.SandboxOperation(cleanArgument, _isolateDirectory);
+            //string cleanArgument = LanguageHelper.GetSandboxOperation(_sandboxOperations[1]);
+            //executionProcess.SandboxOperation(cleanArgument, _isolateDirectory);
 
         }
     }
