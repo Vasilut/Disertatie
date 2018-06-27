@@ -97,7 +97,7 @@ namespace GeekCoding.MainApplication.Jobs
                 List<string> tests = new List<string>();
                 tests.Add(resultExecution);
                 var serializedData = _serializeTests.SerializeReponseTest(tests);
-                //save in db
+                //save in db the serializedData
 
                 //another signal r notification
                 var taskExecution = _hubContext.Clients.All.SendAsync("ExecutionMessage", "Executat", submision.SubmissionId.ToString(), serializedData.Item2.ToString());

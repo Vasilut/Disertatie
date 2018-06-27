@@ -11,8 +11,9 @@ namespace GeekCoding.Data.Models
         public virtual DbSet<ProgresStatus> ProgresStatus { get; set; }
         public virtual DbSet<Solution> Solution { get; set; }
         public virtual DbSet<Submision> Submision { get; set; }
+        public virtual DbSet<Evaluation> Evaluation { get; set; }
 
-        public EvaluatorContext(DbContextOptions options):base(options)
+        public EvaluatorContext(DbContextOptions options) : base(options)
         {
 
         }
@@ -30,7 +31,7 @@ namespace GeekCoding.Data.Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            
+
             modelBuilder.Entity<Problem>(entity =>
             {
                 entity.Property(e => e.ProblemId).ValueGeneratedNever();
@@ -76,6 +77,19 @@ namespace GeekCoding.Data.Models
                     .HasForeignKey(d => d.ProblemId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__Solution__Proble__3A81B327");
+            });
+
+            modelBuilder.Entity<Evaluation>(entity =>
+            {
+                entity.Property(e => e.EvaluationId).ValueGeneratedNever();
+
+                entity.Property(e => e.EvaluationResult).IsRequired();
+
+                entity.HasOne(d => d.Submision)
+                    .WithMany(p => p.Evaluation)
+                    .HasForeignKey(d => d.SubmisionId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Evaluatio__Submi__36B12243");
             });
 
             modelBuilder.Entity<Submision>(entity =>

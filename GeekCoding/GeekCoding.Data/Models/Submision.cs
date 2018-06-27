@@ -6,6 +6,10 @@ namespace GeekCoding.Data.Models
 {
     public partial class Submision
     {
+        public Submision()
+        {
+            Evaluation = new HashSet<Evaluation>();
+        }
         public Guid SubmisionId { get; set; }
         public Guid ProblemId { get; set; }
         public string UserName { get; set; }
@@ -20,6 +24,7 @@ namespace GeekCoding.Data.Models
         public Problem Problem { get; set; }
         public bool? JobQueued { get; set; }
         public string SourceCode { get; set; }
+        public ICollection<Evaluation> Evaluation { get; set; }
 
     }
 }
