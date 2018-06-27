@@ -45,6 +45,7 @@ namespace GeekCoding.MainApplication
             services.AddScoped<IProblemRepository, ProblemRepository>();
             services.AddScoped<IMessageBuilder, EmailBuilder>();
             services.AddScoped<ISolutionRepository, SolutionRepository>();
+            services.AddScoped<IEvaluationRepository, EvaluationRepository>();
             services.AddScoped<ISubmisionRepository, SubmisionRepository>();
             services.AddScoped<IProgressStatusRepository, ProgresStatusRepository>();
             services.AddScoped<ISerializeTests, SerializeTests>();

@@ -21,15 +21,17 @@ namespace GeekCoding.MainApplication.Controllers
         private ISubmisionRepository _submisionRepository;
         private IConfiguration _configuration;
         private IProblemRepository _problemRepository;
+        private IEvaluationRepository _evaluationRepository;
         private string _compilationApi;
         private string _executionApi;
 
         public SubmissionController(ISubmisionRepository submisionRepository, IConfiguration configuration,
-                                    IProblemRepository problemRepository)
+                                    IProblemRepository problemRepository, IEvaluationRepository evaluationRepository)
         {
             _submisionRepository = submisionRepository;
             _configuration = configuration;
             _problemRepository = problemRepository;
+            _evaluationRepository = evaluationRepository;
 
             //intialize compilation and running api
             _compilationApi = _configuration.GetSection("Api")["CompilationApi"];

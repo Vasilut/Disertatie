@@ -19,14 +19,17 @@ namespace GeekCoding.MainApplication.Jobs
     {
         private SubmissionHub _submissionHub;
         private ISubmisionRepository _submissionRepository;
+        private IEvaluationRepository _evaluationRepository;
         private IHubContext<SubmissionHub> _hubContext;
         private ISerializeTests _serializeTests;
 
         public SubmissionRequest(SubmissionHub submissionHub, ISubmisionRepository submissionRepository,
-                                 IHubContext<SubmissionHub> hubContext, ISerializeTests serializeTests)
+                                 IHubContext<SubmissionHub> hubContext, ISerializeTests serializeTests,
+                                 IEvaluationRepository evaluationRepository)
         {
             _submissionHub = submissionHub;
             _submissionRepository = submissionRepository;
+            _evaluationRepository = evaluationRepository;
             _hubContext = hubContext;
             _serializeTests = serializeTests;
            
@@ -91,6 +94,7 @@ namespace GeekCoding.MainApplication.Jobs
             var serializedExecutionData = JsonConvert.SerializeObject(executionModel);
             var httpContentExecution = new StringContent(serializedExecutionData, Encoding.UTF8, "application/json");
             var responseExecution = await client.PostAsync(_executionApi, httpContentExecution);
+
             if (responseExecution.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 var resultExecution = await responseExecution.Content.ReadAsStringAsync();
@@ -98,6 +102,14 @@ namespace GeekCoding.MainApplication.Jobs
                 tests.Add(resultExecution);
                 var serializedData = _serializeTests.SerializeReponseTest(tests);
                 //save in db the serializedData
+                var evaluationModel = new Evaluation
+                {
+                    EvaluationId = Guid.NewGuid(),
+                    EvaluationResult = serializedData.Item1,
+                    Score = serializedData.Item2,
+                    SubmisionId = submision.SubmissionId
+                };
+                await _evaluationRepository.AddAsync(evaluationModel);
 
                 //another signal r notification
                 var taskExecution = _hubContext.Clients.All.SendAsync("ExecutionMessage", "Executat", submision.SubmissionId.ToString(), serializedData.Item2.ToString());
@@ -106,7 +118,7 @@ namespace GeekCoding.MainApplication.Jobs
                     await taskExecution;
                 }
                 //notify with signalR
-                //await NotifyResponse(MessageType.ExecutionMessage, SubmissionStatus.Executed.ToString(), submision.SubmissionId.ToString(), "70");
+                //await NotifyResponse(MessageType.ExecutionMessage, SubmissionStatus.Executed.ToString(), submision.SubmissionId.ToString(), serializedData.Item2.ToString());
 
                 var x = 2;
             }
