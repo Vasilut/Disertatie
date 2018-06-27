@@ -1,6 +1,7 @@
 ﻿using GeekCoding.Compilation.Api.Model;
 using GeekCoding.Data.Models;
 using GeekCoding.MainApplication.Hubs;
+using GeekCoding.MainApplication.ResponseModelDTO;
 using GeekCoding.MainApplication.Utilities;
 using GeekCoding.Repository.Interfaces;
 using Microsoft.AspNetCore.SignalR;
@@ -45,7 +46,7 @@ namespace GeekCoding.MainApplication.Jobs
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 var result = await response.Content.ReadAsStringAsync();
-                var content = JsonConvert.DeserializeObject<ResponseModel>(result);
+                var content = JsonConvert.DeserializeObject<ResponseCompilationModel>(result);
 
                 //update with signal r the response for the submission
                 //await NotifyResponse(MessageType.CompilationMessage, SubmissionStatus.Compiled.ToString(), submision.SubmissionId.ToString(), "0");
@@ -90,7 +91,8 @@ namespace GeekCoding.MainApplication.Jobs
             var responseExecution = await client.PostAsync(_executionApi, httpContentExecution);
             if (responseExecution.StatusCode == System.Net.HttpStatusCode.OK)
             {
-                var resultEx = await responseExecution.Content.ReadAsStringAsync();
+                var resultExecution = await responseExecution.Content.ReadAsStringAsync();
+
                 //another signal r notification
                 var taskExecution = _hubContext.Clients.All.SendAsync("ExecutionMessage", "Executat", submision.SubmissionId.ToString(), "70");
                 if (taskExecution != null)

@@ -4,6 +4,7 @@ using System.Text;
 using GeekCoding.Compilation.Api.Model;
 using GeekCoding.Compilation.Execution;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace GeekCoding.Compilation.Api.Controllers
 {
@@ -21,7 +22,7 @@ namespace GeekCoding.Compilation.Api.Controllers
         [HttpGet]
         public IEnumerable<string> Get()
         {
-            return new string[] { "exec1LuciBlana", "exec2LuciTareDetot" };
+            return new string[] { "exec1LuciBlanaoTare", "exec2LuciTareDetotblanaoGood" };
         }
 
         [HttpPost]

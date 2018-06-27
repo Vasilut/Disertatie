@@ -31,7 +31,7 @@ namespace GeekCoding.Compilation.Api.Controllers
             if (ModelState.IsValid)
             {
                 var response = _compilationFile.CompileFile(item.Content, item.Language, item.ProblemName, item.Username);
-                return JsonConvert.SerializeObject(new ResponseModel {
+                return JsonConvert.SerializeObject(new ResponseCompilationModel {
                                                    CompilationResponse = response.Item1.ToString(),
                                                    OutputMessage = response.Item2 });
             }
