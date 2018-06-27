@@ -33,7 +33,7 @@ namespace GeekCoding.MainApplication.Controllers
         private string _compilationApi;
         private string _executionApi;
 
-        public ProblemsController(IProblemRepository problemRepository, ISubmisionRepository submisionRepository, 
+        public ProblemsController(IProblemRepository problemRepository, ISubmisionRepository submisionRepository,
                                   ISolutionRepository solutionRepository, IConfiguration configuration)
         {
             _problemRepository = problemRepository;
@@ -133,7 +133,7 @@ namespace GeekCoding.MainApplication.Controllers
         public async Task<IActionResult> ProblemExecute([FromForm] FileExecutionViewModel model)
         {
             //read the content of the file
-            Tuple<string,long> fileContent = await FileHelpers.ProcessFormFile(model.File, ModelState);
+            Tuple<string, long> fileContent = await FileHelpers.ProcessFormFile(model.File, ModelState);
             double sizeOfFile = (fileContent.Item2) % 1000;
             var compilationModel = new CompilationModel { Content = fileContent.Item1, Language = model.Compilator, ProblemName = model.ProblemName, Username = User.Identity.Name };
 
@@ -155,39 +155,9 @@ namespace GeekCoding.MainApplication.Controllers
 
             await _submisionRepository.AddAsync(submission);
 
-            //compile file (linux)
-            
-            //var client = new HttpClient();
-            //var serializedData = JsonConvert.SerializeObject(compilationModel);
-            //var httpContent = new StringContent(serializedData, Encoding.UTF8, "application/json");
-
-            //var response = await client.PostAsync(_compilationApi, httpContent);
-            //if (response.StatusCode == System.Net.HttpStatusCode.OK)
-            //{
-            //    var result = await response.Content.ReadAsStringAsync();
-            //    var content = JsonConvert.DeserializeObject<ResponseModel>(result);
-
-                
-
-                //if (content.CompilationResponse == "SUCCESS")
-                //{
-                //    //call the api to execute... not done yet.. (linux)
-                //    var executionModel = new ExecutionModel { MemoryLimit = "10000", ProblemName = model.ProblemName, UserName = User.Identity.Name, TimeLimit = "2" };
-                //    var serializedExecutionData = JsonConvert.SerializeObject(executionModel);
-                //    var httpContentExecution = new StringContent(serializedExecutionData, Encoding.UTF8, "application/json");
-                //    var responseExecution = await client.PostAsync(_executionApi, httpContent);
-                //    if(responseExecution.StatusCode == System.Net.HttpStatusCode.OK)
-                //    {
-                //        var resultEx = await responseExecution.Content.ReadAsStringAsync();
-                //        var x = 2;
-                //    }
-
-                //}
-                
-
-                ViewData["subbmited"] = true;
-                return RedirectToAction("GetProblem", new { id = Guid.Parse(model.ProblemId) });
-            }
+            ViewData["subbmited"] = true;
+            return RedirectToAction("GetProblem", new { id = Guid.Parse(model.ProblemId) });
+        }
 
         //    return RedirectToAction("GetProblem", new { id = Guid.Parse(model.ProblemId) });
         //}

@@ -20,12 +20,15 @@ namespace GeekCoding.MainApplication.Jobs
         private SubmissionHub _submissionHub;
         private ISubmisionRepository _submissionRepository;
         private IHubContext<SubmissionHub> _hubContext;
+        private ISerializeTests _serializeTests;
 
-        public SubmissionRequest(SubmissionHub submissionHub, ISubmisionRepository submissionRepository, IHubContext<SubmissionHub> hubContext)
+        public SubmissionRequest(SubmissionHub submissionHub, ISubmisionRepository submissionRepository,
+                                 IHubContext<SubmissionHub> hubContext, ISerializeTests serializeTests)
         {
             _submissionHub = submissionHub;
             _submissionRepository = submissionRepository;
             _hubContext = hubContext;
+            _serializeTests = serializeTests;
            
         }
         public async Task MakeSubmissionRequestAsync(SubmisionDto submision, string _compilationApi,
@@ -63,8 +66,7 @@ namespace GeekCoding.MainApplication.Jobs
 
                     //notify with signal r
                     //await NotifyResponse(MessageType.CompilationMessage, SubmissionStatus.Compiled.ToString(), submision.SubmissionId.ToString(), "0");
-
-
+                    
                     //call the api to execute
                     await ExecuteSubmission(submision, _executionApi);
 
@@ -92,14 +94,16 @@ namespace GeekCoding.MainApplication.Jobs
             if (responseExecution.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 var resultExecution = await responseExecution.Content.ReadAsStringAsync();
-
+                List<string> tests = new List<string>();
+                tests.Add(resultExecution);
+                var serializedData = _serializeTests.SerializeReponseTest(tests);
+                //save in db
                 //another signal r notification
-                var taskExecution = _hubContext.Clients.All.SendAsync("ExecutionMessage", "Executat", submision.SubmissionId.ToString(), "70");
+                var taskExecution = _hubContext.Clients.All.SendAsync("ExecutionMessage", "Executat", submision.SubmissionId.ToString(), serializedData.Item2.ToString());
                 if (taskExecution != null)
                 {
                     await taskExecution;
                 }
-
                 //notify with signalR
                 //await NotifyResponse(MessageType.ExecutionMessage, SubmissionStatus.Executed.ToString(), submision.SubmissionId.ToString(), "70");
 

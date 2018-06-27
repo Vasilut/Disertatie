@@ -15,6 +15,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.SignalR;
 using GeekCoding.MainApplication.Hubs;
+using GeekCoding.MainApplication.Utilities;
 
 namespace GeekCoding.MainApplication
 {
@@ -46,6 +47,7 @@ namespace GeekCoding.MainApplication
             services.AddScoped<ISolutionRepository, SolutionRepository>();
             services.AddScoped<ISubmisionRepository, SubmisionRepository>();
             services.AddScoped<IProgressStatusRepository, ProgresStatusRepository>();
+            services.AddScoped<ISerializeTests, SerializeTests>();
             services.AddTransient<SubmissionHub>();
 
             services.AddSignalR();
