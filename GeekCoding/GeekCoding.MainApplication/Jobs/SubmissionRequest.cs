@@ -98,6 +98,7 @@ namespace GeekCoding.MainApplication.Jobs
                 tests.Add(resultExecution);
                 var serializedData = _serializeTests.SerializeReponseTest(tests);
                 //save in db
+
                 //another signal r notification
                 var taskExecution = _hubContext.Clients.All.SendAsync("ExecutionMessage", "Executat", submision.SubmissionId.ToString(), serializedData.Item2.ToString());
                 if (taskExecution != null)

@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace GeekCoding.MainApplication.Utilities
@@ -31,6 +32,8 @@ namespace GeekCoding.MainApplication.Utilities
                     string executionOutput = execution[2];
                     
                     var options = executionResult.Split(new string[] { "---" }, StringSplitOptions.None);
+                    Regex rg = new Regex(@"\w+");
+                    bool firstValue = true;
                     foreach (var metaParameter in options)
                     {
                         var splitOption = metaParameter.Split(':');
@@ -38,6 +41,15 @@ namespace GeekCoding.MainApplication.Utilities
                         {
                             var key = splitOption[0];
                             var val = splitOption[1];
+
+                            if (firstValue)
+                            {
+                                Match match = rg.Match(splitOption[0]);
+                                key = match.Value;
+                                firstValue = false;
+                                _responseDictionary.Add(key, val);
+                                continue;
+                            }
 
                             _responseDictionary.Add(key, val);
                         }
@@ -58,7 +70,7 @@ namespace GeekCoding.MainApplication.Utilities
                         testModel.ExecutionTime = _responseDictionary["time"];
                         testModel.MemoryUsed = _responseDictionary["cg-mem"];
 
-                        if (executionOutput == "Ok!")
+                        if (executionOutput.Contains("Ok!"))
                         {
                             testModel.Point = 10;
                             testModel.Message = "Ok!";
@@ -90,7 +102,6 @@ namespace GeekCoding.MainApplication.Utilities
                         testModel.ExecutionTime = "Time Limit Exceeeded!";
                         testModel.Message = "Time Limit Exceeded!";
                         testModel.MemoryUsed = _responseDictionary["cg-mem"];
-                        testModel.Point = 0;
                         break;
                     }
                 case "SG":
@@ -98,7 +109,6 @@ namespace GeekCoding.MainApplication.Utilities
                         testModel.ExecutionTime = "Memory limit exceeeded!";
                         testModel.Message = "Caught fatal signal 9!";
                         testModel.MemoryUsed = "Caught fatal signal 9";
-                        testModel.Point = 0;
                         break;
                     }
                 case "RE":
@@ -106,7 +116,6 @@ namespace GeekCoding.MainApplication.Utilities
                         testModel.ExecutionTime = "Runtime Error!";
                         testModel.Message = "Runtime Error!";
                         testModel.MemoryUsed = "Runtime Error";
-                        testModel.Point = 0;
                         break;
                     }
             }
