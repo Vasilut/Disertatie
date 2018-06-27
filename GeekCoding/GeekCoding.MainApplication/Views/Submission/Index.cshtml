@@ -33,10 +33,7 @@
                 <th>
                     @Html.DisplayNameFor(model => model.Compilator)
                 </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.MessageOfSubmision)
-                </th>
-
+                
                 <th></th>
             </tr>
         </thead>
@@ -62,10 +59,7 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.Compilator)
                     </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.MessageOfSubmision)
-                    </td>
-
+                    
                     <td>
 
                         <a asp-action="Details" asp-route-id="@item.SubmisionId">Details</a>

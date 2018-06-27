@@ -42,6 +42,7 @@ namespace GeekCoding.Compilation.Execution
              * 3. copy the "test.in" files in sandbox environment
              * 4. run the file in sanxbox: ./isolate --cg --meta=/tmp/result.txt --cg-mem=5000 --time=1.5 --run -- program
              * ./isolate --cg --meta=/tmp/muc2.txt --stdin=test1.in --stdout=fis1.out --cg-mem=3000 --time=2 --run -- prog  --> run over all the tests this will be ran
+             * steps 3 and 4 need to be ran over all the tests.
              * 5. clean sandbox: ./isolate --clean
              */
             var executionProcess = ExternalProcessCompileExecuter.Instance;
@@ -63,14 +64,14 @@ namespace GeekCoding.Compilation.Execution
             executionProcess.SandboxOperation(executionArgument, _isolateDirectory);
             string executionResult = _fileGenerator.ReadExectutionResult();
 
-            //run bash script to compare the ok file with the generated one to see the results.
+            //step 5run bash script to compare the ok file with the generated one to see the results.
             string argumentBash = $"sh prog.sh {outFileGeneratedPath} {outFileOkPath}";
             string executionResponse = executionProcess.SandboxOperation(argumentBash, sourcesDirectory);
 
 
-            //step 5
-            //string cleanArgument = LanguageHelper.GetSandboxOperation(_sandboxOperations[1]);
-            //executionProcess.SandboxOperation(cleanArgument, _isolateDirectory);
+            //step 6
+            string cleanArgument = LanguageHelper.GetSandboxOperation(_sandboxOperations[1]);
+            executionProcess.SandboxOperation(cleanArgument, _isolateDirectory);
 
             return new Tuple<string,string>(executionResult, executionResponse);
 
