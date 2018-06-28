@@ -7,5 +7,6 @@ namespace GeekCoding.Repository.Interfaces
 {
     public interface IEvaluationRepository : IRepositoryBase<Evaluation>
     {
+        Evaluation GetItemBySubmission(Guid submissionId);
     }
 }

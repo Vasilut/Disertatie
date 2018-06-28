@@ -32,18 +32,22 @@ namespace GeekCoding.MainApplication.Jobs
             _evaluationRepository = evaluationRepository;
             _hubContext = hubContext;
             _serializeTests = serializeTests;
-           
+
         }
         public async Task MakeSubmissionRequestAsync(SubmisionDto submision, string _compilationApi,
                                                      string _executionApi)
         {
-            //update the status of the submission
-            UpdateSubmissionStatus(submision.SubmissionId, SubmissionStatus.Compiling,string.Empty);
+            UpdateSubmissionStatus(submision.SubmissionId, SubmissionStatus.Compiling, string.Empty,0);
             //notify signal r to compiling status
             //await NotifyResponse(MessageType.CompilationMessage, SubmissionStatus.Compiling.ToString(), submision.SubmissionId.ToString(), "0");
 
-            var compilationModel = new CompilationModel { Content = submision.Content, Language = submision.Compilator,
-                                                          ProblemName = submision.ProblemName, Username = submision.UserName };
+            var compilationModel = new CompilationModel
+            {
+                Content = submision.Content,
+                Language = submision.Compilator,
+                ProblemName = submision.ProblemName,
+                Username = submision.UserName
+            };
             var client = new HttpClient();
             var serializedData = JsonConvert.SerializeObject(compilationModel);
             var httpContent = new StringContent(serializedData, Encoding.UTF8, "application/json");
@@ -56,28 +60,26 @@ namespace GeekCoding.MainApplication.Jobs
 
                 //update with signal r the response for the submission
                 //await NotifyResponse(MessageType.CompilationMessage, SubmissionStatus.Compiled.ToString(), submision.SubmissionId.ToString(), "0");
-                var task =  _hubContext.Clients.All.SendAsync("SubmissionMessage", "Salut Dinamo", submision.SubmissionId.ToString());
-                if(task != null)
+                var task = _hubContext.Clients.All.SendAsync("SubmissionMessage", "Salut Dinamo", submision.SubmissionId.ToString());
+                if (task != null)
                 {
                     await task;
                 }
 
                 if (content.CompilationResponse == "SUCCESS")
                 {
-                    //update the status of the submission
-                    UpdateSubmissionStatus(submision.SubmissionId, SubmissionStatus.Compiled,content.CompilationResponse);
+                    UpdateSubmissionStatus(submision.SubmissionId, SubmissionStatus.Compiled, content.OutputMessage,0);
 
                     //notify with signal r
                     //await NotifyResponse(MessageType.CompilationMessage, SubmissionStatus.Compiled.ToString(), submision.SubmissionId.ToString(), "0");
-                    
+
                     //call the api to execute
                     await ExecuteSubmission(submision, _executionApi);
 
                 }
                 else
                 {
-                    //update status not compiled
-                    UpdateSubmissionStatus(submision.SubmissionId, SubmissionStatus.CompilationError,content.OutputMessage);
+                    UpdateSubmissionStatus(submision.SubmissionId, SubmissionStatus.CompilationError, content.OutputMessage,0);
 
                     //notify with signal r
                     //await NotifyResponse(MessageType.CompilationMessage, SubmissionStatus.CompilationError.ToString(), submision.SubmissionId.ToString(), "0");
@@ -89,8 +91,13 @@ namespace GeekCoding.MainApplication.Jobs
         {
             var client = new HttpClient();
 
-            var executionModel = new ExecutionModel { MemoryLimit = submision.MemoryLimit, ProblemName = submision.ProblemName,
-                                                      UserName = submision.UserName, TimeLimit = submision.TimeLimit};
+            var executionModel = new ExecutionModel
+            {
+                MemoryLimit = submision.MemoryLimit,
+                ProblemName = submision.ProblemName,
+                UserName = submision.UserName,
+                TimeLimit = submision.TimeLimit
+            };
             var serializedExecutionData = JsonConvert.SerializeObject(executionModel);
             var httpContentExecution = new StringContent(serializedExecutionData, Encoding.UTF8, "application/json");
             var responseExecution = await client.PostAsync(_executionApi, httpContentExecution);
@@ -111,6 +118,7 @@ namespace GeekCoding.MainApplication.Jobs
                 };
                 await _evaluationRepository.AddAsync(evaluationModel);
 
+                UpdateSubmissionStatus(submision.SubmissionId, SubmissionStatus.Executed, string.Empty, serializedData.Item2);
                 //another signal r notification
                 var taskExecution = _hubContext.Clients.All.SendAsync("ExecutionMessage", "Executat", submision.SubmissionId.ToString(), serializedData.Item2.ToString());
                 if (taskExecution != null)
@@ -124,13 +132,17 @@ namespace GeekCoding.MainApplication.Jobs
             }
         }
 
-        private void UpdateSubmissionStatus(Guid submissionId, SubmissionStatus submissionStatus, string messageOfCompilation)
+        private void UpdateSubmissionStatus(Guid submissionId, SubmissionStatus submissionStatus, string messageOfCompilation, int score)
         {
             var submissionToUpdate = _submissionRepository.GetItem(submissionId);
             if (submissionToUpdate != null)
             {
                 submissionToUpdate.StateOfSubmision = submissionStatus.ToString();
-                submissionToUpdate.MessageOfSubmision = messageOfCompilation;
+                submissionToUpdate.Score = score;
+                if (messageOfCompilation != string.Empty)
+                {
+                    submissionToUpdate.MessageOfSubmision = messageOfCompilation;
+                }
                 _submissionRepository.Update(submissionToUpdate);
                 _submissionRepository.Save();
 
@@ -139,10 +151,10 @@ namespace GeekCoding.MainApplication.Jobs
 
         private async Task NotifyResponse(MessageType messageType, string message, string submissionId, string score)
         {
-            if(messageType == MessageType.CompilationMessage)
+            if (messageType == MessageType.CompilationMessage)
             {
                 var task = _hubContext.Clients.All.SendAsync("SubmissionMessage", message, submissionId);
-                if(task != null)
+                if (task != null)
                 {
                     await task;
                 }
@@ -150,12 +162,12 @@ namespace GeekCoding.MainApplication.Jobs
             else
             {
                 var taskExecution = _hubContext.Clients.All.SendAsync("ExecutionMessage", message, submissionId, score);
-                if(taskExecution != null)
+                if (taskExecution != null)
                 {
                     await taskExecution;
                 }
             }
         }
-        
+
     }
 }

@@ -25,5 +25,10 @@ namespace GeekCoding.Repository
         {
             return RepositoryContext.Evaluation.Where(x => x.EvaluationId == id).Include(x => x.Submision).FirstOrDefault();
         }
+
+        public Evaluation GetItemBySubmission(Guid submissionId)
+        {
+            return RepositoryContext.Evaluation.Include(x => x.Submision).Where(x => x.SubmisionId == submissionId).FirstOrDefault();
+        }
     }
 }

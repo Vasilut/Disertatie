@@ -7,11 +7,14 @@ using GeekCoding.Data.Models;
 using GeekCoding.MainApplication.Hubs;
 using GeekCoding.MainApplication.Jobs;
 using GeekCoding.MainApplication.Utilities;
+using GeekCoding.MainApplication.Utilities.DTO;
+using GeekCoding.MainApplication.ViewModels;
 using GeekCoding.Repository.Interfaces;
 using Hangfire;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 
 namespace GeekCoding.MainApplication.Controllers
 {
@@ -81,7 +84,37 @@ namespace GeekCoding.MainApplication.Controllers
         public async Task<IActionResult> Details(Guid id)
         {
             var submision = await _submisionRepository.GetAsync(id);
-            return View(submision);
+            var problem = submision.Problem;
+            var evaluationResult = _evaluationRepository.GetItemBySubmission(id);
+            var lstEvaluationResult = EvaluationList(evaluationResult);
+           
+            SubmisionDetailsViewModel sd = new SubmisionDetailsViewModel
+            {
+                UserName = submision.UserName,
+                Data = submision.DataOfSubmision,
+                ProblemName = problem.ProblemName,
+                Status = submision.StateOfSubmision,
+                Compilator = submision.Compilator,
+                SourceSize = submision.SourceSize,
+                ProblemTimeLimit = problem.TimeLimit,
+                ProblemMemoryLimit = problem.MemoryLimit,
+                Scor = submision.Score,
+                EvaluationResult = lstEvaluationResult,
+                MessageOfSubmission = submision.MessageOfSubmision
+                
+            };
+
+            return View(sd);
+        }
+
+        private List<TestModelDto> EvaluationList(Evaluation evaluation)
+        {
+            if(evaluation == null)
+            {
+                return new List<TestModelDto>();
+            }
+            var list = JsonConvert.DeserializeObject<List<TestModelDto>>(evaluation.EvaluationResult);
+            return list;
         }
     }
 }
