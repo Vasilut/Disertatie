@@ -113,7 +113,8 @@ namespace GeekCoding.MainApplication.Controllers
         public async Task<IActionResult> Submissions(Guid id)
         {
             var listOfSubmission = await _submisionRepository.GetAllAsync();
-            var submisionList = listOfSubmission.Where(sub => sub.ProblemId == id).ToList();
+            var submisionList = listOfSubmission.Where(sub => sub.ProblemId == id && sub.UserName == User.Identity.Name)
+                                                .OrderByDescending(sub => sub.DataOfSubmision).ToList();
 
             return View(submisionList);
         }

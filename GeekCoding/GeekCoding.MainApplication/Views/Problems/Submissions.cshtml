@@ -1,75 +1,118 @@
 ﻿@model IEnumerable<GeekCoding.Data.Models.Submision>
 
-@if(User.Identity.IsAuthenticated)
+@if (User.Identity.IsAuthenticated)
 {
-<table class="table table-striped">
-    <thead>
-        <tr class="reactable-column-header">
-            <th>
-                @Html.DisplayNameFor(model => model.UserName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DataOfSubmision)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.SourceSize)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Score)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.StateOfSubmision)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Compilator)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MessageOfSubmision)
-            </th>
+    <table class="table table-hover">
+        <thead>
 
-            <th></th>
-        </tr>
-    </thead>
-    <tbody class="reactable-data">
-        @foreach (var item in Model)
-        {
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.UserName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.DataOfSubmision)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.SourceSize)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Score)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.StateOfSubmision)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Compilator)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.MessageOfSubmision)
-                </td>
-
-                <td>
-                <a asp-action="Details" asp-controller="Submission" asp-route-id="@item.SubmisionId">Details</a>
-                    
-                </td>
+                <th>
+                    <font style="vertical-align: inherit;">
+                        <font style="vertical-align: inherit;">
+                            UserName
+                        </font>
+                    </font>
+                </th>
+                <th>
+                    <font style="vertical-align: inherit;">
+                        <font style="vertical-align: inherit;">
+                            Problema
+                        </font>
+                    </font>
+                </th>
+                <th>
+                    <font style="vertical-align: inherit;">
+                        <font style="vertical-align: inherit;">
+                            Data
+                        </font>
+                    </font>
+                </th>
+                <th>
+                    <font style="vertical-align: inherit;">
+                        <font style="vertical-align: inherit;">
+                            State of submission
+                        </font>
+                    </font>
+                </th>
+                <th>
+                    <font style="vertical-align: inherit;">
+                        <font style="vertical-align: inherit;">
+                            Score
+                        </font>
+                    </font>
+                </th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody class="reactable-data">
+            @foreach (var item in Model)
+            {
+
+                <tr id="@item.SubmisionId">
+                    <th scope="row">
+                        <font style="vertical-align: inherit;">
+                            <font style="vertical-align: inherit;">
+                                @item.UserName
+                            </font>
+                        </font>
+                    </th>
+                    <td>
+                        <font style="vertical-align: inherit;">
+                            <font style="vertical-align: inherit;">
+                                @item.SourceSize
+                            </font>
+                        </font>
+                    </td>
+                    <td>
+                        <font style="vertical-align: inherit;">
+                            <font style="vertical-align: inherit;">
+                                @item.DataOfSubmision
+                            </font>
+                        </font>
+                    </td>
+                    <td id="stateSubmission">
+                        <font style="vertical-align: inherit;">
+                            <font style="vertical-align: inherit;">
+                                @item.StateOfSubmision
+                            </font>
+                        </font>
+                    </td>
+                    <td id="score">
+                        <font style="vertical-align: inherit;">
+                            <font style="vertical-align: inherit;">
+                                @item.Score
+                            </font>
+                        </font>
+                    </td>
+                    <td>
+                        <font style="vertical-align: inherit;">
+                            <font style="vertical-align: inherit;">
+                                <a asp-action="Details" asp-controller="Submission" asp-route-id="@item.SubmisionId">Details</a>
+                            </font>
+                        </font>
+                    </td>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <td>
+                            <font style="vertical-align: inherit;">
+                                <font style="vertical-align: inherit;">
+                                    <a asp-action="Delete" asp-route-id="@item.SubmisionId">Delete</a>
+                                </font>
+                            </font>
+                        </td>
+
+                    }
+                </tr>
+
+
+            }
+        </tbody>
+    </table>
 }
 else
 {
-<div class="panel panel-danger">
-    <div class="panel-heading">
-        You have not signed in. You cannot see your submissions.
+    <div class="panel panel-danger">
+        <div class="panel-heading">
+            You have not signed in. You cannot see your submissions.
+        </div>
     </div>
-</div>
 }
