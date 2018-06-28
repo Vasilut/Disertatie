@@ -12,64 +12,108 @@
     <p>
         <a asp-action="Create">Create New</a>
     </p>
-    <table class="table table-striped">
+    <table class="table table-hover">
         <thead>
-            <tr class="reactable-column-header">
+
+            <tr>
                 <th>
-                    @Html.DisplayNameFor(model => model.UserName)
+                    <font style="vertical-align: inherit;">
+                        <font style="vertical-align: inherit;">
+                            UserName
+                        </font>
+                    </font>
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.DataOfSubmision)
+                    <font style="vertical-align: inherit;">
+                        <font style="vertical-align: inherit;">
+                            Problema
+                        </font>
+                    </font>
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.SourceSize)
+                    <font style="vertical-align: inherit;">
+                        <font style="vertical-align: inherit;">
+                            Data
+                        </font>
+                    </font>
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Score)
+                    <font style="vertical-align: inherit;">
+                        <font style="vertical-align: inherit;">
+                            State of submission
+                        </font>
+                    </font>
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.StateOfSubmision)
+                    <font style="vertical-align: inherit;">
+                        <font style="vertical-align: inherit;">
+                            Score
+                        </font>
+                    </font>
                 </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Compilator)
-                </th>
-                
-                <th></th>
             </tr>
         </thead>
         <tbody class="reactable-data">
             @foreach (var item in Model)
             {
+
                 <tr id="@item.SubmisionId">
+                    <th scope="row">
+                        <font style="vertical-align: inherit;">
+                            <font style="vertical-align: inherit;">
+                                @item.UserName
+                            </font>
+                        </font>
+                    </th>
                     <td>
-                        @Html.DisplayFor(modelItem => item.UserName)
+                        <font style="vertical-align: inherit;">
+                            <font style="vertical-align: inherit;">
+                                @item.SourceSize
+                            </font>
+                        </font>
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.DataOfSubmision)
+                        <font style="vertical-align: inherit;">
+                            <font style="vertical-align: inherit;">
+                                @item.DataOfSubmision
+                            </font>
+                        </font>
+                    </td>
+                    <td id="stateSubmission">
+                        <font style="vertical-align: inherit;">
+                            <font style="vertical-align: inherit;">
+                                @item.StateOfSubmision
+                            </font>
+                        </font>
+                    </td>
+                    <td id="score">
+                        <font style="vertical-align: inherit;">
+                            <font style="vertical-align: inherit;">
+                                @item.Score
+                            </font>
+                        </font>
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.SourceSize)
+                        <font style="vertical-align: inherit;">
+                            <font style="vertical-align: inherit;">
+                                <a asp-action="Details" asp-route-id="@item.SubmisionId">Details</a>
+                            </font>
+                        </font>
                     </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Score)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.StateOfSubmision)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Compilator)
-                    </td>
-                    
-                    <td>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <td>
+                            <font style="vertical-align: inherit;">
+                                <font style="vertical-align: inherit;">
+                                    <a asp-action="Delete" asp-route-id="@item.SubmisionId">Delete</a>
+                                </font>
+                            </font>
+                        </td>
 
-                        <a asp-action="Details" asp-route-id="@item.SubmisionId">Details</a>
-                        @if (User.IsInRole("Admin"))
-                        {
-                            <a asp-action="Delete" asp-route-id="@item.SubmisionId">Delete</a>
-                        }
-
-                    </td>
+                    }
                 </tr>
+
+
             }
         </tbody>
     </table>
@@ -77,10 +121,10 @@
 </html>
 
 @section Scripts {
-<script src="/lib/signalr/signalr.js"></script>
+    <script src="/lib/signalr/signalr.js"></script>
 
     <script type="text/javascript">
-        
+
 
         const connection = new signalR.HubConnectionBuilder()
             .withUrl("/hubs/submission")
@@ -89,16 +133,23 @@
 
 
         connection.on("SubmissionMessage", (message, subbmisionId) => {
-
+            //update column state of submission with the message
+            console.log(subbmisionId);
+            var submisionToUpdate = document.getElementById(subbmisionId.toString());
+            submisionToUpdate.cells[3].innerText = message.toString();
             console.log(message);
         });
 
         connection.on("ExecutionMessage", (message, submissionId, score) => {
+            //update score column with the message
+            var submisionToUpdate = document.getElementById(submissionId.toString());
+            submisionToUpdate.cells[3].innerText = message.toString();
+            submisionToUpdate.cells[4].innerText = score.toString();
             console.log(score);
         });
-        
+
 
         connection.start().catch(err => console.error(err.toString()));
 
     </script>
-    }
+}

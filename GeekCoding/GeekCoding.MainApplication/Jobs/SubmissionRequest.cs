@@ -39,7 +39,7 @@ namespace GeekCoding.MainApplication.Jobs
         {
             UpdateSubmissionStatus(submision.SubmissionId, SubmissionStatus.Compiling, string.Empty,0);
             //notify signal r to compiling status
-            //await NotifyResponse(MessageType.CompilationMessage, SubmissionStatus.Compiling.ToString(), submision.SubmissionId.ToString(), "0");
+            await NotifyResponse(MessageType.CompilationMessage, SubmissionStatus.Compiling.ToString(), submision.SubmissionId.ToString(), "0");
 
             var compilationModel = new CompilationModel
             {
@@ -58,20 +58,18 @@ namespace GeekCoding.MainApplication.Jobs
                 var result = await response.Content.ReadAsStringAsync();
                 var content = JsonConvert.DeserializeObject<ResponseCompilationModel>(result);
 
-                //update with signal r the response for the submission
-                //await NotifyResponse(MessageType.CompilationMessage, SubmissionStatus.Compiled.ToString(), submision.SubmissionId.ToString(), "0");
-                var task = _hubContext.Clients.All.SendAsync("SubmissionMessage", "Salut Dinamo", submision.SubmissionId.ToString());
-                if (task != null)
-                {
-                    await task;
-                }
+                //var task = _hubContext.Clients.All.SendAsync("SubmissionMessage", "Salut Dinamo", submision.SubmissionId.ToString());
+                //if (task != null)
+                //{
+                //    await task;
+                //}
 
                 if (content.CompilationResponse == "SUCCESS")
                 {
                     UpdateSubmissionStatus(submision.SubmissionId, SubmissionStatus.Compiled, content.OutputMessage,0);
 
                     //notify with signal r
-                    //await NotifyResponse(MessageType.CompilationMessage, SubmissionStatus.Compiled.ToString(), submision.SubmissionId.ToString(), "0");
+                    await NotifyResponse(MessageType.CompilationMessage, SubmissionStatus.Compiled.ToString(), submision.SubmissionId.ToString(), "0");
 
                     //call the api to execute
                     await ExecuteSubmission(submision, _executionApi);
@@ -82,7 +80,7 @@ namespace GeekCoding.MainApplication.Jobs
                     UpdateSubmissionStatus(submision.SubmissionId, SubmissionStatus.CompilationError, content.OutputMessage,0);
 
                     //notify with signal r
-                    //await NotifyResponse(MessageType.CompilationMessage, SubmissionStatus.CompilationError.ToString(), submision.SubmissionId.ToString(), "0");
+                    await NotifyResponse(MessageType.CompilationMessage, SubmissionStatus.CompilationError.ToString(), submision.SubmissionId.ToString(), "0");
                 }
             }
         }
@@ -118,15 +116,9 @@ namespace GeekCoding.MainApplication.Jobs
                 };
                 await _evaluationRepository.AddAsync(evaluationModel);
 
-                UpdateSubmissionStatus(submision.SubmissionId, SubmissionStatus.Executed, string.Empty, serializedData.Item2);
-                //another signal r notification
-                var taskExecution = _hubContext.Clients.All.SendAsync("ExecutionMessage", "Executat", submision.SubmissionId.ToString(), serializedData.Item2.ToString());
-                if (taskExecution != null)
-                {
-                    await taskExecution;
-                }
+                UpdateSubmissionStatus(submision.SubmissionId, SubmissionStatus.Executed, string.Empty, serializedData.Item2);            
                 //notify with signalR
-                //await NotifyResponse(MessageType.ExecutionMessage, SubmissionStatus.Executed.ToString(), submision.SubmissionId.ToString(), serializedData.Item2.ToString());
+                await NotifyResponse(MessageType.ExecutionMessage, SubmissionStatus.Executed.ToString(), submision.SubmissionId.ToString(), serializedData.Item2.ToString());
 
                 var x = 2;
             }

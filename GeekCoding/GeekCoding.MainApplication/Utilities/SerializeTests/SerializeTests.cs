@@ -25,11 +25,11 @@ namespace GeekCoding.MainApplication.Utilities
             int sumPoints = 0;
             foreach (var item in tests)
             {
-                string[] execution = item.Split(' ');
-                if (execution.Length > 2)
+                string[] execution = item.Split(new string[] { "XXX" }, StringSplitOptions.None);
+                if (execution.Length > 1)
                 {
                     string executionResult = execution[0];
-                    string executionOutput = execution[2];
+                    string executionOutput = execution[1];
                     
                     var options = executionResult.Split(new string[] { "---" }, StringSplitOptions.None);
                     Regex rg = new Regex(@"\w+");

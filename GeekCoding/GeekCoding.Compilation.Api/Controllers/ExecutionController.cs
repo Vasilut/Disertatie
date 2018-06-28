@@ -32,7 +32,7 @@ namespace GeekCoding.Compilation.Api.Controllers
             if (ModelState.IsValid)
             {
                 Tuple<string,string> executionResponse = _executeFile.Execute(item.ProblemName, item.UserName, "C++", item.TimeLimit, item.MemoryLimit);
-                return new StringBuilder(executionResponse.Item1).Append(" ").Append("Response: ").Append(executionResponse.Item2).ToString();
+                return new StringBuilder(executionResponse.Item1).Append("XXX").Append("Response: ").Append(executionResponse.Item2).ToString();
             }
 
             return "Failed response";
