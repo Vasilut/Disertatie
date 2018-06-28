@@ -5,57 +5,96 @@
     <li><a asp-area="" asp-controller="Problems" asp-action="Add">Create Problem</a></li>
 }
 
-<div class="table-responsive">
-<table class="table table-striped">
+
+<table class="table table-hover" style="margin-top:50px;">
     <thead>
-        <tr class="reactable-column-header">
+
+        <tr>
             <th>
-                @Html.DisplayNameFor(model => model.ProblemName)
-            </th>
-            @*<th>
-                    @Html.DisplayNameFor(model => model.ProblemContent)
-                </th>*@
-            <th>
-                @Html.DisplayNameFor(model => model.Dificulty)
+                <font style="vertical-align: inherit;">
+                    <font style="vertical-align: inherit;">
+                        ProblemName
+                    </font>
+                </font>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.AverageAcceptance)
+                <font style="vertical-align: inherit;">
+                    <font style="vertical-align: inherit;">
+                        Dificulty
+                    </font>
+                </font>
             </th>
-            <th></th>
+            <th>
+                <font style="vertical-align: inherit;">
+                    <font style="vertical-align: inherit;">
+                        AverageAcceptance
+                    </font>
+                </font>
+            </th>
+
         </tr>
     </thead>
     <tbody class="reactable-data">
         @foreach (var item in Model)
         {
+
             <tr>
+                <th scope="row">
+                    <font style="vertical-align: inherit;">
+                        <font style="vertical-align: inherit;">
+                            <a asp-action="GetProblem" asp-route-id="@item.ProblemId">  @item.ProblemName  </a>  
+                        </font>
+                    </font>
+                </th>
                 <td>
-                    @Html.DisplayFor(modelItem => item.ProblemName)
-                </td>
-                @*<td>
-                        @Html.DisplayFor(modelItem => item.ProblemContent)
-                    </td>*@
-                <td>
-                    <span class="label label-info"> @Html.DisplayFor(modelItem => item.Dificulty)</span>
+                    <font style="vertical-align: inherit;">
+                        <font style="vertical-align: inherit;">
+                            <span class="label label-info"> @item.Dificulty </span>
+                        </font>
+                    </font>
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.AverageAcceptance)%
+                    <font style="vertical-align: inherit;">
+                        <font style="vertical-align: inherit;">
+                            @item.AverageAcceptance
+                        </font>
+                    </font>
                 </td>
+                @if (User.IsInRole("Admin"))
+                {
+                    <td>
+                        <font style="vertical-align: inherit;">
+                            <font style="vertical-align: inherit;">
+                                <a asp-action="Edit" asp-route-id="@item.ProblemId">Edit</a>
+                            </font>
+                        </font>
+                    </td>
+
+                }
                 <td>
-                    @if (User.IsInRole("Admin"))
-                    {
-                        <a asp-action="Edit" asp-route-id="@item.ProblemId">Edit</a>
-                    }
-                    <a asp-action="GetProblem" asp-route-id="@item.ProblemId">Details</a>
-                    @if (User.IsInRole("Admin"))
-                    {
-                        <a asp-action="Delete" asp-route-id="@item.ProblemId">Delete</a>
-                    }
+                    <font style="vertical-align: inherit;">
+                        <font style="vertical-align: inherit;">
+                            <a asp-action="GetProblem" asp-route-id="@item.ProblemId">Rezolva</a>
+                        </font>
+                    </font>
                 </td>
+                @if (User.IsInRole("Admin"))
+                {
+                    <td>
+                        <font style="vertical-align: inherit;">
+                            <font style="vertical-align: inherit;">
+                                <a asp-action="Delete" asp-route-id="@item.ProblemId">Delete</a>
+                            </font>
+                        </font>
+                    </td>
+
+                }
             </tr>
+
+
         }
     </tbody>
 </table>
-</div>
 
 
 @*<div class="row">
