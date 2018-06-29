@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace GeekCoding.MainApplication.Jobs
@@ -22,6 +23,8 @@ namespace GeekCoding.MainApplication.Jobs
         private IEvaluationRepository _evaluationRepository;
         private IHubContext<SubmissionHub> _hubContext;
         private ISerializeTests _serializeTests;
+        static SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1, 1);
+
 
         public SubmissionRequest(SubmissionHub submissionHub, ISubmisionRepository submissionRepository,
                                  IHubContext<SubmissionHub> hubContext, ISerializeTests serializeTests,
@@ -72,8 +75,16 @@ namespace GeekCoding.MainApplication.Jobs
                     await NotifyResponse(MessageType.CompilationMessage, SubmissionStatus.Compiled.ToString(), submision.SubmissionId.ToString(), "0");
 
                     //call the api to execute
-                    await ExecuteSubmission(submision, _executionApi);
-
+                    
+                    await semaphoreSlim.WaitAsync();
+                    try
+                    {
+                        await ExecuteSubmission(submision, _executionApi);
+                    }
+                    finally
+                    {
+                        semaphoreSlim.Release();
+                    }
                 }
                 else
                 {
