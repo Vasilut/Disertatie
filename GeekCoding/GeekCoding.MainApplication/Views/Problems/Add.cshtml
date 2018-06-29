@@ -1,62 +1,79 @@
 ﻿@model GeekCoding.MainApplication.ViewModels.ProblemViewModel
-
 <!DOCTYPE html>
-
 <html>
 <head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Add</title>
+    <meta charset="UTF-8">
+    <title>Add Problems</title>
+    <link href="http://netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.css" rel="stylesheet">
+    <link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote.css" rel="stylesheet">
 </head>
 <body>
 
-<h4>Problem</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Add">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="ProblemName" class="control-label"></label>
-                <input asp-for="ProblemName" class="form-control" />
-                <span asp-validation-for="ProblemName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ProblemContent" class="control-label"></label>
-                <label></label>
-                <textarea asp-for="ProblemContent"></textarea>
-            </div>
-            <div class="form-group">
-                <label asp-for="MemoryLimit" class="control-label"></label>
-                <input asp-for="MemoryLimit" class="form-control" />
-                <span asp-validation-for="MemoryLimit" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="TimeLimit" class="control-label"></label>
-                <input asp-for="TimeLimit" class="form-control" />
-                <span asp-validation-for="TimeLimit" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Dificulty" class="control-label"></label>
-                <input asp-for="Dificulty" class="form-control" />
-                <span asp-validation-for="Dificulty" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <div class="checkbox">
-                    <label>
-                        <input asp-for="Visible" /> @Html.DisplayNameFor(model => model.Visible)
-                    </label>
+    <h4>Problem</h4>
+    <hr />
+    <div class="row">
+        <div class="col-md-8">
+            <form asp-action="Add">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="ProblemName" class="control-label"></label>
+                    <input asp-for="ProblemName" class="form-control" />
+                    <span asp-validation-for="ProblemName" class="text-danger"></span>
                 </div>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-default" />
-            </div>
-        </form>
+                <div class="form-group">
+                    <label asp-for="ProblemContent" class="control-label"></label>
+                    <label></label>
+                    <textarea id="summernote" asp-for="ProblemContent"></textarea>
+                </div>
+                <div class="form-group">
+                    <label asp-for="MemoryLimit" class="control-label"></label>
+                    <input asp-for="MemoryLimit" class="form-control" />
+                    <span asp-validation-for="MemoryLimit" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="TimeLimit" class="control-label"></label>
+                    <input asp-for="TimeLimit" class="form-control" />
+                    <span asp-validation-for="TimeLimit" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Dificulty" class="control-label"></label>
+                    <input asp-for="Dificulty" class="form-control" />
+                    <span asp-validation-for="Dificulty" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <div class="checkbox">
+                        <label>
+                            <input asp-for="Visible" /> @Html.DisplayNameFor(model => model.Visible)
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Create" class="btn btn-default" />
+                </div>
+            </form>
+        </div>
     </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+    <div>
+        <a asp-action="Index">Back to List</a>
+    </div>
 
 </body>
 </html>
+@section Scripts {
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
+    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#summernote').summernote();
+        });
+
+    </script>
+
+    <script>
+        var markupStr = '<h2><span style="font-family: Verdana;">Enunț</span></h2><h5><br></h5><p><span style="font-family: Arial;">﻿</span></p><p><span style="font-family: Arial;"><br></span></p><h2 style="font-family: &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; color: rgb(0, 0, 0);"><span style="font-family: Verdana;">Cerinta</span></h2><p style="font-family: &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; color: rgb(0, 0, 0);"><br></p><p style="font-family: &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; color: rgb(0, 0, 0);"><br></p><h2 style="font-family: &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; color: rgb(0, 0, 0);"><span style="font-family: Verdana;">Date de intrare</span></h2><p><br></p><h2><span style="font-family: Verdana;">Date de iesire</span></h2><p><br></p><h2 style="font-family: &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; color: rgb(0, 0, 0);"><span style="font-family: Verdana;">Restrictii și precizări</span></h2><p style="font-family: &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; color: rgb(0, 0, 0);"><br></p><p style="font-family: &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; color: rgb(0, 0, 0);"><br></p><h2 style="font-family: &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; color: rgb(0, 0, 0);"><span style="font-family: Verdana;">Exemplu</span></h2><p style="font-family: &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif;"><span style="color: rgb(156, 0, 0);">fisier.in</span></p><p style="font-family: &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; color: rgb(0, 0, 0);"><br></p><p style="font-family: &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif;"><span style="color: rgb(156, 0, 0);">fisier.out</span></p><p style="font-family: &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; color: rgb(0, 0, 0);"><br></p><h2 style="font-family: &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; color: rgb(0, 0, 0);"><span style="font-family: Verdana;">Explicație</span></h2><p><br></p>';
+        $('#summernote').summernote('code', markupStr);
+    </script>
+
+}
