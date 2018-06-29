@@ -40,13 +40,15 @@ namespace GeekCoding.Data.Models
                     .IsRequired()
                     .HasMaxLength(50);
 
-                entity.Property(e => e.ProblemContent)
-                    .IsRequired()
-                    .HasMaxLength(500);
+                entity.Property(e => e.MemoryLimit).HasMaxLength(50);
+
+                entity.Property(e => e.ProblemContent).IsRequired();
 
                 entity.Property(e => e.ProblemName)
                     .IsRequired()
                     .HasMaxLength(50);
+
+                entity.Property(e => e.TimeLimit).HasMaxLength(50);
             });
 
             modelBuilder.Entity<ProgresStatus>(entity =>
@@ -61,22 +63,20 @@ namespace GeekCoding.Data.Models
                     .WithMany(p => p.ProgresStatus)
                     .HasForeignKey(d => d.ProblemId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__ProgresSt__Probl__403A8C7D");
+                    .HasConstraintName("FK__ProgresSt__Probl__2B3F6F97");
             });
 
             modelBuilder.Entity<Solution>(entity =>
             {
                 entity.Property(e => e.SolutionId).ValueGeneratedNever();
 
-                entity.Property(e => e.Content)
-                    .IsRequired()
-                    .HasMaxLength(500);
+                entity.Property(e => e.Content).IsRequired();
 
                 entity.HasOne(d => d.Problem)
                     .WithMany(p => p.Solution)
                     .HasForeignKey(d => d.ProblemId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Solution__Proble__3A81B327");
+                    .HasConstraintName("FK__Solution__Proble__2C3393D0");
             });
 
             modelBuilder.Entity<Evaluation>(entity =>
@@ -122,7 +122,7 @@ namespace GeekCoding.Data.Models
                     .WithMany(p => p.Submision)
                     .HasForeignKey(d => d.ProblemId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Submision__Probl__3D5E1FD2");
+                    .HasConstraintName("FK__Submision__Probl__2D27B809");
             });
         }
     }
