@@ -26,5 +26,10 @@ namespace GeekCoding.Repository
             return RepositoryContext.Submision.Where(x => x.SubmisionId == id).Include(x => x.Problem).FirstOrDefault();
         }
 
+        public override async Task<ICollection<Submision>> GetAllAsync()
+        {
+            return await RepositoryContext.Submision.Include(prob => prob.Problem).ToListAsync();
+        }
+
     }
 }
