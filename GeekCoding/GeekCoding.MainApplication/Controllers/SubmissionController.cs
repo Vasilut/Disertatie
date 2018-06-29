@@ -6,6 +6,7 @@ using GeekCoding.Compilation.Api.Model;
 using GeekCoding.Data.Models;
 using GeekCoding.MainApplication.Hubs;
 using GeekCoding.MainApplication.Jobs;
+using GeekCoding.MainApplication.Pagination;
 using GeekCoding.MainApplication.Utilities;
 using GeekCoding.MainApplication.Utilities.DTO;
 using GeekCoding.MainApplication.ViewModels;
@@ -43,7 +44,7 @@ namespace GeekCoding.MainApplication.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? page)
         {
             
             var submisionList = await _submisionRepository.GetAllAsync();
@@ -66,7 +67,9 @@ namespace GeekCoding.MainApplication.Controllers
                 
             }
             _submisionRepository.Save();
-            return View(submisionList.OrderByDescending(sub => sub.DataOfSubmision));
+            int pageSize = 20;
+            var submissionListOrdered = submisionList.OrderByDescending(sub => sub.DataOfSubmision).ToList();
+            return View(PaginatedList<Submision>.CreateAsync(submissionListOrdered, page ?? 1, pageSize));
         }
 
         [HttpGet]

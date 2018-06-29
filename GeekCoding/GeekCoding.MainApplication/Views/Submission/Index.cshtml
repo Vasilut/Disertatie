@@ -1,4 +1,4 @@
-﻿@model IEnumerable<GeekCoding.Data.Models.Submision>
+﻿@model GeekCoding.MainApplication.Pagination.PaginatedList<GeekCoding.Data.Models.Submision>
 
 <!DOCTYPE html>
 
@@ -114,6 +114,21 @@
             }
         </tbody>
     </table>
+    @{
+        var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+        var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+    }
+
+    <a asp-action="Index"
+       asp-route-page="@(Model.PageIndex - 1)"
+       class="btn btn-default @prevDisabled">
+        Previous
+    </a>
+    <a asp-action="Index"
+       asp-route-page="@(Model.PageIndex + 1)"
+       class="btn btn-default @nextDisabled">
+        Next
+    </a>
 </body>
 </html>
 
