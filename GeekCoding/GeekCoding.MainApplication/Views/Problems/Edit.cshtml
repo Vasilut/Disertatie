@@ -1,0 +1,89 @@
+﻿@model GeekCoding.Data.Models.Problem
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Add Problems</title>
+    <link href="http://netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.css" rel="stylesheet">
+    <link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote.css" rel="stylesheet">
+</head>
+<body>
+    <hr />
+    <div class="row">
+        <div class="col-md-8">
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="ProblemId" />
+                <div class="form-group">
+                    <label asp-for="ProblemName" class="control-label"></label>
+                    <input asp-for="ProblemName" class="form-control" />
+                    <span asp-validation-for="ProblemName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ProblemContent" class="control-label"></label>
+                    <label></label>
+                    <textarea id="summernote" asp-for="ProblemContent"></textarea>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Dificulty" class="control-label"></label>
+                    <input asp-for="Dificulty" class="form-control" />
+                    <span asp-validation-for="Dificulty" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="GoodSubmision" class="control-label"></label>
+                    <input asp-for="GoodSubmision" class="form-control" readonly/>
+                    <span asp-validation-for="GoodSubmision" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="BadSubmission" class="control-label"></label>
+                    <input asp-for="BadSubmission" class="form-control" readonly/>
+                    <span asp-validation-for="BadSubmission" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="MemoryLimit" class="control-label"></label>
+                    <input asp-for="MemoryLimit" class="form-control" />
+                    <span asp-validation-for="MemoryLimit" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="TimeLimit" class="control-label"></label>
+                    <input asp-for="TimeLimit" class="form-control" />
+                    <span asp-validation-for="TimeLimit" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <div class="checkbox">
+                        <label>
+                            <input asp-for="Visible" /> @Html.DisplayNameFor(model => model.Visible)
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-default" />
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div>
+        <a asp-action="Index">Back to List</a>
+    </div>
+</body>
+</html>
+
+@section Scripts {
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
+    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#summernote').summernote();
+        });
+
+    </script>
+
+    <script>
+        var content = @Model.ProblemContent;
+        var markupStr = content;
+        $('#summernote').summernote('code', markupStr);
+    </script>
+
+}

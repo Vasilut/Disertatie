@@ -100,6 +100,33 @@ namespace GeekCoding.MainApplication.Controllers
             }
             return View();
         }
+
+        [Authorize(Roles = "Admin")]
+        [HttpGet]
+        public IActionResult Edit(Guid id)
+        {
+            var problem = _problemRepository.GetItem(id);
+            if(problem == null)
+            {
+                return RedirectToAction("Index");
+            }
+            return View(problem);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public IActionResult Edit([FromForm] Problem problem)
+        {
+            if(ModelState.IsValid)
+            {
+                //update the entity;
+                _problemRepository.Update(problem);
+                _problemRepository.Save();
+                return RedirectToAction("Index");
+            }
+
+            return View();
+        }
         
         [AllowAnonymous]
         [HttpGet]
@@ -174,18 +201,27 @@ namespace GeekCoding.MainApplication.Controllers
             ViewData["subbmited"] = true;
             return RedirectToAction("GetProblem", new { id = Guid.Parse(model.ProblemId) });
         }
-
-        //    return RedirectToAction("GetProblem", new { id = Guid.Parse(model.ProblemId) });
-        //}
-
+        
 
         [Authorize(Roles = "Admin")]
-        [HttpDelete]
+        [HttpGet]
         public IActionResult Delete(Guid id)
         {
-            _problemRepository.Delete(id);
+            var problem = _problemRepository.GetItem(id);
+            if (problem == null)
+            {
+                return RedirectToAction("Index");
+            }
+            return View(problem);
+        }
+
+        [Authorize(Roles =("Admin"))]
+        [HttpPost]
+        public IActionResult DeleteConfirmed(Guid problemId)
+        {
+            _problemRepository.Delete(problemId);
             _problemRepository.Save();
-            return View("ProblemDeleted");
+            return View("Index");
         }
     }
 }
