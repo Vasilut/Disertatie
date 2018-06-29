@@ -1,4 +1,4 @@
-﻿@model IEnumerable<GeekCoding.Data.Models.Problem>
+﻿@model GeekCoding.MainApplication.Pagination.PaginatedList<GeekCoding.Data.Models.Problem>
 
 @if (User.IsInRole("Admin"))
 {
@@ -42,7 +42,7 @@
                 <th scope="row">
                     <font style="vertical-align: inherit;">
                         <font style="vertical-align: inherit;">
-                            <a asp-action="GetProblem" asp-route-id="@item.ProblemId">  @item.ProblemName  </a>  
+                            <a asp-action="GetProblem" asp-route-id="@item.ProblemId">  @item.ProblemName  </a>
                         </font>
                     </font>
                 </th>
@@ -95,7 +95,21 @@
         }
     </tbody>
 </table>
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
 
+<a asp-action="Index"
+   asp-route-page="@(Model.PageIndex - 1)"
+   class="btn btn-default @prevDisabled">
+    Previous
+</a>
+<a asp-action="Index"
+   asp-route-page="@(Model.PageIndex + 1)"
+   class="btn btn-default @nextDisabled">
+    Next
+</a>
 
 @*<div class="row">
         <div class="col-lg-4 col-md-4">

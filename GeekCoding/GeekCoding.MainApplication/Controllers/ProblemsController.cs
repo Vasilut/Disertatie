@@ -8,6 +8,7 @@ using GeekCoding.Common.Helpers;
 using GeekCoding.Compilation.Api.Model;
 using GeekCoding.Data.Models;
 using GeekCoding.MainApplication.Jobs;
+using GeekCoding.MainApplication.Pagination;
 using GeekCoding.MainApplication.Utilities;
 using GeekCoding.MainApplication.ViewModels;
 using GeekCoding.Repository.Interfaces;
@@ -49,7 +50,7 @@ namespace GeekCoding.MainApplication.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? page)
         {
             var problemList = await _problemRepository.GetAllAsync();
             var goodList = problemList.Where(prob => prob.Visible == true).Select(prop =>
@@ -61,8 +62,9 @@ namespace GeekCoding.MainApplication.Controllers
                 return prop;
             }).ToList();
 
-
-            return View(goodList);
+            int pageSize = 20;
+            return View(PaginatedList<Problem>.CreateAsync(goodList, page ?? 1, pageSize));
+            //return View(goodList);
         }
 
         [Authorize(Roles = "Admin")]
