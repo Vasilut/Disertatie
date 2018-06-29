@@ -18,7 +18,7 @@
 
     <div class="tab-content">
         <div id="home" class="tab-pane fade in active">
-           @Model.Problem.ProblemContent
+            @Html.Raw(@Model.Problem.ProblemContent);
 
             @if (User.Identity.IsAuthenticated)
             {

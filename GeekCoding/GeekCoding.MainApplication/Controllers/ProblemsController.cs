@@ -100,7 +100,7 @@ namespace GeekCoding.MainApplication.Controllers
             }
             return View();
         }
-
+        
         [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> GetProblem(Guid id)
