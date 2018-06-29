@@ -1,7 +1,7 @@
 ﻿@if (User.Identity.IsAuthenticated)
 {
     <form method="post" class="navbar-form" asp-controller="Account" asp-action="Logout" asp-antiforgery="true">
-        Hello: @User.Identity.Name
+        <span style="color:#fff; padding-right:15px;">@User.Identity.Name</span>
         <input type="submit" value="Logout" class="btn btn-primary" />
     </form>
 

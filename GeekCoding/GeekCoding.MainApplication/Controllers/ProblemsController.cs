@@ -104,8 +104,21 @@ namespace GeekCoding.MainApplication.Controllers
         public async Task<IActionResult> GetProblem(Guid id)
         {
             var problem = await _problemRepository.GetAsync(id);
-            var tp = new Tuple<Problem, List<SelectListItem>>(problem, _compilers);
-            return View(tp);
+            var listOfSubmission = await _submisionRepository.GetAllAsync();
+            var submisionList = listOfSubmission.Where(sub => sub.ProblemId == id && sub.UserName == User.Identity.Name)
+                                                .OrderByDescending(sub => sub.DataOfSubmision).ToList();
+
+            var solutions = await _solutionRepository.GetAllAsync();
+            var solution = solutions.Where(sol => sol.ProblemId == id).FirstOrDefault();
+
+            ProblemDetailsViewModel problemDetailsViewModel = new ProblemDetailsViewModel
+            {
+                Problem = problem,
+                Submisions = submisionList,
+                Solution = solution,
+                SelectListItems = _compilers
+            };
+            return View(problemDetailsViewModel);
         }
 
         [AllowAnonymous]

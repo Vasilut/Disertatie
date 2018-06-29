@@ -1,118 +1,194 @@
-﻿@model Tuple<GeekCoding.Data.Models.Problem, List<SelectListItem>>
-
-    @*<div class="panel panel-success">
+﻿@model GeekCoding.MainApplication.ViewModels.ProblemDetailsViewModel
+@*<div class="panel panel-success">
         <div class="panel-heading">The solution was saved successfully!</div>
     </div>*@
 
 <div class="panel panel-default">
     <div class="panel-body">
-        @Model.Item1.ProblemName
+        @Model.Problem.ProblemName
     </div>
 </div>
-@*<div class="question-title clearfix">
-        <h2>@Model.ProblemName</h2>
-    </div>*@
-<div class="container question-detail-container">
-    <ul class="nav nav-tabs">
-        <li class="active"><a data-toggle="tab" href="#home"><i class="glyphicon glyphicon-file"></i> &nbsp; Description</a></li>
-        <li class="nav-item"><a asp-action="Submissions" asp-route-id="@Model.Item1.ProblemId"><i class="glyphicon glyphicon-cd"></i> &nbsp; Submissions</a></li>
-        <li class="nav-item"><a asp-action="Solution" asp-route-id="@Model.Item1.ProblemId"><i class="glyphicon glyphicon-scale"></i> &nbsp; Solution</a></li>
+
+<div class="question-detail-container">
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a data-toggle="tab" href="#home" aria-controls="home" role="tab"><i class="glyphicon glyphicon-file"></i> &nbsp; Description</a></li>
+        <li role="presentation" class="nav-item"><a data-toggle="tab" href="#submissions" aria-controls="submissions" role="tab"><i class="glyphicon glyphicon-cd"></i> &nbsp; Submissions</a></li>
+        <li role="presentation" class="nav-item"><a data-toggle="tab" href="#solutions" aria-controls="solutions" role="tab"><i class="glyphicon glyphicon-scale"></i> &nbsp; Solution</a></li>
     </ul>
 
     <div class="tab-content">
         <div id="home" class="tab-pane fade in active">
-            <p>@Model.Item1.ProblemContent</p>
-            <p>@Model.Item1.ProblemContent</p>
-            <p>@Model.Item1.ProblemContent</p>
-            <p>@Model.Item1.ProblemContent</p>
-            <p>@Model.Item1.ProblemContent</p>
-            <p>@Model.Item1.ProblemContent</p>
-            <p>@Model.Item1.ProblemContent</p>
+            <p>@Model.Problem.ProblemContent</p>
+            <p>@Model.Problem.ProblemContent</p>
+            <p>@Model.Problem.ProblemContent</p>
+            <p>@Model.Problem.ProblemContent</p>
+            <p>@Model.Problem.ProblemContent</p>
+            <p>@Model.Problem.ProblemContent</p>
+
+            @if (User.Identity.IsAuthenticated)
+            {
+                <form class="form-inline" asp-action="ProblemExecute" method="post" enctype="multipart/form-data" style="position:  relative; background: rgba(51, 122, 183, 0.4); padding:  15px">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <input type="file" name="file" />
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="Compilator">Compilator</label>
+                                <select asp-items="@Model.SelectListItems" class="control-label" name="Compilator"></select>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div style="position:  absolute; bottom: 15px; right: 15px;">
+                        <button type="submit" class="btn btn-default pull-right">Submit</button>
+
+                    </div>
+
+                    <input type="hidden" name="ProblemId" value="@Model.Problem.ProblemId" />
+                    <input type="hidden" name="ProblemName" value="@Model.Problem.ProblemName" />
+                </form>
+            }
+            else
+            {
+                <div class="panel panel-danger">
+                    <div class="panel-heading">
+                        You have not signed in. Cannot submit your code
+                    </div>
+                </div>
+
+            }
+
         </div>
-        @*<div id="submissions" class="tab-pane fade">
-                <script>
-                            var id = '@Model.ProblemId';
-                            var confirmUrl = '@Html.Raw(@Url.Action("Submissions", "Problems"))';
-                    </script>
-                @await Html.PartialAsync("Submissions")
-            </div>*@
-        @*<div id="solutions" class="tab-pane fade">
+        <div id="submissions" class="tab-pane fade">
+            <table class="table table-hover">
+                <thead>
+
+                    <tr>
+                        <th>
+                            <font style="vertical-align: inherit;">
+                                <font style="vertical-align: inherit;">
+                                    UserName
+                                </font>
+                            </font>
+                        </th>
+                        <th>
+                            <font style="vertical-align: inherit;">
+                                <font style="vertical-align: inherit;">
+                                    Problema
+                                </font>
+                            </font>
+                        </th>
+                        <th>
+                            <font style="vertical-align: inherit;">
+                                <font style="vertical-align: inherit;">
+                                    Data
+                                </font>
+                            </font>
+                        </th>
+                        <th>
+                            <font style="vertical-align: inherit;">
+                                <font style="vertical-align: inherit;">
+                                    State of submission
+                                </font>
+                            </font>
+                        </th>
+                        <th>
+                            <font style="vertical-align: inherit;">
+                                <font style="vertical-align: inherit;">
+                                    Score
+                                </font>
+                            </font>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="reactable-data">
+                    @foreach (var item in Model.Submisions)
+                    {
+
+                        <tr id="@item.SubmisionId">
+                            <th scope="row">
+                                <font style="vertical-align: inherit;">
+                                    <font style="vertical-align: inherit;">
+                                        @item.UserName
+                                    </font>
+                                </font>
+                            </th>
+                            <td>
+                                <font style="vertical-align: inherit;">
+                                    <font style="vertical-align: inherit;">
+                                        @item.SourceSize
+                                    </font>
+                                </font>
+                            </td>
+                            <td>
+                                <font style="vertical-align: inherit;">
+                                    <font style="vertical-align: inherit;">
+                                        @item.DataOfSubmision
+                                    </font>
+                                </font>
+                            </td>
+                            <td id="stateSubmission">
+                                <font style="vertical-align: inherit;">
+                                    <font style="vertical-align: inherit;">
+                                        @item.StateOfSubmision
+                                    </font>
+                                </font>
+                            </td>
+                            <td id="score">
+                                <font style="vertical-align: inherit;">
+                                    <font style="vertical-align: inherit;">
+                                        @item.Score
+                                    </font>
+                                </font>
+                            </td>
+                            <td>
+                                <font style="vertical-align: inherit;">
+                                    <font style="vertical-align: inherit;">
+                                        <a asp-action="Details" asp-controller="Submission" asp-route-id="@item.SubmisionId">Details</a>
+                                    </font>
+                                </font>
+                            </td>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <td>
+                                    <font style="vertical-align: inherit;">
+                                        <font style="vertical-align: inherit;">
+                                            <a asp-action="Delete" asp-route-id="@item.SubmisionId">Delete</a>
+                                        </font>
+                                    </font>
+                                </td>
+
+                            }
+                        </tr>
+
+
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div id="solutions" class="tab-pane fade">
+            @if (User.Identity.IsAuthenticated)
+            {
                 <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
-            </div>*@
+            }
+            else
+            {
+                <div class="panel panel-danger">
+                    <div class="panel-heading">
+                        You have not signed in. Cannot see the solution of the problem
+                    </div>
+                </div>
+
+            }
+        </div>
     </div>
 </div>
 
 
 
-
-@*<div class="container">
-            <h2>@Model.ProblemName</h2>
-            <ul class="nav nav-tabs">
-                <li class="nav-item">
-                    <a class="nav-link active" href="#">Description</a>
-                    @Model.ProblemContent
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" asp-action="Submissions" asp-route-id="@Model.ProblemId">Submissions</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" asp-action="Solution" asp-route-id="@Model.ProblemId">Solution</a>
-                </li>
-            </ul>
-           <--navbar
-        <div class="row">
-        <div class="col-sm-3">
-            <div class="sidebar-nav">
-                <div class="navbar navbar-default" role="navigation">
-                    <div class="navbar-header">
-                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-navbar-collapse">
-                            <span class="sr-only">Toggle navigation</span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                        </button>
-                        <span class="visible-xs navbar-brand">Sidebar menu</span>
-                    </div>
-                    <div class="navbar-collapse collapse sidebar-navbar-collapse">
-                        <ul class="nav navbar-nav">
-                            <li class="active"><a href="#">Menu Item 1</a></li>
-                            <li><a href="#">Menu Item 2</a></li>
-                            <li><a href="#">Menu Item 4</a></li>
-                            <li><a href="#">Reviews <span class="badge">1,118</span></a></li>
-                        </ul>
-                    </div><!--/.nav-collapse -->
-                </div>
-            </div>
-        </div>
-    </div>
-        </div>*@
-
-@if (User.Identity.IsAuthenticated)
-{
-    <form class="form-inline" asp-action="ProblemExecute" method="post" enctype="multipart/form-data">
-        <div class="form-group">
-            <div class="col-md-10">
-                <input type="file" name="file" />
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="Compilator">Compilator</label>
-            <select asp-items="@Model.Item2" class="control-label" name="Compilator"></select>
-        </div>
-        <input type="hidden" name="ProblemId" value="@Model.Item1.ProblemId" />
-        <input type="hidden" name="ProblemName" value="@Model.Item1.ProblemName" />
-        <button type="submit" class="btn btn-default">Submit</button>
-    </form>
-}
-else
-{
-    <div class="panel panel-danger">
-        <div class="panel-heading">
-            You have not signed in. Cannot submit your code
-        </div>
-    </div>
-
-}
 
 
 <div>
@@ -121,7 +197,7 @@ else
 
 @section script_variables{
     <script type="text/javascript">
-    var id = '@Model.Item1.ProblemId';
+    var id = '@Model.Problem.ProblemId';
     var confirmUrl = '@Html.Raw(@Url.Action("Submissions", "Problems"))';
     </script>
 
