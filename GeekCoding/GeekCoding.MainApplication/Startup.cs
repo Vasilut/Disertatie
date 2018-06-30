@@ -43,6 +43,7 @@ namespace GeekCoding.MainApplication
             services.AddDbContext<EvaluatorContext>(option => option.UseSqlServer(connectionString));
             services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<EvaluatorContext>().AddDefaultTokenProviders();
             services.AddScoped<IProblemRepository, ProblemRepository>();
+            services.AddScoped<ITestsRepository, TestsRepository>();
             services.AddScoped<IMessageBuilder, EmailBuilder>();
             services.AddScoped<ISolutionRepository, SolutionRepository>();
             services.AddScoped<IEvaluationRepository, EvaluationRepository>();

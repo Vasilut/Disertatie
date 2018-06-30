@@ -1,0 +1,145 @@
+﻿@model GeekCoding.MainApplication.ViewModels.TestViewModel
+
+
+@if (User.IsInRole("Admin"))
+{
+
+    <div class="row" style="margin-top:25px;">
+        <div class="col-md-1">
+            <font style="vertical-align: inherit;">
+                <font style="vertical-align: inherit;">
+                    <a class="btn btn-info" asp-controller="Tests" asp-action="Add" asp-route-id="@Model.ProblemId">Create Test</a>
+                </font>
+            </font>
+        </div>
+    </div>
+
+
+}
+
+<table class="table table-hover" style="margin-top:50px;">
+    <thead>
+
+        <tr>
+            <th>
+                <font style="vertical-align: inherit;">
+                    <font style="vertical-align: inherit;">
+                        TestNumber
+                    </font>
+                </font>
+            </th>
+            <th>
+                <font style="vertical-align: inherit;">
+                    <font style="vertical-align: inherit;">
+                        FisierIn
+                    </font>
+                </font>
+            </th>
+            <th>
+                <font style="vertical-align: inherit;">
+                    <font style="vertical-align: inherit;">
+                        FisierOk
+                    </font>
+                </font>
+            </th>
+            <th>
+                <font style="vertical-align: inherit;">
+                    <font style="vertical-align: inherit;">
+                        TestInput
+                    </font>
+                </font>
+            </th>
+            <th>
+                <font style="vertical-align: inherit;">
+                    <font style="vertical-align: inherit;">
+                        TestOutput
+                    </font>
+                </font>
+            </th>
+            <th>
+                <font style="vertical-align: inherit;">
+                    <font style="vertical-align: inherit;">
+                        Scor
+                    </font>
+                </font>
+            </th>
+
+        </tr>
+    </thead>
+    <tbody class="reactable-data">
+        @foreach (var item in Model.ListModel)
+        {
+
+            <tr>
+                <td>
+                    <font style="vertical-align: inherit;">
+                        <font style="vertical-align: inherit;">
+                            @item.TestNumber
+                        </font>
+                    </font>
+                </td>
+                <td>
+                    <font style="vertical-align: inherit;">
+                        <font style="vertical-align: inherit;">
+                            @item.FisierIn
+                        </font>
+                    </font>
+                </td>
+                <td>
+                    <font style="vertical-align: inherit;">
+                        <font style="vertical-align: inherit;">
+                            @item.FisierOk
+                        </font>
+                    </font>
+                </td>
+                <td>
+                    <font style="vertical-align: inherit;">
+                        <font style="vertical-align: inherit;">
+                            @item.TestInput
+                        </font>
+                    </font>
+                </td>
+                <td>
+                    <font style="vertical-align: inherit;">
+                        <font style="vertical-align: inherit;">
+                            @item.TestOutput
+                        </font>
+                    </font>
+                </td>
+                <td>
+                    <font style="vertical-align: inherit;">
+                        <font style="vertical-align: inherit;">
+                            @item.Scor
+                        </font>
+                    </font>
+                </td>
+                @if (User.IsInRole("Admin"))
+                {
+
+                    <td>
+                        <font style="vertical-align: inherit;">
+                            <font style="vertical-align: inherit;">
+                                <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.TestId">Edit</a>
+                            </font>
+                        </font>
+                    </td>
+
+                }
+                @if (User.IsInRole("Admin"))
+                {
+                    <td>
+                        <font style="vertical-align: inherit;">
+                            <font style="vertical-align: inherit;">
+                                <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.TestId">Delete</a>
+                            </font>
+                        </font>
+                    </td>
+
+                }
+            </tr>
+
+
+        }
+    </tbody>
+</table>
+
