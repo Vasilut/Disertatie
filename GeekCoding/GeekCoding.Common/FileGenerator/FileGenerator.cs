@@ -42,6 +42,46 @@ namespace GeekCoding.Common
             }
         }
 
+        public void GenerateTestFile(string fileName, string problem, string content)
+        {
+            string fileToCreate = GenerateFilesAndDirectory(fileName, problem);
+            if (!File.Exists(fileToCreate))
+            {
+                using (FileStream fs = new FileStream(fileToCreate, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None))
+                {
+                    content = content.Trim();
+                    StreamWriter writer = new StreamWriter(fs, Encoding.UTF8);
+                    writer.WriteLine(content);
+                    writer.Flush();
+                }
+            }
+
+        }
+
+        private string GenerateFilesAndDirectory(string fileName, string problem)
+        {
+            //create directory
+            var goodDirectory = GetCurrentDirectory();
+            if (!Directory.Exists(goodDirectory))
+            {
+                Directory.CreateDirectory(goodDirectory);
+            }
+
+            var testDirectory = Path.Combine(goodDirectory, problem);
+            if (!Directory.Exists(testDirectory))
+            {
+                Directory.CreateDirectory(testDirectory);
+            }
+
+            //create file
+            var fileToCreate = Path.Combine(testDirectory, fileName);
+            if (File.Exists(fileToCreate))
+            {
+                File.Delete(fileToCreate);
+            }
+            return fileToCreate;
+        }
+
         public string GetCurrentDirectory()
         {
             var myDoc = "/usr/local/etc/";

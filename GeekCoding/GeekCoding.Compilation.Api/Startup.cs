@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using GeekCoding.Common;
 using GeekCoding.Compilation.Execution;
+using GeekCoding.Compilation.GenerateTests;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -28,6 +29,7 @@ namespace GeekCoding.Compilation.Api
         {
             services.AddScoped<ICompilationFile, CompilationFile>();
             services.AddScoped<IFileGenerator, FileGenerator>();
+            services.AddScoped<ITestGenerator, TestGenerator>();
             services.AddScoped<IExecutionFile, ExecutionFile>();
             services.AddMvc();
         }

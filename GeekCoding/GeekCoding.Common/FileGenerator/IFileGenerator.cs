@@ -13,5 +13,6 @@ namespace GeekCoding.Common
         string GetFileFullName(string problemName, string userName);
 
         string ReadExectutionResult();
+        void GenerateTestFile(string fileName, string problem, string content);
     }
 }

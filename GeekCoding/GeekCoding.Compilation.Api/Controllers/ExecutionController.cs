@@ -22,7 +22,7 @@ namespace GeekCoding.Compilation.Api.Controllers
         [HttpGet]
         public IEnumerable<string> Get()
         {
-            return new string[] { "exec1LuciCelMaiTareTareDragnea", "exec2LuciTareFelinaBlanaGoodDancila" };
+            return new string[] { "exec1LuciCelMaiTareTareDragnea22", "exec2LuciTareFelinaBlanaGoodDancil22a" };
         }
 
         [HttpPost]
