@@ -12,6 +12,7 @@ namespace GeekCoding.Data.Models
         public virtual DbSet<Solution> Solution { get; set; }
         public virtual DbSet<Submision> Submision { get; set; }
         public virtual DbSet<Evaluation> Evaluation { get; set; }
+        public virtual DbSet<Tests> Tests { get; set; }
 
         public EvaluatorContext(DbContextOptions options) : base(options)
         {
@@ -90,6 +91,31 @@ namespace GeekCoding.Data.Models
                     .HasForeignKey(d => d.SubmisionId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__Evaluatio__Submi__36B12243");
+            });
+
+            modelBuilder.Entity<Tests>(entity =>
+            {
+                entity.HasKey(e => e.TestId);
+
+                entity.Property(e => e.TestId).ValueGeneratedNever();
+
+                entity.Property(e => e.FisierIn)
+                    .IsRequired()
+                    .HasMaxLength(50);
+
+                entity.Property(e => e.FisierOk)
+                    .IsRequired()
+                    .HasMaxLength(50);
+
+                entity.Property(e => e.TestInput).IsRequired();
+
+                entity.Property(e => e.TestOutput).IsRequired();
+
+                entity.HasOne(d => d.Problem)
+                    .WithMany(p => p.Tests)
+                    .HasForeignKey(d => d.ProblemId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Tests__ProblemId__412EB0B6");
             });
 
             modelBuilder.Entity<Submision>(entity =>

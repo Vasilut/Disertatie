@@ -11,6 +11,7 @@ namespace GeekCoding.Data.Models
             ProgresStatus = new HashSet<ProgresStatus>();
             Solution = new HashSet<Solution>();
             Submision = new HashSet<Submision>();
+            Tests = new HashSet<Tests>();
         }
 
         public Guid ProblemId { get; set; }
@@ -28,5 +29,6 @@ namespace GeekCoding.Data.Models
         public ICollection<ProgresStatus> ProgresStatus { get; set; }
         public ICollection<Solution> Solution { get; set; }
         public ICollection<Submision> Submision { get; set; }
+        public ICollection<Tests> Tests { get; set; }
     }
 }
