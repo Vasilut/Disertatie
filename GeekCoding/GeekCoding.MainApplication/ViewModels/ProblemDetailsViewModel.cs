@@ -13,5 +13,6 @@ namespace GeekCoding.MainApplication.ViewModels
         public List<SelectListItem> SelectListItems { get; set; }
         public List<Submision> Submisions { get; set; }
         public Solution Solution { get; set; }
+        public int Score { get; set; }
     }
 }

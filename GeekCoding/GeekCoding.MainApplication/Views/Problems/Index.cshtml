@@ -2,7 +2,18 @@
 
 @if (User.IsInRole("Admin"))
 {
-    <li><a asp-area="" asp-controller="Problems" asp-action="Add">Create Problem</a></li>
+
+    <div class="row" style="margin-top:25px;">
+        <div class="col-md-1">
+            <font style="vertical-align: inherit;">
+                <font style="vertical-align: inherit;">
+                    <a class="btn btn-info" asp-controller="Problems" asp-action="Add">Create Problem</a>
+                </font>
+            </font>
+        </div>
+    </div>
+
+
 }
 
 
@@ -65,7 +76,7 @@
                     <td>
                         <font style="vertical-align: inherit;">
                             <font style="vertical-align: inherit;">
-                                <a asp-action="Edit" asp-route-id="@item.ProblemId">Edit</a>
+                                <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.ProblemId">Edit</a>
                             </font>
                         </font>
                     </td>
@@ -74,7 +85,7 @@
                 <td>
                     <font style="vertical-align: inherit;">
                         <font style="vertical-align: inherit;">
-                            <a asp-action="GetProblem" asp-route-id="@item.ProblemId">Rezolva</a>
+                            <a class="btn btn-success" asp-action="GetProblem" asp-route-id="@item.ProblemId">Rezolva</a>
                         </font>
                     </font>
                 </td>
@@ -83,7 +94,7 @@
                     <td>
                         <font style="vertical-align: inherit;">
                             <font style="vertical-align: inherit;">
-                                <a asp-controller="Problems" asp-action="Delete" asp-route-id="@item.ProblemId">Delete</a>
+                                <a class="btn btn-danger" asp-controller="Problems" asp-action="Delete" asp-route-id="@item.ProblemId">Delete</a>
                             </font>
                         </font>
                     </td>

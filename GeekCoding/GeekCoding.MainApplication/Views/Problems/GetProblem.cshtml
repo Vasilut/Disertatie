@@ -3,7 +3,74 @@
         <div class="panel-heading">The solution was saved successfully!</div>
     </div>*@
 
-<div class="panel panel-default">
+<table class="table table-bordered" style="margin-top:25px;">
+    <thead>
+        <tr>
+            <th>
+                <font style="vertical-align: inherit;">
+                    <font style="vertical-align: inherit;">
+                        Limita timp
+                    </font>
+                </font>
+            </th>
+            <th>
+                <font style="vertical-align: inherit;">
+                    <font style="vertical-align: inherit;">
+                        Limita memorie
+                    </font>
+                </font>
+            </th>
+            <th>
+                <font style="vertical-align: inherit;">
+                    <font style="vertical-align: inherit;">
+                        Dificultate
+                    </font>
+                </font>
+            </th>
+            <th>
+                <font style="vertical-align: inherit;">
+                    <font style="vertical-align: inherit;">
+                        Scorul tau
+                    </font>
+                </font>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+       <tr>
+                <td>
+                    <font style="vertical-align: inherit;">
+                        <font style="vertical-align: inherit;">
+                            @Model.Problem.TimeLimit s
+                        </font>
+                    </font>
+                </td>
+                <td>
+                    <font style="vertical-align: inherit;">
+                        <font style="vertical-align: inherit;">
+                            @Model.Problem.MemoryLimit kb
+                        </font>
+                    </font>
+                </td>
+                <td>
+                    <font style="vertical-align: inherit;">
+                        <font style="vertical-align: inherit;">
+                            @Model.Problem.Dificulty
+                        </font>
+                    </font>
+                </td>
+                <td>
+                    <font style="vertical-align: inherit;">
+                        <font style="vertical-align: inherit;">
+                            @Model.Score
+                        </font>
+                    </font>
+                </td>
+            </tr>
+        </tbody>
+</table>
+
+<div class="panel panel-default" >
     <div class="panel-body">
         @Model.Problem.ProblemName
     </div>
@@ -18,7 +85,7 @@
 
     <div class="tab-content">
         <div id="home" class="tab-pane fade in active">
-            @Html.Raw(@Model.Problem.ProblemContent);
+            @Html.Raw(@Model.Problem.ProblemContent)
 
             @if (User.Identity.IsAuthenticated)
             {

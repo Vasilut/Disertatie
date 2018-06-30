@@ -139,13 +139,15 @@ namespace GeekCoding.MainApplication.Controllers
 
             var solutions = await _solutionRepository.GetAllAsync();
             var solution = solutions.Where(sol => sol.ProblemId == id).FirstOrDefault();
+            var score = submisionList.FirstOrDefault() == null ? 0 : submisionList.First().Score;
 
             ProblemDetailsViewModel problemDetailsViewModel = new ProblemDetailsViewModel
             {
                 Problem = problem,
                 Submisions = submisionList,
                 Solution = solution,
-                SelectListItems = _compilers
+                SelectListItems = _compilers,
+                Score = score
             };
             return View(problemDetailsViewModel);
         }
