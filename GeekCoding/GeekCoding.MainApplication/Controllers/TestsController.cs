@@ -58,7 +58,7 @@ namespace GeekCoding.MainApplication.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Add([FromForm]Tests test)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 var newTest = new Tests
                 {
@@ -76,7 +76,7 @@ namespace GeekCoding.MainApplication.Controllers
 
                 _testRepository.Create(newTest);
                 _testRepository.Save();
-                
+
                 return RedirectToAction(nameof(Index), new { id = test.ProblemId });
             }
 
@@ -84,49 +84,56 @@ namespace GeekCoding.MainApplication.Controllers
         }
 
         // GET: Tests/Edit/5
-        public ActionResult Edit(int id)
+        public ActionResult Edit(Guid id)
         {
-            return View();
+            var test = _testRepository.GetItem(id);
+            if (test == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View(test);
         }
 
         // POST: Tests/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit([FromForm] Tests test)
         {
-            try
+            if (ModelState.IsValid)
             {
-                // TODO: Add update logic here
+                //update from server first
 
-                return RedirectToAction(nameof(Index));
+                _testRepository.Update(test);
+                _testRepository.Save();
+                return RedirectToAction(nameof(Index), new { id = test.ProblemId });
             }
-            catch
-            {
-                return View();
-            }
+            return View();
         }
 
         // GET: Tests/Delete/5
-        public ActionResult Delete(int id)
+        public ActionResult Delete(Guid id)
         {
-            return View();
+            var test = _testRepository.GetItem(id);
+            if (test == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            return View(test);
         }
 
         // POST: Tests/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete([FromForm] TestProblemsIdViewModel test)
         {
-            try
-            {
-                // TODO: Add delete logic here
 
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            //delete from linux server first
+
+            _testRepository.Delete(test.TestId);
+            _testRepository.Save();
+
+            return RedirectToAction(nameof(Index), new { id = test.ProblemId });
         }
     }
 }
