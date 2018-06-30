@@ -104,11 +104,11 @@ namespace GeekCoding.Common.Helpers
             {
                 case "INIT":
                     {
-                        return $"./isolate {SandboxOperation[0]}";
+                        return $"./isolate --cg {SandboxOperation[0]}";
                     }
                 case "CLEAN":
                     {
-                        return $"./isolate {SandboxOperation[1]}";
+                        return $"./isolate --cg {SandboxOperation[1]}";
                     }
                 default:
                     break;
@@ -116,12 +116,12 @@ namespace GeekCoding.Common.Helpers
             return string.Empty;
         }
 
-        public static string SandboxArguments(string timeLimit, string memoryLimit, string resultFile, string fileToExecute, string inputFile, string outputFile)
+        public static string SandboxArguments(string timeLimit, string memoryLimit, string resultFile, string fileToExecute, string inputFile, string outputFile, string sandboxDirectory)
         {
             //result file = /tmp/logo3.txt
             //memory in kb (for example 4600)
             //time 1.5 seconds
-            return $"./isolate --cg --meta={resultFile} --stdin={inputFile} --stdout={outputFile} --cg-mem={memoryLimit} --time={timeLimit} --run -- {fileToExecute}";
+            return $"./isolate --cg --dir={sandboxDirectory}:rw --meta={resultFile} --stdin={inputFile} --stdout={outputFile} --cg-mem={memoryLimit} --time={timeLimit} --run -- {fileToExecute}";
         }
     }
 }

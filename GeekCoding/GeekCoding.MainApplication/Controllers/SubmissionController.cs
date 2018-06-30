@@ -48,8 +48,9 @@ namespace GeekCoding.MainApplication.Controllers
         {
             
             var submisionList = await _submisionRepository.GetAllAsync();
+            var submissionListOrderedAsc = submisionList.OrderBy(x => x.DataOfSubmision).ToList();
             //need to get all the submission that have queed flag set to 0
-            foreach (var submission in submisionList)
+            foreach (var submission in submissionListOrderedAsc)
             {
                 if(submission.JobQueued == false)
                 {

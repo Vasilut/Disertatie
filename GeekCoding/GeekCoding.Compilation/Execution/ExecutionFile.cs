@@ -60,7 +60,7 @@ namespace GeekCoding.Compilation.Execution
             executionProcess.SandboxOperation(copyArgument, _homeDirectory);
 
             //step 4
-            string executionArgument = LanguageHelper.SandboxArguments(timeLimit, memoryLimit, "/tmp/results.txt", fileToExecute, _inputFile, _outputFile);
+            string executionArgument = LanguageHelper.SandboxArguments(timeLimit, memoryLimit, "/tmp/results.txt", fileToExecute, _inputFile, _outputFile, _sandboxDirectory);
             executionProcess.SandboxOperation(executionArgument, _isolateDirectory);
             string executionResult = _fileGenerator.ReadExectutionResult();
 
