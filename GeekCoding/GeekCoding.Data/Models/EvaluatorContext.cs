@@ -71,7 +71,13 @@ namespace GeekCoding.Data.Models
             {
                 entity.Property(e => e.SolutionId).ValueGeneratedNever();
 
+                entity.Property(e => e.Author)
+                    .IsRequired()
+                    .HasMaxLength(50);
+
                 entity.Property(e => e.Content).IsRequired();
+
+                entity.Property(e => e.DateAdded).HasColumnType("date");
 
                 entity.HasOne(d => d.Problem)
                     .WithMany(p => p.Solution)
