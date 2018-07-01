@@ -12,5 +12,8 @@ namespace GeekCoding.Compilation.Api.Model
         
         public string ProblemName { get; set; }
         public string UserName { get; set; }
+        public string Compilator { get; set; }
+        public string FileName { get; set; }
+        public int NumberOfTests { get; set; }
     }
 }

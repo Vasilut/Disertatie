@@ -35,7 +35,7 @@ namespace GeekCoding.Common
                 using (FileStream fs = new FileStream(fileToCreate, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None))
                 {
                     content = content.Trim();
-                    StreamWriter writer = new StreamWriter(fs, Encoding.UTF8);
+                    StreamWriter writer = new StreamWriter(fs, Encoding.ASCII);
                     writer.WriteLine(content);
                     writer.Flush();
                 }
@@ -50,7 +50,7 @@ namespace GeekCoding.Common
                 using (FileStream fs = new FileStream(fileToCreate, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None))
                 {
                     content = content.Trim();
-                    StreamWriter writer = new StreamWriter(fs, Encoding.UTF8);
+                    StreamWriter writer = new StreamWriter(fs, Encoding.ASCII);
                     writer.WriteLine(content);
                     writer.Flush();
                 }
@@ -89,6 +89,15 @@ namespace GeekCoding.Common
             return goodDirectory;
         }
 
+        public string BuildNewDirectory(string oldPath, string folderName)
+        {
+            var newDirectory = Path.Combine(oldPath, folderName);
+            if(!Directory.Exists(newDirectory))
+            {
+                Directory.CreateDirectory(newDirectory);
+            }
+            return newDirectory;
+        }
         public string GetFileFullName(string problemName, string userName)
         {
             var goodDirectory = GetCurrentDirectory();

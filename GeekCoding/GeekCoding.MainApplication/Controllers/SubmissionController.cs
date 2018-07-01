@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using GeekCoding.Compilation.Api.Model;
@@ -26,16 +27,19 @@ namespace GeekCoding.MainApplication.Controllers
         private IConfiguration _configuration;
         private IProblemRepository _problemRepository;
         private IEvaluationRepository _evaluationRepository;
+        private ITestsRepository _testRepository;
         private string _compilationApi;
         private string _executionApi;
 
         public SubmissionController(ISubmisionRepository submisionRepository, IConfiguration configuration,
-                                    IProblemRepository problemRepository, IEvaluationRepository evaluationRepository)
+                                    IProblemRepository problemRepository, IEvaluationRepository evaluationRepository,
+                                    ITestsRepository testsRepository)
         {
             _submisionRepository = submisionRepository;
             _configuration = configuration;
             _problemRepository = problemRepository;
             _evaluationRepository = evaluationRepository;
+            _testRepository = testsRepository;
 
             //intialize compilation and running api
             _compilationApi = _configuration.GetSection("Api")["CompilationApi"];
@@ -57,10 +61,13 @@ namespace GeekCoding.MainApplication.Controllers
                     //start a job for this submission
                     var problem = _problemRepository.GetItem(submission.ProblemId);
                     string problemName = problem.ProblemName;
+                    var tests = _testRepository.GetTestsByProblemId(problem.ProblemId).ToList();
+                    int nrOfTests = tests.Count;
+                    string nameOfFile = problemName.ToLower();
 
                     var submissionDtoModel = new SubmisionDto { Compilator = submission.Compilator, ProblemName = problemName, Content = submission.SourceCode,
                                                                 SubmissionId = submission.SubmisionId, UserName = User.Identity.Name, MemoryLimit = problem.MemoryLimit,
-                                                                TimeLimit = problem.TimeLimit
+                                                                TimeLimit = problem.TimeLimit, NumberOfTests = nrOfTests, FileName = nameOfFile
                                                                 };
                     BackgroundJob.Enqueue<SubmissionRequest>(x => x.MakeSubmissionRequestAsync(submissionDtoModel, _compilationApi,_executionApi));
                     submission.JobQueued = true;

@@ -14,7 +14,8 @@ namespace GeekCoding.MainApplication.Utilities
         public string Compilator { get; set; }
         public string MemoryLimit { get; set; }
         public string TimeLimit { get; set; }
+        public int NumberOfTests { get; set; }
+        public string FileName { get; set; }
 
-        
     }
 }

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 namespace GeekCoding.Compilation.Api.Model
 {
+    [Serializable]
     public class ResponseExecutionModel
     {
         public string ExecutionStatus { get; set; }

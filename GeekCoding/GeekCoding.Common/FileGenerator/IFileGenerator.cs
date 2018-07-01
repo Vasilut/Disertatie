@@ -14,5 +14,6 @@ namespace GeekCoding.Common
 
         string ReadExectutionResult();
         void GenerateTestFile(string fileName, string problem, string content);
+        string BuildNewDirectory(string oldPath, string folderName);
     }
 }

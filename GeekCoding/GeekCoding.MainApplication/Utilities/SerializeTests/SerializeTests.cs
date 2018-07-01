@@ -1,4 +1,5 @@
-﻿using GeekCoding.MainApplication.Utilities.DTO;
+﻿using GeekCoding.Compilation.Api.Model;
+using GeekCoding.MainApplication.Utilities.DTO;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -14,26 +15,23 @@ namespace GeekCoding.MainApplication.Utilities
         private List<TestModelDto> _listTestModel;
         public SerializeTests()
         {
-            _responseDictionary = new Dictionary<string, string>();
+            
             _listTestModel = new List<TestModelDto>();
         }
 
-        public Tuple<string,int> SerializeReponseTest(List<string> tests)
+        public Tuple<string,int> SerializeReponseTest(List<ResponseExecutionModel> responseExecutionModels)
         {
-            //each string represent a result "time:1.125---time-wall:1.143---max-rss:4972---csw-voluntary:1---csw-forced:315---cg-mem:2512--- Response: Incorrect!\n"
+            //first property represent the status: "time:1.125---time-wall:1.143---max-rss:4972---csw-voluntary:1---csw-forced:315---cg-mem:2512---"
+            //second parameter represent the resut:Response: Incorrect!\n
             //we parse all the result and we'll serialize the list where we store the new results
             int sumPoints = 0;
-            foreach (var item in tests)
+            foreach (var item in responseExecutionModels)
             {
-                string[] execution = item.Split(new string[] { "XXX" }, StringSplitOptions.None);
-                if (execution.Length > 1)
-                {
-                    string executionResult = execution[0];
-                    string executionOutput = execution[1];
+                    _responseDictionary = new Dictionary<string, string>();
+                    string executionResult = item.ExecutionResults;
+                    string executionOutput = item.ExecutionStatus;
                     
                     var options = executionResult.Split(new string[] { "---" }, StringSplitOptions.None);
-                    Regex rg = new Regex(@"\w+");
-                    bool firstValue = true;
                     foreach (var metaParameter in options)
                     {
                         var splitOption = metaParameter.Split(':');
@@ -41,16 +39,6 @@ namespace GeekCoding.MainApplication.Utilities
                         {
                             var key = splitOption[0];
                             var val = splitOption[1];
-
-                            if (firstValue)
-                            {
-                                Match match = rg.Match(splitOption[0]);
-                                key = match.Value;
-                                firstValue = false;
-                                _responseDictionary.Add(key, val);
-                                continue;
-                            }
-
                             _responseDictionary.Add(key, val);
                         }
                     }
@@ -84,7 +72,6 @@ namespace GeekCoding.MainApplication.Utilities
                     }
 
                     _listTestModel.Add(testModel);
-                }
             }
 
             var serializedList = JsonConvert.SerializeObject(_listTestModel);

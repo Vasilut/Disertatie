@@ -61,12 +61,6 @@ namespace GeekCoding.MainApplication.Jobs
                 var result = await response.Content.ReadAsStringAsync();
                 var content = JsonConvert.DeserializeObject<ResponseCompilationModel>(result);
 
-                //var task = _hubContext.Clients.All.SendAsync("SubmissionMessage", "Salut Dinamo", submision.SubmissionId.ToString());
-                //if (task != null)
-                //{
-                //    await task;
-                //}
-
                 if (content.CompilationResponse == "SUCCESS")
                 {
                     UpdateSubmissionStatus(submision.SubmissionId, SubmissionStatus.Compiled, content.OutputMessage,0);
@@ -105,7 +99,10 @@ namespace GeekCoding.MainApplication.Jobs
                 MemoryLimit = submision.MemoryLimit,
                 ProblemName = submision.ProblemName,
                 UserName = submision.UserName,
-                TimeLimit = submision.TimeLimit
+                TimeLimit = submision.TimeLimit,
+                Compilator = submision.Compilator,
+                FileName = submision.FileName,
+                NumberOfTests = submision.NumberOfTests
             };
             var serializedExecutionData = JsonConvert.SerializeObject(executionModel);
             var httpContentExecution = new StringContent(serializedExecutionData, Encoding.UTF8, "application/json");
@@ -114,9 +111,8 @@ namespace GeekCoding.MainApplication.Jobs
             if (responseExecution.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 var resultExecution = await responseExecution.Content.ReadAsStringAsync();
-                List<string> tests = new List<string>();
-                tests.Add(resultExecution);
-                var serializedData = _serializeTests.SerializeReponseTest(tests);
+                var responseExecutionModels = DeserializeExecutionResponse(resultExecution);
+                var serializedData = _serializeTests.SerializeReponseTest(responseExecutionModels);
                 //save in db the serializedData
                 var evaluationModel = new Evaluation
                 {
@@ -133,6 +129,13 @@ namespace GeekCoding.MainApplication.Jobs
 
                 var x = 2;
             }
+        }
+
+        private List<ResponseExecutionModel> DeserializeExecutionResponse(string execututionResponse)
+        {
+            List<string> result = new List<string>();
+            var listDeserialized = JsonConvert.DeserializeObject<List<ResponseExecutionModel>>(execututionResponse);
+            return listDeserialized;
         }
 
         private void UpdateSubmissionStatus(Guid submissionId, SubmissionStatus submissionStatus, string messageOfCompilation, int score)

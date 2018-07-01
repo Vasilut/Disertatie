@@ -6,6 +6,7 @@ namespace GeekCoding.Compilation.Execution
 {
     public interface IExecutionFile
     {
-        Tuple<string,string> Execute(string problemName, string userName, string language,string timeLimit, string memoryLimit);
+        List<Tuple<string,string> > Execute(string problemName, string userName, string language,
+                                     string timeLimit, string memoryLimit, string testFile, int numbefOfTests);
     }
 }

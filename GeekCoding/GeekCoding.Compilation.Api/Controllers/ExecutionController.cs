@@ -22,20 +22,30 @@ namespace GeekCoding.Compilation.Api.Controllers
         [HttpGet]
         public IEnumerable<string> Get()
         {
-            return new string[] { "exec1LuciCelMaiTareTareDragnea22", "exec2LuciTareFelinaBlanaGoodDancil22a" };
+            return new string[] { "exec1LuciCelMaiTareTareDragnea222", "exec2LuciTareFelinaBlanaGoodDancil22a2" };
         }
 
         [HttpPost]
         // POST api/<controller>
-        public string Post([FromBody]ExecutionModel item)
+        public JsonResult Post([FromBody]ExecutionModel item)
         {
             if (ModelState.IsValid)
             {
-                Tuple<string,string> executionResponse = _executeFile.Execute(item.ProblemName, item.UserName, "C++", item.TimeLimit, item.MemoryLimit);
-                return new StringBuilder(executionResponse.Item1).Append("XXX").Append("Response: ").Append(executionResponse.Item2).ToString();
+                var lstExecutionResponse = _executeFile.Execute(item.ProblemName, item.UserName, item.Compilator,
+                                                                              item.TimeLimit, item.MemoryLimit, item.FileName, item.NumberOfTests);
+                var lst = new List<ResponseExecutionModel>();
+                foreach (var itemRsp in lstExecutionResponse)
+                {
+                    lst.Add(new ResponseExecutionModel
+                    {
+                        ExecutionResults = itemRsp.Item1,
+                        ExecutionStatus = itemRsp.Item2
+                    });
+                }
+                return Json(lst);
             }
 
-            return "Failed response";
+            return Json("Failed response");
         }
     }
 }
