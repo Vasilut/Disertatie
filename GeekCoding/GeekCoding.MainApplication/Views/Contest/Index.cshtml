@@ -1,4 +1,4 @@
-﻿
+﻿@model IEnumerable<GeekCoding.Data.Models.Contest>
 <!DOCTYPE html>
 
 <html>
@@ -7,6 +7,36 @@
     <title></title>
 </head>
 <body>
-    welcome to contest page!
+    @foreach(var item in Model)
+    {
+        <div class="row" style="margin-top:50px;">
+            <div class="col-md-10">
+                <div class="panel panel-info">
+                    <div class="panel-body">
+                        <h3 class="panel-body">
+                            <img src="~/images/trophy.jpg" /> @item.Title
+                            <p class="pull-right">@item.StatusContest</p>
+                        </h3>
+                        <h5 class="panel-body">
+                            <ul class="list-unstyled list-inline">
+                                &nbsp; &nbsp;
+                                <li>
+                                    <span class="glyphicon glyphicon-user">
+                                    </span>
+                                    @item.StartDate
+                                </li>
+                                <li>
+                                    <span class="glyphicon glyphicon-user">
+                                    </span>
+                                    @item.Duration
+                                </li>
+                            </ul>
+                        </h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr />
+    }
 </body>
 </html>

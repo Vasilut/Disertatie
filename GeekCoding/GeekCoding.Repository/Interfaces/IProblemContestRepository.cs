@@ -5,7 +5,7 @@ using System.Text;
 
 namespace GeekCoding.Repository.Interfaces
 {
-    interface IProblemContestRepository : IRepositoryBase<ProblemContest>
+    public interface IProblemContestRepository : IRepositoryBase<ProblemContest>
     {
     }
 }

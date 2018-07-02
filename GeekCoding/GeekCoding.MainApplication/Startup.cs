@@ -49,6 +49,11 @@ namespace GeekCoding.MainApplication
             services.AddScoped<IEvaluationRepository, EvaluationRepository>();
             services.AddScoped<ISubmisionRepository, SubmisionRepository>();
             services.AddScoped<IProgressStatusRepository, ProgresStatusRepository>();
+            services.AddScoped<IContestRepository, ContestRepository>();
+            services.AddScoped<IUserContestRepository, UserContestRepository>();
+            services.AddScoped<IProblemContestRepository, ProblemContestRepository>();
+            services.AddScoped<ISubmisionContestRepository, SubmisionContestRepository>();
+            services.AddScoped<IAnnouncementRepository, AnnouncementRepository>();
             services.AddScoped<ISerializeTests, SerializeTests>();
             services.AddTransient<SubmissionHub>();
 

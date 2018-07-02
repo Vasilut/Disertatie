@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace GeekCoding.Data.Models
@@ -20,6 +21,8 @@ namespace GeekCoding.Data.Models
         public string StatusContest { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
+        [NotMapped]
+        public double Duration { get; set; }
 
         public ICollection<Announcement> Announcement { get; set; }
         public ICollection<ProblemContest> ProblemContest { get; set; }
