@@ -1,0 +1,48 @@
+﻿@model GeekCoding.Data.Models.Solution
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Detalii articol</title>
+</head>
+<body>
+
+   
+            <h3>Detalii articol ( @Model.Name )</h3>
+            <hr />
+
+            <div class="row">
+                <div class="col-md-1"><b>Author</b></div>
+                <div class="col-md-2">@Model.Author</div>
+                <div class="col-md-2"><b>Name</b></div>
+                <div class="col-md-2">@Model.Name</div>
+                <hr />
+            </div>
+
+            <div class="row">
+                <div class="col-md-1"><b>Date added</b></div>
+                <div class="col-md-2">@Model.DateAdded </div>
+                <div class="col-md-2"><b>Problem name</b></div>
+                <div class="col-md-2">@Model.Problem.ProblemName</div>
+                <hr />
+            </div>
+
+            <hr />
+            <div class="row">
+                <h3> Solution</h3>
+                <hr />
+
+                <div class="row">
+                    @Html.Raw(Model.Content)
+                </div>
+
+            </div>
+ 
+
+    <div>
+        <a asp-action="Index">  <i class="glyphicon glyphicon-arrow-left"></i> &nbsp; Back to List</a>
+    </div>
+</body>
+</html>

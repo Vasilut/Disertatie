@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GeekCoding.Data.Models;
+using GeekCoding.MainApplication.Pagination;
 using GeekCoding.MainApplication.ViewModels;
 using GeekCoding.Repository.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -25,10 +26,24 @@ namespace GeekCoding.MainApplication.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-        public IActionResult Index()
+        public IActionResult Index(int? page)
         {
             var lst = _solutionRepository.GetAll().ToList();
-            return View(lst);
+
+            int pageSize = 10;
+            return View(PaginatedList<Solution>.CreateAsync(lst, page ?? 1,pageSize));
+        }
+
+        [AllowAnonymous]
+        [HttpGet]
+        public IActionResult Details(Guid id)
+        {
+            var solution = _solutionRepository.GetItem(id);
+            if(solution == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            return View(solution);
         }
         
         [Authorize(Roles ="Admin")]
