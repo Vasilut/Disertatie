@@ -60,7 +60,7 @@ namespace GeekCoding.Repository
             return await RepositoryContext.Set<T>().FindAsync(id);
         }
 
-        public IQueryable<T> GetAll()
+        public virtual IQueryable<T> GetAll()
         {
             return RepositoryContext.Set<T>();
         }

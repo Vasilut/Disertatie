@@ -7,10 +7,25 @@
     <title></title>
 </head>
 <body>
-    @foreach(var item in Model)
+
+    @if (User.IsInRole("Admin"))
+    {
+
+        <div class="row" style="margin-top:25px;">
+            <div class="col-md-1">
+                <font style="vertical-align: inherit;">
+                    <font style="vertical-align: inherit;">
+                        <a class="btn btn-info" asp-controller="Contest" asp-action="Add">Create Contest</a>
+                    </font>
+                </font>
+            </div>
+        </div>
+
+    }
+    @foreach (var item in Model)
     {
         <div class="row" style="margin-top:50px;">
-            <div class="col-md-10">
+            <div class="col-md-9">
                 <div class="panel panel-info">
                     <div class="panel-body">
                         <h3 class="panel-body">
@@ -35,6 +50,30 @@
                     </div>
                 </div>
             </div>
+            @if (User.IsInRole("Admin"))
+            {
+                <div class="col-md-1">
+                    <font style="vertical-align: inherit;">
+                        <font style="vertical-align: inherit;">
+                            <a class="btn btn-warning" asp-controller="Contest" asp-action="Edit" asp-route-id="@item.ContestId">Edit</a>
+                        </font>
+                    </font>
+                </div>
+                <div class="col-md-1">
+                    <font style="vertical-align: inherit;">
+                        <font style="vertical-align: inherit;">
+                            <a class="btn btn-danger" asp-controller="Contest" asp-action="Delete" asp-route-id="@item.ContestId">Delete</a>
+                        </font>
+                    </font>
+                </div>
+                <div class="col-md-1">
+                    <font style="vertical-align: inherit;">
+                        <font style="vertical-align: inherit;">
+                            <a class="btn btn-primary" asp-controller="Contest" asp-action="AddProblems" asp-route-id="@item.ContestId">Add problems</a>
+                        </font>
+                    </font>
+                </div>
+            }
         </div>
         <hr />
     }
