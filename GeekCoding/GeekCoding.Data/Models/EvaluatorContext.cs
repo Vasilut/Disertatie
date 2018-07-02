@@ -13,6 +13,12 @@ namespace GeekCoding.Data.Models
         public virtual DbSet<Submision> Submision { get; set; }
         public virtual DbSet<Evaluation> Evaluation { get; set; }
         public virtual DbSet<Tests> Tests { get; set; }
+        public virtual DbSet<Contest> Contest { get; set; }
+        public virtual DbSet<UserContest> UserContest { get; set; }
+        public virtual DbSet<ProblemContest> ProblemContest { get; set; }
+        public virtual DbSet<SubmisionContest> SubmisionContest { get; set; }
+        public virtual DbSet<Announcement> Announcement { get; set; }
+        
 
         public EvaluatorContext(DbContextOptions options) : base(options)
         {
@@ -33,6 +39,36 @@ namespace GeekCoding.Data.Models
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<Announcement>(entity =>
+            {
+                entity.Property(e => e.AnnouncementId).ValueGeneratedNever();
+
+                entity.HasOne(d => d.Contest)
+                    .WithMany(p => p.Announcement)
+                    .HasForeignKey(d => d.ContestId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Announcem__Conte__66603565");
+            });
+
+            modelBuilder.Entity<Contest>(entity =>
+            {
+                entity.Property(e => e.ContestId).ValueGeneratedNever();
+
+                entity.Property(e => e.Content).IsRequired();
+
+                entity.Property(e => e.EndDate).HasColumnType("datetime");
+
+                entity.Property(e => e.StartDate).HasColumnType("datetime");
+
+                entity.Property(e => e.StatusContest)
+                    .IsRequired()
+                    .HasMaxLength(20);
+
+                entity.Property(e => e.Title)
+                    .IsRequired()
+                    .HasMaxLength(50);
+            });
+
             modelBuilder.Entity<Problem>(entity =>
             {
                 entity.Property(e => e.ProblemId).ValueGeneratedNever();
@@ -50,6 +86,55 @@ namespace GeekCoding.Data.Models
                     .HasMaxLength(50);
 
                 entity.Property(e => e.TimeLimit).HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<ProblemContest>(entity =>
+            {
+                entity.Property(e => e.ProblemContestId).ValueGeneratedNever();
+
+                entity.HasOne(d => d.Contest)
+                    .WithMany(p => p.ProblemContest)
+                    .HasForeignKey(d => d.ContestId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__ProblemCo__Conte__5EBF139D");
+
+                entity.HasOne(d => d.Problem)
+                    .WithMany(p => p.ProblemContest)
+                    .HasForeignKey(d => d.ProblemId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__ProblemCo__Probl__5FB337D6");
+            });
+
+            modelBuilder.Entity<SubmisionContest>(entity =>
+            {
+                entity.Property(e => e.SubmisionContestId).ValueGeneratedNever();
+
+                entity.HasOne(d => d.Contest)
+                    .WithMany(p => p.SubmisionContest)
+                    .HasForeignKey(d => d.ContestId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Submision__Conte__628FA481");
+
+                entity.HasOne(d => d.Submision)
+                    .WithMany(p => p.SubmisionContest)
+                    .HasForeignKey(d => d.SubmisionId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Submision__Submi__6383C8BA");
+            });
+
+            modelBuilder.Entity<UserContest>(entity =>
+            {
+                entity.Property(e => e.UserContestId).ValueGeneratedNever();
+
+                entity.Property(e => e.UserName)
+                    .IsRequired()
+                    .HasMaxLength(50);
+
+                entity.HasOne(d => d.Contest)
+                    .WithMany(p => p.UserContest)
+                    .HasForeignKey(d => d.ContestId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__UserConte__Conte__5BE2A6F2");
             });
 
             modelBuilder.Entity<ProgresStatus>(entity =>

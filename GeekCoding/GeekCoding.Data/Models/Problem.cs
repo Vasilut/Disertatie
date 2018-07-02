@@ -12,6 +12,7 @@ namespace GeekCoding.Data.Models
             Solution = new HashSet<Solution>();
             Submision = new HashSet<Submision>();
             Tests = new HashSet<Tests>();
+            ProblemContest = new HashSet<ProblemContest>();
         }
 
         public Guid ProblemId { get; set; }
@@ -25,6 +26,7 @@ namespace GeekCoding.Data.Models
         public bool Visible { get; set; }
         [NotMapped]
         public double AverageAcceptance { get; set; }
+        public ICollection<ProblemContest> ProblemContest { get; set; }
 
         public ICollection<ProgresStatus> ProgresStatus { get; set; }
         public ICollection<Solution> Solution { get; set; }
