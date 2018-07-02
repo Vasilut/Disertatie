@@ -101,5 +101,27 @@ namespace GeekCoding.MainApplication.Controllers
             }
             return View();
         }
+
+        [Authorize(Roles ="Admin")]
+        [HttpGet]
+        public IActionResult Delete(Guid id)
+        {
+            var solution = _solutionRepository.GetItem(id);
+            if(solution == null)
+            {
+                return RedirectToAction(nameof(ProblemSolution));
+            }
+            return View(solution);
+        }
+
+        [Authorize(Roles ="Admin")]
+        [HttpPost]
+        public IActionResult Delete([FromForm] SolutionProblemViewModel solution)
+        {
+            _solutionRepository.Delete(solution.SolutionId);
+            _solutionRepository.Save();
+
+            return RedirectToAction(nameof(ProblemSolution), new { id = solution.ProblemId });
+        }
     }
 }
