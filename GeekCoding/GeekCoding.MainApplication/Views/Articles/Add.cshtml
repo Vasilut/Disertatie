@@ -43,13 +43,13 @@
                 <div class="form-group">
                     <input type="submit" value="Create" class="btn btn-default" />
                 </div>
-                <input type="hidden" name="ProblemId" value="94A704E6-839A-41C0-AC43-7F5780EF5EDA" />
+                <input type="hidden" name="ProblemId" value="@ViewBag.ProblemId" />
             </form>
         </div>
     </div>
 
     <div>
-        <a asp-action="ProblemSolution" asp-route-id="@Model.ProblemId" >  <i class="glyphicon glyphicon-arrow-left"></i> &nbsp; Back to List</a>
+        <a asp-action="ProblemSolution" asp-route-id="@ViewBag.ProblemId" >  <i class="glyphicon glyphicon-arrow-left"></i> &nbsp; Back to List</a>
     </div>
 
 </body>

@@ -49,7 +49,7 @@ namespace GeekCoding.MainApplication.Controllers
 
         public IActionResult Add(Guid id)
         {
-            ViewBag.Id = id;
+            ViewBag.ProblemId = id;
             return View();
         }
 
