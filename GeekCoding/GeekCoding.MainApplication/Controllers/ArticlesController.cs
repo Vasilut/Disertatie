@@ -75,5 +75,31 @@ namespace GeekCoding.MainApplication.Controllers
             }
             return View();
         }
+
+        [Authorize(Roles = "Admin")]
+        [HttpGet]
+        public IActionResult Edit(Guid id)
+        {
+            var solution = _solutionRepository.GetItem(id);
+            if(solution == null)
+            {
+                return RedirectToAction(nameof(ProblemSolution));
+            }
+            return View(solution);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public IActionResult Edit([FromForm] Solution solution)
+        {
+            if(ModelState.IsValid)
+            {
+                //update entity
+                _solutionRepository.Update(solution);
+                _solutionRepository.Save();
+                return RedirectToAction(nameof(ProblemSolution), new { id = solution.ProblemId });
+            }
+            return View();
+        }
     }
 }
