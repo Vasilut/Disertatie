@@ -48,13 +48,13 @@ namespace GeekCoding.MainApplication.Controllers
         }
 
         // GET: Tests/Details/5
-        public ActionResult Details(int id)
+        public IActionResult Details(int id)
         {
             return View();
         }
 
         // GET: Tests/Create
-        public ActionResult Add(Guid id)
+        public IActionResult Add(Guid id)
         {
             ViewBag.ProblemId = id;
             return View();
@@ -144,7 +144,7 @@ namespace GeekCoding.MainApplication.Controllers
         }
 
         // GET: Tests/Edit/5
-        public ActionResult Edit(Guid id)
+        public IActionResult Edit(Guid id)
         {
             var test = _testRepository.GetItem(id);
             if (test == null)
@@ -158,7 +158,7 @@ namespace GeekCoding.MainApplication.Controllers
         // POST: Tests/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([FromForm] Tests test)
+        public IActionResult Edit([FromForm] Tests test)
         {
             if (ModelState.IsValid)
             {
@@ -172,7 +172,7 @@ namespace GeekCoding.MainApplication.Controllers
         }
 
         // GET: Tests/Delete/5
-        public ActionResult Delete(Guid id)
+        public IActionResult Delete(Guid id)
         {
             var test = _testRepository.GetItem(id);
             if (test == null)
@@ -185,7 +185,7 @@ namespace GeekCoding.MainApplication.Controllers
         // POST: Tests/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete([FromForm] TestProblemsIdViewModel test)
+        public IActionResult Delete([FromForm] TestProblemsIdViewModel test)
         {
 
             //delete from linux server first

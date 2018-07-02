@@ -235,15 +235,15 @@
             </table>
         </div>
         <div id="solutions" class="tab-pane fade">
-            @if (User.Identity.IsAuthenticated)
+            @if (User.Identity.IsAuthenticated && Model.Solution != null)
             {
-                <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
+                @Html.Raw(@Model.Solution.Content)
             }
             else
             {
                 <div class="panel panel-danger">
                     <div class="panel-heading">
-                        You have not signed in. Cannot see the solution of the problem
+                        You don't have rights to see the problem solution!
                     </div>
                 </div>
 

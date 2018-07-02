@@ -1,0 +1,118 @@
+﻿@model GeekCoding.MainApplication.ViewModels.SolutionViewModel
+
+<div class="panel panel-default" style="margin-top:25px;">
+    <div class="panel-body">
+        Solution for problem @Model.ProblemName
+    </div>
+</div>
+
+@if (User.IsInRole("Admin") && Model.Solution == null)
+{
+
+    <div class="row" style="margin-top:25px;">
+        <div class="col-md-1">
+            <font style="vertical-align: inherit;">
+                <font style="vertical-align: inherit;">
+                    <a class="btn btn-info" asp-action="Add" asp-route-id="@Model.ProblemId">Create Solution</a>
+                </font>
+            </font>
+        </div>
+    </div>
+
+
+}
+
+@if (User.IsInRole("Admin") && Model.Solution != null)
+{
+    <table class="table table-hover" style="margin-top:50px;">
+        <thead>
+
+            <tr>
+                <th>
+                    <font style="vertical-align: inherit;">
+                        <font style="vertical-align: inherit;">
+                            Solution name
+                        </font>
+                    </font>
+                </th>
+                <th>
+                    <font style="vertical-align: inherit;">
+                        <font style="vertical-align: inherit;">
+                            Author
+                        </font>
+                    </font>
+                </th>
+                <th>
+                    <font style="vertical-align: inherit;">
+                        <font style="vertical-align: inherit;">
+                            Data added
+                        </font>
+                    </font>
+                </th>
+                <th>
+                    <font style="vertical-align: inherit;">
+                        <font style="vertical-align: inherit;">
+                            Visible
+                        </font>
+                    </font>
+                </th>
+            </tr>
+        </thead>
+        <tbody class="reactable-data">
+            <tr>
+                <td>
+                    <font style="vertical-align: inherit;">
+                        <font style="vertical-align: inherit;">
+                            @Model?.Solution.Name.
+                        </font>
+                    </font>
+                </td>
+                <td>
+                    <font style="vertical-align: inherit;">
+                        <font style="vertical-align: inherit;">
+                            @Model?.Solution.Author
+                        </font>
+                    </font>
+                </td>
+                <td>
+                    <font style="vertical-align: inherit;">
+                        <font style="vertical-align: inherit;">
+                            @Model?.Solution.DateAdded
+                        </font>
+                    </font>
+                </td>
+                <td>
+                    <font style="vertical-align: inherit;">
+                        <font style="vertical-align: inherit;">
+                            @Model?.Solution.Visible
+                        </font>
+                    </font>
+                </td>
+                @if (User.IsInRole("Admin"))
+                {
+
+                    <td>
+                        <font style="vertical-align: inherit;">
+                            <font style="vertical-align: inherit;">
+                                <a class="btn btn-warning" asp-action="Edit" asp-route-id="@Model.Solution.SolutionId">Edit</a>
+                            </font>
+                        </font>
+                    </td>
+
+                }
+                @if (User.IsInRole("Admin"))
+                {
+                    <td>
+                        <font style="vertical-align: inherit;">
+                            <font style="vertical-align: inherit;">
+                                <a class="btn btn-danger" asp-action="Delete" asp-route-id="@Model.Solution.SolutionId">Delete</a>
+                            </font>
+                        </font>
+                    </td>
+
+                }
+            </tr>
+
+        </tbody>
+    </table>
+}

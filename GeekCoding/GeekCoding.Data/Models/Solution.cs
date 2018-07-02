@@ -12,5 +12,7 @@ namespace GeekCoding.Data.Models
 
         public string Author { get; set; }
         public DateTime DateAdded { get; set; }
+        public bool Visible { get; set; }
+        public string Name { get; set; }
     }
 }

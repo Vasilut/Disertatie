@@ -77,7 +77,11 @@ namespace GeekCoding.Data.Models
 
                 entity.Property(e => e.Content).IsRequired();
 
-                entity.Property(e => e.DateAdded).HasColumnType("date");
+                entity.Property(e => e.DateAdded).HasColumnType("datetime");
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(50);
 
                 entity.HasOne(d => d.Problem)
                     .WithMany(p => p.Solution)
