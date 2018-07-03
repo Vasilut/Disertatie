@@ -1,4 +1,5 @@
-﻿using GeekCoding.Common.Helpers;
+﻿using GeekCoding.Common.EmailGenerator;
+using GeekCoding.Common.Helpers;
 using GeekCoding.Compilation.Api.Model;
 using GeekCoding.Data.Models;
 using GeekCoding.MainApplication.Utilities;
@@ -7,6 +8,7 @@ using GeekCoding.MainApplication.Utilities.Enum;
 using GeekCoding.MainApplication.ViewModels;
 using GeekCoding.Repository.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -28,10 +30,12 @@ namespace GeekCoding.MainApplication.Controllers
         private IProblemContestRepository _problemContestRepository;
         private ISubmisionContestRepository _submisionContestRepository;
         private List<SelectListItem> _compilers = new List<SelectListItem>();
+        private IMessageBuilder _emailSender;
+        private UserManager<User> _userManager;
 
-        public ContestController(IContestRepository contestRepository, IUserContestRepository userContestRepository,
-                                 IProblemContestRepository problemContestRepository, ISubmisionContestRepository submisionContestRepository,
-                                 IAnnouncementRepository announcementRepository, IProblemRepository problemRepository, ISubmisionRepository submisionRepository)
+        public ContestController(IContestRepository contestRepository, IUserContestRepository userContestRepository, IProblemContestRepository problemContestRepository,
+                                 ISubmisionContestRepository submisionContestRepository, IAnnouncementRepository announcementRepository, IProblemRepository problemRepository,
+                                 ISubmisionRepository submisionRepository, IMessageBuilder emailSender, UserManager<User> userManager)
         {
             _contestRepository = contestRepository;
             _userContestRepository = userContestRepository;
@@ -41,6 +45,8 @@ namespace GeekCoding.MainApplication.Controllers
             _problemRepository = problemRepository;
             _submisionRepository = submisionRepository;
             _compilers = Compilator.Compilers;
+            _emailSender = emailSender;
+            _userManager = userManager;
         }
 
         [AllowAnonymous]
@@ -141,10 +147,23 @@ namespace GeekCoding.MainApplication.Controllers
                 _contestRepository.Save();
 
                 //send mail to all the registered user with the contest
+                InformUsersNewContest(contest.Title);
 
                 return RedirectToAction(nameof(Index));
             }
             return View();
+        }
+
+        private void InformUsersNewContest(string contestName)
+        {
+            //var lstUsers = _userManager.Users.ToList();
+            //foreach (var item in lstUsers)
+            //{
+            //    _emailSender.AddReceiver(item.Email)
+            //                        .AddSubject($"Contest {contestName} ")
+            //                        .AddBody("A new contest will start soon!. Please check our page")
+            //                        .BuildAndSend();
+            //}
         }
 
         [Authorize(Roles = "Admin")]
