@@ -25,55 +25,69 @@
     @foreach (var item in Model)
     {
         <div class="row" style="margin-top:50px;">
-            <div class="col-md-9">
-                <div class="panel panel-info">
-                    <div class="panel-body">
-                        <h3 class="panel-body">
-                            <img src="~/images/trophy.jpg" /> @item.Title
-                            <p class="pull-right">@item.StatusContest</p>
-                        </h3>
-                        <h5 class="panel-body">
-                            <ul class="list-unstyled list-inline">
-                                &nbsp; &nbsp;
-                                <li>
-                                    <span class="glyphicon glyphicon-user">
-                                    </span>
-                                    @item.StartDate
-                                </li>
-                                <li>
-                                    <span class="glyphicon glyphicon-user">
-                                    </span>
-                                    @item.Duration
-                                </li>
-                            </ul>
-                        </h5>
+            <a asp-action="Details" asp-route-id="@item.ContestId">
+                <div class="col-md-9">
+                    <div class="panel panel-info">
+                        <div class="panel-body">
+                            <h3 class="panel-body">
+                                <img src="~/images/trophy.jpg" /> @item.Title
+                                <p class="pull-right">@item.StatusContest</p>
+                            </h3>
+                            <h5 class="panel-body">
+                                <ul class="list-unstyled list-inline">
+                                    &nbsp; &nbsp;
+                                    <li>
+                                        <span class="glyphicon glyphicon-calendar">
+                                        </span>
+                                        @item.StartDate
+                                    </li>
+                                    <li>
+                                        <span class="glyphicon glyphicon-time">
+                                        </span>
+                                        @{
+                                            if (item.Duration >= 24)
+                                            {
+                                                double d = item.Duration / 24;
+                                                string response = d + " days";
+                                                @response
+                                            }
+                                            else
+                                            {
+                                                string response = item.Duration + " hours";
+                                                @response
+                                            }
+                                        }
+                                    </li>
+                                </ul>
+                            </h5>
+                        </div>
                     </div>
                 </div>
-            </div>
-            @if (User.IsInRole("Admin"))
-            {
-                <div class="col-md-1">
-                    <font style="vertical-align: inherit;">
+                @if (User.IsInRole("Admin"))
+                {
+                    <div class="col-md-1">
                         <font style="vertical-align: inherit;">
-                            <a class="btn btn-warning" asp-controller="Contest" asp-action="Edit" asp-route-id="@item.ContestId">Edit</a>
+                            <font style="vertical-align: inherit;">
+                                <a class="btn btn-warning" asp-controller="Contest" asp-action="Edit" asp-route-id="@item.ContestId">Edit</a>
+                            </font>
                         </font>
-                    </font>
-                </div>
-                <div class="col-md-1">
-                    <font style="vertical-align: inherit;">
+                    </div>
+                    <div class="col-md-1">
                         <font style="vertical-align: inherit;">
-                            <a class="btn btn-danger" asp-controller="Contest" asp-action="Delete" asp-route-id="@item.ContestId">Delete</a>
+                            <font style="vertical-align: inherit;">
+                                <a class="btn btn-danger" asp-controller="Contest" asp-action="Delete" asp-route-id="@item.ContestId">Delete</a>
+                            </font>
                         </font>
-                    </font>
-                </div>
-                <div class="col-md-1">
-                    <font style="vertical-align: inherit;">
+                    </div>
+                    <div class="col-md-1">
                         <font style="vertical-align: inherit;">
-                            <a class="btn btn-primary" asp-controller="Contest" asp-action="AddProblems" asp-route-id="@item.ContestId">Add problems</a>
+                            <font style="vertical-align: inherit;">
+                                <a class="btn btn-primary" asp-controller="Contest" asp-action="AddProblems" asp-route-id="@item.ContestId">Add problems</a>
+                            </font>
                         </font>
-                    </font>
-                </div>
-            }
+                    </div>
+                }
+                </a>
         </div>
         <hr />
     }

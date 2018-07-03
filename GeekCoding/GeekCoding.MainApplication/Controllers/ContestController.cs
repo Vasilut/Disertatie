@@ -5,6 +5,7 @@ using GeekCoding.MainApplication.ViewModels;
 using GeekCoding.Repository.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -45,6 +46,38 @@ namespace GeekCoding.MainApplication.Controllers
             }).ToList();
 
             return View(lst);
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        public IActionResult RegisterUser([FromForm] Contest model)
+        {
+            //register user in database
+            if (ModelState.IsValid)
+            {
+                var contestUser = new UserContest
+                {
+                    UserContestId = Guid.NewGuid(),
+                    ContestId = model.ContestId,
+                    UserName = User.Identity.Name
+                };
+                _userContestRepository.Create(contestUser);
+                _userContestRepository.Save();
+                return RedirectToAction(nameof(Index));
+            }
+            return RedirectToAction(nameof(Index));
+        }
+
+        [AllowAnonymous]
+        [HttpGet]
+        public IActionResult Details(Guid id)
+        {
+            var contest = _contestRepository.GetItem(id);
+            if(contest == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            return View(contest);
         }
 
         [Authorize(Roles = "Admin")]
@@ -163,7 +196,7 @@ namespace GeekCoding.MainApplication.Controllers
                 _problemContestRepository.Save();
                 return RedirectToAction(nameof(Index));
             }
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(AddProblems), new { id = model.ContestId });
         }
 
         [Authorize(Roles ="Admin")]

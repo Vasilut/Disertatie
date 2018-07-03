@@ -6,25 +6,11 @@
 
 <h2>DeleteProblemFromContest</h2>
 
-<h3>Are you sure you want to delete this problem from the contest?</h3>
+<h3>Are you sure you want to delete the problem <b> @Model.Problem?.ProblemName </b> from the contest?</h3>
 <div>
     <h4>ProblemContest</h4>
     <hr />
-    @*<dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Contest)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Contest.Content)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Problem)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Problem.Dificulty)
-        </dd>
-    </dl>*@
-    
+     
     <form asp-action="DeleteProblemFromContest">
         <input type="hidden" asp-for="ProblemContestId" />
         <input type="submit" value="Delete" class="btn btn-default" /> |
