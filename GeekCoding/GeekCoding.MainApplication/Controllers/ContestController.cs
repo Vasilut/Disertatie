@@ -1,4 +1,7 @@
-﻿using GeekCoding.Data.Models;
+﻿using GeekCoding.Common.Helpers;
+using GeekCoding.Compilation.Api.Model;
+using GeekCoding.Data.Models;
+using GeekCoding.MainApplication.Utilities;
 using GeekCoding.MainApplication.Utilities.DTO;
 using GeekCoding.MainApplication.Utilities.Enum;
 using GeekCoding.MainApplication.ViewModels;
@@ -6,9 +9,11 @@ using GeekCoding.Repository.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace GeekCoding.MainApplication.Controllers
 {
@@ -17,14 +22,16 @@ namespace GeekCoding.MainApplication.Controllers
     {
         private IAnnouncementRepository _announcementRepository;
         private IProblemRepository _problemRepository;
+        private ISubmisionRepository _submisionRepository;
         private IContestRepository _contestRepository;
         private IUserContestRepository _userContestRepository;
         private IProblemContestRepository _problemContestRepository;
         private ISubmisionContestRepository _submisionContestRepository;
+        private List<SelectListItem> _compilers = new List<SelectListItem>();
 
         public ContestController(IContestRepository contestRepository, IUserContestRepository userContestRepository,
                                  IProblemContestRepository problemContestRepository, ISubmisionContestRepository submisionContestRepository,
-                                 IAnnouncementRepository announcementRepository, IProblemRepository problemRepository)
+                                 IAnnouncementRepository announcementRepository, IProblemRepository problemRepository, ISubmisionRepository submisionRepository)
         {
             _contestRepository = contestRepository;
             _userContestRepository = userContestRepository;
@@ -32,6 +39,8 @@ namespace GeekCoding.MainApplication.Controllers
             _submisionContestRepository = submisionContestRepository;
             _announcementRepository = announcementRepository;
             _problemRepository = problemRepository;
+            _submisionRepository = submisionRepository;
+            _compilers = Compilator.Compilers;
         }
 
         [AllowAnonymous]
@@ -190,7 +199,57 @@ namespace GeekCoding.MainApplication.Controllers
         [HttpGet]
         public IActionResult ProblemContestOverview(Guid id, Guid contest)
         {
-            return View();
+
+            var problem = _problemRepository.GetItem(id);
+            
+            var problemContestViewModel = new ProblemContestDetailsViewModel
+            {
+                ContestId = contest,
+                Problem = problem,
+                SelectListItems = _compilers,
+                Score = 0
+            };
+            //see list
+            return View(problemContestViewModel);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> ProblemContestExecute([FromForm] FileExecutionContestViewModel model)
+        {
+            //read the content of the file
+            Tuple<string, long> fileContent = await FileHelpers.ProcessFormFile(model.File, ModelState);
+            double sizeOfFile = (fileContent.Item2) % 1000;
+            var compilationModel = new CompilationModel { Content = fileContent.Item1, Language = model.Compilator, ProblemName = model.ProblemName, Username = User.Identity.Name };
+
+            //save the submission
+            var submission = new Submision
+            {
+                SubmisionId = Guid.NewGuid(),
+                DataOfSubmision = DateTime.Now,
+                Compilator = model.Compilator,
+                ProblemId = Guid.Parse(model.ProblemId),
+                SourceSize = sizeOfFile.ToString(),
+                StateOfSubmision = SubmissionStatus.NotCompiled.ToString(),
+                UserName = User.Identity.Name,
+                MessageOfSubmision = string.Empty,
+                Score = 0,
+                JobQueued = false,
+                SourceCode = fileContent.Item1
+            };
+
+            await _submisionRepository.AddAsync(submission);
+
+            var submissionContest = new SubmisionContest
+            {
+                SubmisionContestId = Guid.NewGuid(),
+                ContestId = model.ContestId,
+                SubmisionId = submission.SubmisionId
+            };
+
+            await _submisionContestRepository.AddAsync(submissionContest);
+
+            return RedirectToAction(nameof(Details), new { id = model.ContestId });
         }
 
         [HttpGet]
