@@ -13,27 +13,30 @@
             @Html.Raw(@Model.Contest.Content)
             @if (User.Identity.IsAuthenticated)
             {
-                @if (Model.UserRegistered == false)
+                @if (DateTime.Now < Model.Contest.StartDate)
                 {
-                    <div class="panel-heading">
-                        <form method="post" asp-action="RegisterUser">
-                            <div class="form-group">
-                                <input type="submit" value="Register" class="btn-primary pull-right" />
-                            </div>
-                            <input type="hidden" asp-for="@Model.Contest.ContestId" />
-                        </form>
-                    </div>
-                }
-                else
-                {
-                    <div class="panel-heading">
-                        <form method="post" asp-action="UnRegisterUser">
-                            <div class="form-group">
-                                <input type="submit" value="UnRegister" class="btn-primary pull-right" />
-                            </div>
-                            <input type="hidden" asp-for="@Model.Contest.ContestId" />
-                        </form>
-                    </div>
+                    @if (Model.UserRegistered == false)
+                    {
+                        <div class="panel-heading">
+                            <form method="post" asp-action="RegisterUser">
+                                <div class="form-group">
+                                    <input type="submit" value="Register" class="btn-primary pull-right" />
+                                </div>
+                                <input type="hidden" asp-for="@Model.Contest.ContestId" />
+                            </form>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="panel-heading">
+                            <form method="post" asp-action="UnRegisterUser">
+                                <div class="form-group">
+                                    <input type="submit" value="UnRegister" class="btn-primary pull-right" />
+                                </div>
+                                <input type="hidden" asp-for="@Model.Contest.ContestId" />
+                            </form>
+                        </div>
+                    }
                 }
 
             }
