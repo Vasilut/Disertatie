@@ -1,4 +1,4 @@
-﻿@model GeekCoding.Data.Models.Contest
+﻿@model GeekCoding.MainApplication.ViewModels.UserContestViewModel
 
 @{
     ViewData["Title"] = "Details";
@@ -8,19 +8,34 @@
 
     <div class="col-lg-8 col-md-8">
         <div class="well well-sm">
-            <h4>@Model.Title</h4>
+            <h4>@Model.Contest.Title</h4>
             <hr />
-            @Html.Raw(@Model.Content)
+            @Html.Raw(@Model.Contest.Content)
             @if (User.Identity.IsAuthenticated)
             {
-                <div class="panel-heading">
-                    <form method="post" asp-action="RegisterUser">
-                        <div class="form-group">
-                            <input type="submit" value="Register" class="btn-primary pull-right" />
-                        </div>
-                        <input type="hidden" asp-for="ContestId" />
-                    </form>
-                </div>
+                @if (Model.UserRegistered == false)
+                {
+                    <div class="panel-heading">
+                        <form method="post" asp-action="RegisterUser">
+                            <div class="form-group">
+                                <input type="submit" value="Register" class="btn-primary pull-right" />
+                            </div>
+                            <input type="hidden" asp-for="@Model.Contest.ContestId" />
+                        </form>
+                    </div>
+                }
+                else
+                {
+                    <div class="panel-heading">
+                        <form method="post" asp-action="UnRegisterUser">
+                            <div class="form-group">
+                                <input type="submit" value="UnRegister" class="btn-primary pull-right" />
+                            </div>
+                            <input type="hidden" asp-for="@Model.Contest.ContestId" />
+                        </form>
+                    </div>
+                }
+
             }
             <table class="table table-hover" style="margin-top:50px;">
                 <thead>
@@ -47,14 +62,14 @@
                         <td>
                             <font style="vertical-align: inherit;">
                                 <font style="vertical-align: inherit;">
-                                    <span class="label label-info"> @Model.StartDate </span>
+                                    <span class="label label-info"> @Model.Contest.StartDate </span>
                                 </font>
                             </font>
                         </td>
                         <td>
                             <font style="vertical-align: inherit;">
                                 <font style="vertical-align: inherit;">
-                                    <span class="label label-info">  @Model.EndDate </span>
+                                    <span class="label label-info">  @Model.Contest.EndDate </span>
                                 </font>
                             </font>
                         </td>
@@ -67,7 +82,35 @@
     </div>
     <div class="col-lg-4 col-md-4">
         <div class="well well-sm">
-
+            <ul class="list-group list-group-flush">
+                &nbsp; &nbsp;
+                <li class="list-group-item">
+                    <span class="glyphicon glyphicon-home">
+                    </span>
+                    Overview
+                </li>
+                <li class="list-group-item">
+                    <span class="glyphicon glyphicon-envelope">
+                    </span>
+                    Announcements
+                </li>
+                <li class="list-group-item">
+                    <span class="glyphicon glyphicon-file">
+                    </span>
+                    Problems
+                </li>
+                <li class="list-group-item">
+                    <span class="glyphicon glyphicon-tasks">
+                    </span>
+                    Submissions
+                </li>
+                <li class="list-group-item">
+                    <span class="glyphicon glyphicon-time">
+                    </span>
+                    Ranking
+                </li>
+                
+            </ul>
         </div>
     </div>
 </div>

@@ -48,9 +48,9 @@ namespace GeekCoding.MainApplication.Controllers
             return View(lst);
         }
 
-        [AllowAnonymous]
+        [Authorize]
         [HttpPost]
-        public IActionResult RegisterUser([FromForm] Contest model)
+        public IActionResult RegisterUser([FromForm] UserContestViewModel model)
         {
             //register user in database
             if (ModelState.IsValid)
@@ -58,7 +58,7 @@ namespace GeekCoding.MainApplication.Controllers
                 var contestUser = new UserContest
                 {
                     UserContestId = Guid.NewGuid(),
-                    ContestId = model.ContestId,
+                    ContestId = model.Contest.ContestId,
                     UserName = User.Identity.Name
                 };
                 _userContestRepository.Create(contestUser);
@@ -68,16 +68,42 @@ namespace GeekCoding.MainApplication.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [Authorize]
+        [HttpPost]
+        public IActionResult UnRegisterUser([FromForm] UserContestViewModel model)
+        {
+            if(ModelState.IsValid)
+            {
+                var userContest = _userContestRepository.GetAll().Where(x => x.ContestId == model.Contest.ContestId && x.UserName == User.Identity.Name).FirstOrDefault();
+                _userContestRepository.Delete(userContest.UserContestId);
+                _userContestRepository.Save();
+                return RedirectToAction("Details", new { id = model.Contest.ContestId });
+            }
+            return RedirectToAction(nameof(Index));
+        }
+
         [AllowAnonymous]
         [HttpGet]
         public IActionResult Details(Guid id)
         {
             var contest = _contestRepository.GetItem(id);
-            if(contest == null)
+            var listOfParticipants = _userContestRepository.GetAll().Where(x => x.ContestId == id).ToList();
+            bool isRegistered = true;
+            var participant = listOfParticipants.Where(part => part.UserName == User.Identity?.Name).FirstOrDefault();
+            if(participant == null)
+            {
+                isRegistered = false;
+            }
+            var userContest = new UserContestViewModel
+            {
+                Contest = contest,
+                UserRegistered = isRegistered
+            };
+            if (contest == null)
             {
                 return RedirectToAction(nameof(Index));
             }
-            return View(contest);
+            return View(userContest);
         }
 
         [Authorize(Roles = "Admin")]
@@ -135,7 +161,7 @@ namespace GeekCoding.MainApplication.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [Authorize(Roles ="Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public IActionResult AddProblems(Guid id)
         {
@@ -177,7 +203,7 @@ namespace GeekCoding.MainApplication.Controllers
             return View(contestproblemViewModel);
         }
 
-        [Authorize(Roles ="Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public IActionResult Select([FromForm] ContestProblemViewModel model)
         {
@@ -199,12 +225,12 @@ namespace GeekCoding.MainApplication.Controllers
             return RedirectToAction(nameof(AddProblems), new { id = model.ContestId });
         }
 
-        [Authorize(Roles ="Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public IActionResult DeleteProblemFromContest(Guid id, Guid contest)
         {
             var contestFound = _problemContestRepository.GetAll().Where(x => x.ContestId == contest && x.ProblemId == id).FirstOrDefault();
-            if(contestFound != null)
+            if (contestFound != null)
             {
                 return View(contestFound);
             }
