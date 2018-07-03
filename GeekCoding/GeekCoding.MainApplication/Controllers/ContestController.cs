@@ -54,7 +54,7 @@ namespace GeekCoding.MainApplication.Controllers
                 return prop;
             }).ToList();
 
-            return View(lst);
+            return View(goodList);
         }
 
         [Authorize]

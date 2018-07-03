@@ -31,7 +31,26 @@
                         <div class="panel-body">
                             <h3 class="panel-body">
                                 <img src="~/images/trophy.jpg" /> @item.Title
-                                <p class="pull-right">@item.StatusContest</p>
+                                <p class="pull-right">
+                                    @{
+                                        if (DateTime.Now < item.StartDate)
+                                        {
+                                            string response = "NotStarted";
+                                            @response
+                                        }
+                                        else
+                                        if (DateTime.Now > item.EndDate)
+                                        {
+                                            string response = "Ended";
+                                            @response
+                                        }
+                                        else
+                                        {
+                                            string response = "Underway";
+                                            @response
+                                        }
+                                    }
+                                </p>
                             </h3>
                             <h5 class="panel-body">
                                 <ul class="list-unstyled list-inline">
