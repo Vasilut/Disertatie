@@ -47,7 +47,7 @@ namespace GeekCoding.Data.Models
                     .WithMany(p => p.Announcement)
                     .HasForeignKey(d => d.ContestId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Announcem__Conte__66603565");
+                    .HasConstraintName("FK__Announcem__Conte__123EB7A3");
             });
 
             modelBuilder.Entity<Contest>(entity =>
@@ -96,13 +96,13 @@ namespace GeekCoding.Data.Models
                     .WithMany(p => p.ProblemContest)
                     .HasForeignKey(d => d.ContestId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__ProblemCo__Conte__5EBF139D");
+                    .HasConstraintName("FK__ProblemCo__Conte__0A9D95DB");
 
                 entity.HasOne(d => d.Problem)
                     .WithMany(p => p.ProblemContest)
                     .HasForeignKey(d => d.ProblemId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__ProblemCo__Probl__5FB337D6");
+                    .HasConstraintName("FK__ProblemCo__Probl__0B91BA14");
             });
 
             modelBuilder.Entity<SubmisionContest>(entity =>
@@ -113,13 +113,13 @@ namespace GeekCoding.Data.Models
                     .WithMany(p => p.SubmisionContest)
                     .HasForeignKey(d => d.ContestId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Submision__Conte__628FA481");
+                    .HasConstraintName("FK__Submision__Conte__0E6E26BF");
 
                 entity.HasOne(d => d.Submision)
                     .WithMany(p => p.SubmisionContest)
                     .HasForeignKey(d => d.SubmisionId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Submision__Submi__6383C8BA");
+                    .HasConstraintName("FK__Submision__Submi__0F624AF8");
             });
 
             modelBuilder.Entity<UserContest>(entity =>
@@ -134,7 +134,7 @@ namespace GeekCoding.Data.Models
                     .WithMany(p => p.UserContest)
                     .HasForeignKey(d => d.ContestId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__UserConte__Conte__5BE2A6F2");
+                    .HasConstraintName("FK__UserConte__Conte__07C12930");
             });
 
             modelBuilder.Entity<ProgresStatus>(entity =>
