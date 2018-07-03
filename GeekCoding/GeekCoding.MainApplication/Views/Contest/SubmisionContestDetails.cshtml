@@ -1,0 +1,191 @@
+﻿@model GeekCoding.MainApplication.ViewModels.SubmisionDetailsViewModel
+
+@{
+    ViewData["Title"] = "Submision Details";
+}
+@*<div class="list-group article-list touch">
+        <a class="list-group-item" href="">
+            <div class="media">
+                <div class="media-body">
+                    <div class="top-bar">
+                        <h4 class="media-heading">
+                            DSads sda a sda
+                        </h4>
+                        <div class="rating">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>*@
+
+<h3>Detalii evaluare</h3>
+<hr />
+<div class="row">
+    <div class="col-md-1"><b>User</b></div>
+    <div class="col-md-2">@Model.UserName</div>
+    <div class="col-md-2"><b>Data</b></div>
+    <div class="col-md-2">@Model.Data</div>
+    <hr />
+</div>
+<div class="row">
+    <div class="col-md-1"><b>Problema</b></div>
+    <div class="col-md-2">@Model.ProblemName</div>
+    <div class="col-md-2"><b>Status</b></div>
+    <div class="col-md-2">@Model.Status</div>
+    <hr />
+</div>
+<div class="row">
+    <div class="col-md-1"><b>Compilator</b></div>
+    <div class="col-md-2">@Model.Compilator</div>
+    <div class="col-md-2"><b>Source size</b></div>
+    <div class="col-md-2">@Model.SourceSize kb</div>
+    <hr />
+</div>
+<div class="row">
+    <div class="col-md-1"><b>Time limit</b></div>
+    <div class="col-md-2">@Model.ProblemTimeLimit s</div>
+    <div class="col-md-2"><b>Memory limit</b></div>
+    <div class="col-md-2">@Model.ProblemMemoryLimit kb</div>
+    <hr />
+</div>
+<div class="row">
+    <div class="col-md-1"><b>Scor</b></div>
+    <div class="col-md-2">@Model.Scor puncte</div>
+    <hr />
+</div>
+
+<br />
+<h3>Raport evaluare</h3>
+<hr />
+<h4>Mesaj compilare</h4>
+<textarea class="form-control" rows="5" readonly style="resize:none">@Model.MessageOfSubmission</textarea>
+<h4>Rezultat evaluare</h4>
+<hr />
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>
+                <font style="vertical-align: inherit;">
+                    <font style="vertical-align: inherit;">
+                        #
+                    </font>
+                </font>
+            </th>
+            <th>
+                <font style="vertical-align: inherit;">
+                    <font style="vertical-align: inherit;">
+                        Timp executie
+                    </font>
+                </font>
+            </th>
+            <th>
+                <font style="vertical-align: inherit;">
+                    <font style="vertical-align: inherit;">
+                        Memorie
+                    </font>
+                </font>
+            </th>
+            <th>
+                <font style="vertical-align: inherit;">
+                    <font style="vertical-align: inherit;">
+                        Mesaj
+                    </font>
+                </font>
+            </th>
+            <th>
+                <font style="vertical-align: inherit;">
+                    <font style="vertical-align: inherit;">
+                        Punctaj
+                    </font>
+                </font>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (int i = 0; i < Model.EvaluationResult.Count; ++i)
+        {
+            <tr>
+                <th scope="row">
+                    <font style="vertical-align: inherit;">
+                        <font style="vertical-align: inherit;">
+                            @{
+                                int index = i + 1;
+                            }
+                            @index
+                        </font>
+                    </font>
+                </th>
+                <td>
+                    <font style="vertical-align: inherit;">
+                        <font style="vertical-align: inherit;">
+                            @Model.EvaluationResult[i].ExecutionTime
+                        </font>
+                    </font>
+                </td>
+                <td>
+                    <font style="vertical-align: inherit;">
+                        <font style="vertical-align: inherit;">
+                            @Model.EvaluationResult[i].MemoryUsed
+                        </font>
+                    </font>
+                </td>
+                <td>
+                    <font style="vertical-align: inherit;">
+                        <font style="vertical-align: inherit;">
+                            @Model.EvaluationResult[i].Message
+                        </font>
+                    </font>
+                </td>
+                <td>
+                    <font style="vertical-align: inherit;">
+                        <font style="vertical-align: inherit;">
+                            @Model.EvaluationResult[i].Point
+                        </font>
+                    </font>
+                </td>
+            </tr>
+        }
+        <tr>
+            <th scope="row">
+                <font style="vertical-align: inherit;">
+                    <font style="vertical-align: inherit;">
+                        Punctaj total
+                    </font>
+                </font>
+            </th>
+            <td>
+                <font style="vertical-align: inherit;">
+                    <font style="vertical-align: inherit;">
+
+                    </font>
+                </font>
+            </td>
+            <td>
+                <font style="vertical-align: inherit;">
+                    <font style="vertical-align: inherit;">
+
+                    </font>
+                </font>
+            </td>
+            <td>
+                <font style="vertical-align: inherit;">
+                    <font style="vertical-align: inherit;">
+
+                    </font>
+                </font>
+            </td>
+            <td>
+                <font style="vertical-align: inherit;">
+                    <font style="vertical-align: inherit;">
+                        @Model.Scor
+                    </font>
+                </font>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<div>
+    <a asp-action="Index"> <i class="glyphicon glyphicon-arrow-left"></i> &nbsp; Back to List</a>
+</div>

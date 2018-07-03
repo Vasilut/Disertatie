@@ -7,5 +7,6 @@ namespace GeekCoding.Repository.Interfaces
 {
     public interface ISubmisionContestRepository : IRepositoryBase<SubmisionContest>
     {
+        IEnumerable<SubmisionContest> GetListOfSubmisionForSpecificContest(Guid contestId);
     }
 }

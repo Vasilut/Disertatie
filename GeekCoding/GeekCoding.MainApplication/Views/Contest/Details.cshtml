@@ -84,32 +84,49 @@
         <div class="well well-sm">
             <ul class="list-group list-group-flush">
                 &nbsp; &nbsp;
-                <li class="list-group-item">
-                    <span class="glyphicon glyphicon-home">
-                    </span>
-                    Overview
-                </li>
-                <li class="list-group-item">
-                    <span class="glyphicon glyphicon-envelope">
-                    </span>
-                    Announcements
-                </li>
-                <li class="list-group-item">
-                    <span class="glyphicon glyphicon-file">
-                    </span>
-                    Problems
-                </li>
-                <li class="list-group-item">
-                    <span class="glyphicon glyphicon-tasks">
-                    </span>
-                    Submissions
-                </li>
-                <li class="list-group-item">
-                    <span class="glyphicon glyphicon-time">
-                    </span>
-                    Ranking
-                </li>
-                
+                <a asp-action="Overview" asp-route-id="@Model.Contest.ContestId">
+                    <li class="list-group-item">
+                        <span class="glyphicon glyphicon-home">
+                        </span>
+                        Overview
+                    </li>
+                </a>
+                <a asp-action="UsersOverview" asp-route-id="@Model.Contest.ContestId">
+                    <li class="list-group-item">
+                        <span class="glyphicon glyphicon-envelope">
+                        </span>
+                        Announcement
+                    </li>
+                </a>
+                <a asp-action="UsersOverview" asp-route-id="@Model.Contest.ContestId">
+                    <li class="list-group-item">
+                        <span class="glyphicon glyphicon-file">
+                        </span>
+                        Users registered
+                    </li>
+                </a>
+                <a asp-action="ProblemsOverview" asp-route-id="@Model.Contest.ContestId">
+                    <li class="list-group-item">
+                        <span class="glyphicon glyphicon-file">
+                        </span>
+                        Problems
+                    </li>
+                </a>
+                <a asp-action="SubmisionOverview" asp-route-id="@Model.Contest.ContestId">
+                    <li class="list-group-item">
+                        <span class="glyphicon glyphicon-tasks">
+                        </span>
+                        Submissions
+                    </li>
+                </a>
+                <a asp-action="Ranking" asp-route-id="@Model.Contest.ContestId">
+                    <li class="list-group-item">
+                        <span class="glyphicon glyphicon-time">
+                        </span>
+                        Ranking
+                    </li>
+                </a>
+
             </ul>
         </div>
     </div>

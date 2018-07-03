@@ -1,0 +1,34 @@
+﻿@model IEnumerable<string>
+
+<div class="row">
+    <table class="table table-hover">
+        <thead>
+
+            <tr>
+                <th>
+                    <font style="vertical-align: inherit;">
+                        <font style="vertical-align: inherit;">
+                            UserName
+                        </font>
+                    </font>
+                </th>
+                
+            </tr>
+        </thead>
+        <tbody class="reactable-data">
+            @foreach (var item in Model)
+            {
+
+                <tr>
+                    <th scope="row">
+                        <font style="vertical-align: inherit;">
+                            <font style="vertical-align: inherit;">
+                                @item
+                            </font>
+                        </font>
+                    </th>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

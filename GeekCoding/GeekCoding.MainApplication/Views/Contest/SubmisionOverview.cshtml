@@ -1,0 +1,98 @@
+﻿@model IEnumerable<GeekCoding.Data.Models.Submision>
+
+    <div class="row">
+        <table class="table table-hover">
+            <thead>
+
+                <tr>
+                    <th>
+                        <font style="vertical-align: inherit;">
+                            <font style="vertical-align: inherit;">
+                                UserName
+                            </font>
+                        </font>
+                    </th>
+                    <th>
+                        <font style="vertical-align: inherit;">
+                            <font style="vertical-align: inherit;">
+                                Problema
+                            </font>
+                        </font>
+                    </th>
+                    <th>
+                        <font style="vertical-align: inherit;">
+                            <font style="vertical-align: inherit;">
+                                Data
+                            </font>
+                        </font>
+                    </th>
+                    <th>
+                        <font style="vertical-align: inherit;">
+                            <font style="vertical-align: inherit;">
+                                State of submission
+                            </font>
+                        </font>
+                    </th>
+                    <th>
+                        <font style="vertical-align: inherit;">
+                            <font style="vertical-align: inherit;">
+                                Score
+                            </font>
+                        </font>
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="reactable-data">
+                @foreach (var item in Model)
+                {
+
+                    <tr id="@item.SubmisionId">
+                        <th scope="row">
+                            <font style="vertical-align: inherit;">
+                                <font style="vertical-align: inherit;">
+                                    @item.UserName
+                                </font>
+                            </font>
+                        </th>
+                        <td>
+                            <font style="vertical-align: inherit;">
+                                <font style="vertical-align: inherit;">
+                                    @item.Problem?.ProblemName
+                                </font>
+                            </font>
+                        </td>
+                        <td>
+                            <font style="vertical-align: inherit;">
+                                <font style="vertical-align: inherit;">
+                                    @item.DataOfSubmision
+                                </font>
+                            </font>
+                        </td>
+                        <td id="stateSubmission">
+                            <font style="vertical-align: inherit;">
+                                <font style="vertical-align: inherit;">
+                                    @item.StateOfSubmision
+                                </font>
+                            </font>
+                        </td>
+                        <td id="score">
+                            <font style="vertical-align: inherit;">
+                                <font style="vertical-align: inherit;">
+                                    @item.Score
+                                </font>
+                            </font>
+                        </td>
+                        <td>
+                            <font style="vertical-align: inherit;">
+                                <font style="vertical-align: inherit;">
+                                    <a asp-action="Details" asp-controller="Submission" asp-route-id="@item.SubmisionId">Details</a>
+                                </font>
+                            </font>
+                        </td>
+                    </tr>
+
+
+                }
+            </tbody>
+        </table>
+    </div>

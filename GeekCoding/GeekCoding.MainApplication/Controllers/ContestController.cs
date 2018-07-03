@@ -160,6 +160,70 @@ namespace GeekCoding.MainApplication.Controllers
             _contestRepository.Save();
             return RedirectToAction(nameof(Index));
         }
+        
+        [HttpGet]
+        public IActionResult Overview(Guid id)
+        {
+            return RedirectToAction(nameof(Details), new { id = id });
+        }
+
+        [HttpGet]
+        public IActionResult ProblemsOverview(Guid id)
+        {
+            //list with the problems
+            var contestProblemList = _problemContestRepository.GetListOfProblemForSpecificContest(id).ToList();
+            List<Problem> problems = new List<Problem>();
+            foreach (var item in contestProblemList)
+            {
+                problems.Add(item.Problem);
+            }
+
+            var problemContestViewModel = new ProblemsOverviewViewModel
+            {
+                ContestId = id,
+                ContestProblemList = problems
+            };
+
+            return View(problemContestViewModel);
+        }
+
+        [HttpGet]
+        public IActionResult ProblemContestOverview(Guid id, Guid contest)
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult UsersOverview(Guid id)
+        {
+            //list with the users
+            var listOfParticipants = _userContestRepository.GetAll().Where(x => x.ContestId == id).ToList();
+            List<string> usersRegistered = new List<string>();
+            foreach (var item in listOfParticipants)
+            {
+                usersRegistered.Add(item.UserName);
+            }
+            return View(usersRegistered);
+        }
+
+        [HttpGet]
+        public IActionResult SubmisionOverview(Guid id)
+        {
+            //list with submission
+            var contestSubmissionList = _submisionContestRepository.GetListOfSubmisionForSpecificContest(id).ToList();
+            List<Submision> submisions = new List<Submision>();
+            foreach (var item in contestSubmissionList)
+            {
+                submisions.Add(item.Submision);
+            }
+            return View(submisions);
+        }
+
+        [HttpGet]
+        public IActionResult Ranking(Guid id)
+        {
+            return View();
+        }
 
         [Authorize(Roles = "Admin")]
         [HttpGet]
