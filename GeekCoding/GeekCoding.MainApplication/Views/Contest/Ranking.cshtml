@@ -1,0 +1,105 @@
+﻿@model List<GeekCoding.MainApplication.ViewModels.RankingViewModel>
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-hover" style="margin-top:50px;">
+            <thead>
+                <tr>
+                    @if (Model.Count > 0)
+                    {
+                        <th>
+                            <font style="vertical-align: inherit;">
+                                <font style="vertical-align: inherit;">
+                                    Rank
+                                </font>
+                            </font>
+                        </th>
+
+                        <th>
+                            <font style="vertical-align: inherit;">
+                                <font style="vertical-align: inherit;">
+                                    Name
+                                </font>
+                            </font>
+                        </th>
+
+                        var lstProblems = Model.First().ProblemList;
+                        for (int i = 0; i < lstProblems.Count; ++i)
+                        {
+                            <th>
+                                <font style="vertical-align: inherit;">
+                                    <font style="vertical-align: inherit;">
+                                        @lstProblems[i]
+                                    </font>
+                                </font>
+                            </th>
+                        }
+
+                        <th>
+                            <font style="vertical-align: inherit;">
+                                <font style="vertical-align: inherit;">
+                                    Total
+                                </font>
+                            </font>
+                        </th>
+
+                    }
+
+                </tr>
+            </thead>
+            <tbody class="reactable-data">
+                @if (Model.Count > 0)
+                {
+                    for (int i = 0; i < Model.Count; ++i)
+                    {
+                        var participant = Model[i].Participant;
+                        var scores = Model[i].Scores;
+                        var totalScore = Model[i].Total;
+
+                <tr>
+
+                    <th scope="row">
+                        <font style="vertical-align: inherit;">
+                            <font style="vertical-align: inherit;">
+                                @{
+                                    int index = i + 1;
+                                }
+                                @index
+                            </font>
+                        </font>
+                    </th>
+
+                    <td>
+                        <font style="vertical-align: inherit;">
+                            <font style="vertical-align: inherit;">
+                                @participant
+                            </font>
+                        </font>
+                    </td>
+
+                    @for (int j = 0; j < scores.Count; ++j)
+                    {
+
+                        <td>
+                            <font style="vertical-align: inherit;">
+                                <font style="vertical-align: inherit;">
+                                    <span class="label label-info"> @scores[j] </span>
+                                </font>
+                            </font>
+                        </td>
+                    }
+
+                    <td>
+                        <font style="vertical-align: inherit;">
+                            <font style="vertical-align: inherit;">
+                                @totalScore
+                            </font>
+                        </font>
+                    </td>
+                </tr>
+                    }
+                }
+
+            </tbody>
+        </table>
+    </div>
+</div>

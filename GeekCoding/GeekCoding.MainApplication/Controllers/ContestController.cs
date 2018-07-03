@@ -281,7 +281,60 @@ namespace GeekCoding.MainApplication.Controllers
         [HttpGet]
         public IActionResult Ranking(Guid id)
         {
-            return View();
+            //list with the problems
+            var contestProblemList = _problemContestRepository.GetListOfProblemForSpecificContest(id).ToList();
+            List<Problem> problems = new List<Problem>();
+            foreach (var item in contestProblemList)
+            {
+                problems.Add(item.Problem);
+            }
+
+
+            //list of participant
+            var listOfParticipants = _userContestRepository.GetAll().Where(x => x.ContestId == id).ToList();
+            List<string> usersRegistered = new List<string>();
+            foreach (var item in listOfParticipants)
+            {
+                usersRegistered.Add(item.UserName);
+            }
+
+
+            //list of submissions
+            //list with submission
+            var contestSubmissionList = _submisionContestRepository.GetListOfSubmisionForSpecificContest(id).ToList();
+            List<Submision> submisions = new List<Submision>();
+            foreach (var item in contestSubmissionList)
+            {
+                submisions.Add(item.Submision);
+            }
+
+            List<RankingViewModel> rankingList = new List<RankingViewModel>();
+            foreach (var participants in listOfParticipants)
+            {
+                List<int> scores = new List<int>();
+                List<string> lstProblems = new List<string>();
+                RankingViewModel rankingModel = new RankingViewModel();
+                rankingModel.Participant = participants.UserName;
+                int total = 0;
+
+                foreach (var problemInContest in contestProblemList)
+                {
+                    lstProblems.Add(problemInContest.Problem.ProblemName);
+                    var lstOfSubmissionForAProblem = contestSubmissionList.Where(x => x.Submision.ProblemId == problemInContest.ProblemId &&
+                                                                                x.Submision.UserName == participants.UserName).
+                                                                                OrderByDescending(x => x.Submision.Score).ToList();
+                    var score = lstOfSubmissionForAProblem.FirstOrDefault() == null ? 0 : lstOfSubmissionForAProblem.First().Submision.Score;
+                    scores.Add(score);
+                    total = total + score;
+                }
+
+                rankingModel.ProblemList = lstProblems;
+                rankingModel.Scores = scores;
+                rankingModel.Total = total;
+                rankingList.Add(rankingModel);
+            }
+            
+            return View(rankingList.OrderByDescending(x => x.Total).ToList());
         }
 
         [Authorize(Roles = "Admin")]
