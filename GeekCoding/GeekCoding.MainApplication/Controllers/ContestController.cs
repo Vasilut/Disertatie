@@ -222,6 +222,18 @@ namespace GeekCoding.MainApplication.Controllers
         [HttpGet]
         public IActionResult ProblemsOverview(Guid id)
         {
+            //check if the contest started
+            var currentContest = _contestRepository.GetItem(id);
+            if (User.Identity.Name == null || !User.IsInRole("Admin"))
+            {
+                //not registered or not an admin user
+                if (DateTime.Now < currentContest.StartDate)
+                {
+                    //showing nothing if the contest didn't started
+                    return View(new ProblemsOverviewViewModel { ContestId = id, ContestProblemList = new List<Problem>() });
+                }
+            }
+
             //list with the problems
             var contestProblemList = _problemContestRepository.GetListOfProblemForSpecificContest(id).ToList();
             List<Problem> problems = new List<Problem>();
