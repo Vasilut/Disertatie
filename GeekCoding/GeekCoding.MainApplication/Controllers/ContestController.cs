@@ -130,7 +130,7 @@ namespace GeekCoding.MainApplication.Controllers
 
         [Authorize(Roles = "Admin")]
         [HttpPost]
-        public IActionResult Add([FromForm] Contest contest)
+        public IActionResult Add([FromForm] ContestViewModel contest)
         {
             if (ModelState.IsValid)
             {
