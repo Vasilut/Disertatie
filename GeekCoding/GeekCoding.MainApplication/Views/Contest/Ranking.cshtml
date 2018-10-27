@@ -1,10 +1,10 @@
-﻿@model List<GeekCoding.MainApplication.ViewModels.RankingViewModel>
+﻿@model Tuple<List<GeekCoding.MainApplication.ViewModels.RankingViewModel>, Guid>
 <div class="row">
     <div class="col-md-12">
         <table class="table table-hover" style="margin-top:50px;">
             <thead>
                 <tr>
-                    @if (Model.Count > 0)
+                    @if (Model.Item1.Count > 0)
                     {
                         <th>
                             <font style="vertical-align: inherit;">
@@ -22,7 +22,7 @@
                             </font>
                         </th>
 
-                        var lstProblems = Model.First().ProblemList;
+                        var lstProblems = Model.Item1.First().ProblemList;
                         for (int i = 0; i < lstProblems.Count; ++i)
                         {
                             <th>
@@ -47,13 +47,13 @@
                 </tr>
             </thead>
             <tbody class="reactable-data">
-                @if (Model.Count > 0)
+                @if (Model.Item1.Count > 0)
                 {
-                    for (int i = 0; i < Model.Count; ++i)
+                    for (int i = 0; i < Model.Item1.Count; ++i)
                     {
-                        var participant = Model[i].Participant;
-                        var scores = Model[i].Scores;
-                        var totalScore = Model[i].Total;
+                        var participant = Model.Item1[i].Participant;
+                        var scores = Model.Item1[i].Scores;
+                        var totalScore = Model.Item1[i].Total;
 
                 <tr>
 
@@ -102,4 +102,7 @@
             </tbody>
         </table>
     </div>
+</div>
+<div>
+    <a asp-action="Details" asp-route-Id="@Model.Item2"> <i class="glyphicon glyphicon-arrow-left"></i> &nbsp; Back to contest</a>
 </div>

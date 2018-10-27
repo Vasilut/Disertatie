@@ -301,7 +301,9 @@ namespace GeekCoding.MainApplication.Controllers
             {
                 usersRegistered.Add(item.UserName);
             }
-            return View(usersRegistered);
+
+            var userRegisteredAndContestId = new Tuple<List<string>, Guid>(usersRegistered,id);
+            return View(userRegisteredAndContestId);
         }
 
         [HttpGet]
@@ -314,7 +316,8 @@ namespace GeekCoding.MainApplication.Controllers
             {
                 submisions.Add(item.Submision);
             }
-            return View(submisions);
+            var submissionWithContestId = new Tuple<List<Submision>, Guid>(submisions, id);
+            return View(submissionWithContestId);
         }
 
         [HttpGet]
@@ -337,8 +340,7 @@ namespace GeekCoding.MainApplication.Controllers
                 usersRegistered.Add(item.UserName);
             }
 
-
-            //list of submissions
+            
             //list with submission
             var contestSubmissionList = _submisionContestRepository.GetListOfSubmisionForSpecificContest(id).ToList();
             List<Submision> submisions = new List<Submision>();
@@ -372,8 +374,9 @@ namespace GeekCoding.MainApplication.Controllers
                 rankingModel.Total = total;
                 rankingList.Add(rankingModel);
             }
-            
-            return View(rankingList.OrderByDescending(x => x.Total).ToList());
+
+            var rankingForContext = new Tuple<List<RankingViewModel>, Guid>(rankingList.OrderByDescending(x => x.Total).ToList(), id);
+            return View(rankingForContext);
         }
 
         [Authorize(Roles = "Admin")]

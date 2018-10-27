@@ -1,7 +1,7 @@
-﻿@model IEnumerable<GeekCoding.Data.Models.Submision>
+﻿@model Tuple<List<GeekCoding.Data.Models.Submision>, Guid>
 
     <div class="row">
-        <table class="table table-hover">
+        <table class="table table-hover" style="margin-top:50px;">
             <thead>
 
                 <tr>
@@ -43,7 +43,7 @@
                 </tr>
             </thead>
             <tbody class="reactable-data">
-                @foreach (var item in Model)
+                @foreach (var item in Model.Item1)
                 {
 
                     <tr id="@item.SubmisionId">
@@ -95,4 +95,7 @@
                 }
             </tbody>
         </table>
+    </div>
+    <div>
+        <a asp-action="Details" asp-route-Id="@Model.Item2"> <i class="glyphicon glyphicon-arrow-left"></i> &nbsp; Back to contest</a>
     </div>
