@@ -146,22 +146,6 @@ namespace GeekCoding.MainApplication.Controllers
             }
 
             return View();
-            //login with _signInManager
-            //if (ModelState.IsValid)
-            //{
-
-            //    var signInResult = await _signInManager.PasswordSignInAsync(model.UserName, model.Password,
-            //        false, false);
-
-            //    if (signInResult.Succeeded)
-            //    {
-            //        return RedirectToAction("Index", "Home");
-            //    }
-
-            //    ModelState.AddModelError("", "Invalid UserName or Password");
-            //}
-
-            //return View();
         }
 
         #endregion

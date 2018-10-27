@@ -182,7 +182,27 @@ namespace GeekCoding.MainApplication.Controllers
         [HttpPost]
         public IActionResult Delete([FromForm] ContestViewModel contest)
         {
-            //delete first from contestproblem table
+            //delete the user assigned to this contest from user contest
+            var listOfParticipant = _userContestRepository.GetAll().Where(part => part.ContestId == contest.ContestId).ToList();
+            foreach (var item in listOfParticipant)
+            {
+                _userContestRepository.Delete(item);
+            }
+
+            //delete submission
+            var listOfSubmission = _submisionContestRepository.GetAll().Where(subm => subm.ContestId == contest.ContestId).ToList();
+            foreach (var item in listOfSubmission)
+            {
+                _submisionContestRepository.Delete(item);
+            }
+            
+            //delete problem assigned to a contest
+            var listOfProblems = _problemContestRepository.GetAll().Where(prob => prob.ContestId == contest.ContestId).ToList();
+            foreach (var item in listOfProblems)
+            {
+                _problemContestRepository.Delete(item);
+            }
+            
 
             _contestRepository.Delete(contest.ContestId);
             _contestRepository.Save();

@@ -2,7 +2,16 @@
 <html>
 <head>
 
-
+    <style>
+        .footerg {
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            color: cornflowerblue;
+            text-align: center;
+        }
+    </style>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - GeekCoding.MainApplication</title>
@@ -53,9 +62,11 @@
     <div class="container body-content">
         @RenderBody()
         <hr />
-        <footer>
-            <p>&copy; 2018 - GeekCoding</p>
-        </footer>
+        <div class="footerg">
+            <div class="panel-footer">
+                <p>&copy; 2018 - GeekCoding</p>
+            </div>
+        </div>
     </div>
 
     <environment include="Development">
