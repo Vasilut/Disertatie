@@ -41,13 +41,16 @@
                     </font>
                 </td>
 
-                <td>
-                    <font style="vertical-align: inherit;">
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <td>
                         <font style="vertical-align: inherit;">
-                            <a class="btn btn-success" asp-action="ProblemContestOverview" asp-route-id="@item.ProblemId" asp-route-contest="@Model.ContestId">Rezolva</a>
+                            <font style="vertical-align: inherit;">
+                                <a class="btn btn-success" asp-action="ProblemContestOverview" asp-route-id="@item.ProblemId" asp-route-contest="@Model.ContestId">Rezolva</a>
+                            </font>
                         </font>
-                    </font>
-                </td>
+                    </td>
+                }
             </tr>
         }
     </tbody>

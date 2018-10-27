@@ -87,7 +87,7 @@ namespace GeekCoding.MainApplication.Controllers
         [HttpPost]
         public IActionResult UnRegisterUser([FromForm] UserContestViewModel model)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 var userContest = _userContestRepository.GetAll().Where(x => x.ContestId == model.Contest.ContestId && x.UserName == User.Identity.Name).FirstOrDefault();
                 _userContestRepository.Delete(userContest.UserContestId);
@@ -105,7 +105,7 @@ namespace GeekCoding.MainApplication.Controllers
             var listOfParticipants = _userContestRepository.GetAll().Where(x => x.ContestId == id).ToList();
             bool isRegistered = true;
             var participant = listOfParticipants.Where(part => part.UserName == User.Identity?.Name).FirstOrDefault();
-            if(participant == null)
+            if (participant == null)
             {
                 isRegistered = false;
             }
@@ -195,26 +195,30 @@ namespace GeekCoding.MainApplication.Controllers
             {
                 _submisionContestRepository.Delete(item);
             }
-            
+
             //delete problem assigned to a contest
             var listOfProblems = _problemContestRepository.GetAll().Where(prob => prob.ContestId == contest.ContestId).ToList();
             foreach (var item in listOfProblems)
             {
                 _problemContestRepository.Delete(item);
             }
-            
+
 
             _contestRepository.Delete(contest.ContestId);
             _contestRepository.Save();
             return RedirectToAction(nameof(Index));
         }
-        
+
+
+        [AllowAnonymous]
         [HttpGet]
         public IActionResult Overview(Guid id)
         {
             return RedirectToAction(nameof(Details), new { id = id });
         }
 
+
+        [AllowAnonymous]
         [HttpGet]
         public IActionResult ProblemsOverview(Guid id)
         {
@@ -235,20 +239,41 @@ namespace GeekCoding.MainApplication.Controllers
             return View(problemContestViewModel);
         }
 
+
+        [AllowAnonymous]
         [HttpGet]
         public IActionResult ProblemContestOverview(Guid id, Guid contest)
         {
 
             var problem = _problemRepository.GetItem(id);
-            
+            var currentContest = _contestRepository.GetItem(contest);
+            var user = User?.Identity?.Name;
+            int score = 0;
+
+
+            //see the score for this problem in contest for the user that is logged in
+            if (user != null)
+            {
+                //list with submission
+                var contestSubmissionList = _submisionContestRepository.GetListOfSubmisionForSpecificContest(contest).ToList();
+                var lstOfSubmissionForAProblem = contestSubmissionList.Where(x => x.Submision.ProblemId == id &&
+                                                                                x.Submision.UserName == user).
+                                                                                OrderByDescending(x => x.Submision.Score).ToList();
+                score = lstOfSubmissionForAProblem.FirstOrDefault() == null ? 0 : lstOfSubmissionForAProblem.First().Submision.Score;
+
+            }
+
+
             var problemContestViewModel = new ProblemContestDetailsViewModel
             {
                 ContestId = contest,
                 Problem = problem,
                 SelectListItems = _compilers,
-                Score = 0
+                Score = score,
+                StartDate = currentContest.StartDate,
+                EndDate = currentContest.EndDate
             };
-            //see list
+
             return View(problemContestViewModel);
         }
 
@@ -291,6 +316,8 @@ namespace GeekCoding.MainApplication.Controllers
             return RedirectToAction(nameof(Details), new { id = model.ContestId });
         }
 
+
+        [AllowAnonymous]
         [HttpGet]
         public IActionResult UsersOverview(Guid id)
         {
@@ -302,10 +329,12 @@ namespace GeekCoding.MainApplication.Controllers
                 usersRegistered.Add(item.UserName);
             }
 
-            var userRegisteredAndContestId = new Tuple<List<string>, Guid>(usersRegistered,id);
+            var userRegisteredAndContestId = new Tuple<List<string>, Guid>(usersRegistered, id);
             return View(userRegisteredAndContestId);
         }
 
+
+        [AllowAnonymous]
         [HttpGet]
         public IActionResult SubmisionOverview(Guid id)
         {
@@ -320,6 +349,8 @@ namespace GeekCoding.MainApplication.Controllers
             return View(submissionWithContestId);
         }
 
+
+        [AllowAnonymous]
         [HttpGet]
         public IActionResult Ranking(Guid id)
         {
@@ -340,7 +371,7 @@ namespace GeekCoding.MainApplication.Controllers
                 usersRegistered.Add(item.UserName);
             }
 
-            
+
             //list with submission
             var contestSubmissionList = _submisionContestRepository.GetListOfSubmisionForSpecificContest(id).ToList();
             List<Submision> submisions = new List<Submision>();

@@ -13,5 +13,7 @@ namespace GeekCoding.MainApplication.ViewModels
         public List<SelectListItem> SelectListItems { get; set; }
         public int Score { get; set; }
         public Guid ContestId { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
     }
 }
