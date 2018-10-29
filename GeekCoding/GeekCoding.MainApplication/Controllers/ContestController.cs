@@ -325,7 +325,7 @@ namespace GeekCoding.MainApplication.Controllers
 
             await _submisionContestRepository.AddAsync(submissionContest);
 
-            return RedirectToAction(nameof(Details), new { id = model.ContestId });
+            return RedirectToAction(nameof(ProblemsOverview), new { id = model.ContestId });
         }
 
 
