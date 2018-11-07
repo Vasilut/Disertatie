@@ -25,7 +25,7 @@ namespace GeekCoding.MainApplication.Controllers
             _signInManager = signInManager;
             _roleManager = roleManager;
             _emailSender = emailSender;
-            
+
         }
         #region Register
 
@@ -42,7 +42,6 @@ namespace GeekCoding.MainApplication.Controllers
             if (ModelState.IsValid)
             {
                 var user = await _userManager.FindByNameAsync(model.UserName);
-
                 if (user == null)
                 {
                     user = new User
@@ -56,7 +55,28 @@ namespace GeekCoding.MainApplication.Controllers
                     if (result.Succeeded)
                     {
                         var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                        var confirmationEmail = Url.Action("ConfirmEmailAddress", "Account",
+
+                        //this will be removed after the contests.
+                        var userToConfirm = await _userManager.FindByEmailAsync(user.Email);
+
+                        if (userToConfirm != null)
+                        {
+                            var resultFromConfirmation = await _userManager.ConfirmEmailAsync(user, token);
+
+                            if (resultFromConfirmation.Succeeded)
+                            {
+                                await _userManager.AddToRoleAsync(user, "Member");
+                                return View("Success");
+                            }
+                        }
+                        else
+                        {
+                            return View("Error");
+                        }
+
+
+                        /*to be decomented when the contest from 06.12.2018 will be done
+                         * var confirmationEmail = Url.Action("ConfirmEmailAddress", "Account",
                             new { token, email = user.Email }, Request.Scheme);
                         _emailSender.AddReceiver(user.Email)
                                     .AddSubject("Confirmation to GeekCoding Site")
@@ -64,6 +84,7 @@ namespace GeekCoding.MainApplication.Controllers
                                     .BuildAndSend();
                         //send token via mail
                         return View("Success");
+                        */
                     }
                     else
                     {
