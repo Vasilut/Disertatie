@@ -13,13 +13,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GeekCoding.Compilation.Api"
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{474C70B2-7DD4-49BC-8208-443F6447BB00}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeekCoding.MainApplication", "GeekCoding.MainApplication\GeekCoding.MainApplication.csproj", "{06855FA5-28E5-4C58-A367-3F2CE17819ED}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GeekCoding.MainApplication", "GeekCoding.MainApplication\GeekCoding.MainApplication.csproj", "{06855FA5-28E5-4C58-A367-3F2CE17819ED}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeekCoding.Model", "GeekCoding.Model\GeekCoding.Model.csproj", "{2CC45250-EDF1-4935-8C9A-C412D04C131A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GeekCoding.Data", "GeekCoding.Data\GeekCoding.Data.csproj", "{72B39A9F-82C3-4F75-9F51-3A3C45880662}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeekCoding.Data", "GeekCoding.Data\GeekCoding.Data.csproj", "{72B39A9F-82C3-4F75-9F51-3A3C45880662}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeekCoding.Repository", "GeekCoding.Repository\GeekCoding.Repository.csproj", "{3AC8792A-22EE-48EE-8130-D268D33D7ABD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GeekCoding.Repository", "GeekCoding.Repository\GeekCoding.Repository.csproj", "{3AC8792A-22EE-48EE-8130-D268D33D7ABD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,10 +49,6 @@ Global
 		{06855FA5-28E5-4C58-A367-3F2CE17819ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{06855FA5-28E5-4C58-A367-3F2CE17819ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{06855FA5-28E5-4C58-A367-3F2CE17819ED}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2CC45250-EDF1-4935-8C9A-C412D04C131A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2CC45250-EDF1-4935-8C9A-C412D04C131A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2CC45250-EDF1-4935-8C9A-C412D04C131A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2CC45250-EDF1-4935-8C9A-C412D04C131A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{72B39A9F-82C3-4F75-9F51-3A3C45880662}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{72B39A9F-82C3-4F75-9F51-3A3C45880662}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{72B39A9F-82C3-4F75-9F51-3A3C45880662}.Release|Any CPU.ActiveCfg = Release|Any CPU

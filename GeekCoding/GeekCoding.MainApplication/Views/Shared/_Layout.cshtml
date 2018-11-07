@@ -52,6 +52,10 @@
                     <li><a asp-area="" asp-controller="Discuss" asp-action="Index">Discuss</a></li>
                     <li><a asp-area="" asp-controller="Interview" asp-action="Index">Interview</a></li>
                     <li><a asp-area="" asp-controller="Submission" asp-action="Index">Submission</a></li>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <li><a asp-area="" asp-controller="Admin" asp-action="Index">Admin</a></li>
+                    }
                 </ul>
                 <ul class="nav navbar-nav navbar-right" style="padding-top: 8px;">
                     @Html.Partial("_LoginPartial")

@@ -14,8 +14,4 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.0.2" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\GeekCoding.Model\GeekCoding.Model.csproj" />
-  </ItemGroup>
-
 </Project>

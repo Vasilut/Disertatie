@@ -6,7 +6,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\GeekCoding.Data\GeekCoding.Data.csproj" />
-    <ProjectReference Include="..\GeekCoding.Model\GeekCoding.Model.csproj" />
   </ItemGroup>
 
 </Project>

@@ -29,6 +29,8 @@ namespace GeekCoding.Data.Models
         public bool TwoFactorEnabled { get; set; }
         public string UserName { get; set; }
 
+        public UserInformation UserInformation { get; set; }
+
         public ICollection<AspNetUserClaims> AspNetUserClaims { get; set; }
         public ICollection<AspNetUserLogins> AspNetUserLogins { get; set; }
         public ICollection<AspNetUserRoles> AspNetUserRoles { get; set; }
