@@ -6,7 +6,6 @@ namespace GeekCoding.Data.Models
 {
     public partial class OnlineJudgeContext : DbContext
     {
-        public virtual DbSet<AspNetUsers> AspNetUsers { get; set; }
         public virtual DbSet<UserInformation> UserInformation { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -20,19 +19,6 @@ namespace GeekCoding.Data.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<AspNetUsers>(entity =>
-            {
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
-                entity.Property(e => e.Email).HasMaxLength(256);
-
-                entity.Property(e => e.NormalizedEmail).HasMaxLength(256);
-
-                entity.Property(e => e.NormalizedUserName).HasMaxLength(256);
-
-                entity.Property(e => e.UserName).HasMaxLength(256);
-            });
-
             modelBuilder.Entity<UserInformation>(entity =>
             {
                 entity.HasKey(e => e.IdUser);
@@ -50,12 +36,6 @@ namespace GeekCoding.Data.Models
                 entity.Property(e => e.Scoala).IsRequired();
 
                 entity.Property(e => e.Username).IsRequired();
-
-                entity.HasOne(d => d.IdUserNavigation)
-                    .WithOne(p => p.UserInformation)
-                    .HasForeignKey<UserInformation>(d => d.IdUser)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__UserInfor__IdUse__160F4887");
             });
         }
     }

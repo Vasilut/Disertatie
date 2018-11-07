@@ -12,7 +12,5 @@ namespace GeekCoding.Data.Models
         public string Clasa { get; set; }
         public string Scoala { get; set; }
         public string Username { get; set; }
-
-        public AspNetUsers IdUserNavigation { get; set; }
     }
 }

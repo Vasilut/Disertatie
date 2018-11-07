@@ -18,9 +18,7 @@ namespace GeekCoding.Data.Models
         public virtual DbSet<ProblemContest> ProblemContest { get; set; }
         public virtual DbSet<SubmisionContest> SubmisionContest { get; set; }
         public virtual DbSet<Announcement> Announcement { get; set; }
-        public virtual DbSet<AspNetUsers> AspNetUsers { get; set; }
         public virtual DbSet<UserInformation> UserInformation { get; set; }
-
 
         public EvaluatorContext(DbContextOptions options) : base(options)
         {
@@ -248,19 +246,6 @@ namespace GeekCoding.Data.Models
                     .HasConstraintName("FK__Submision__Probl__2D27B809");
             });
 
-            modelBuilder.Entity<AspNetUsers>(entity =>
-            {
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
-                entity.Property(e => e.Email).HasMaxLength(256);
-
-                entity.Property(e => e.NormalizedEmail).HasMaxLength(256);
-
-                entity.Property(e => e.NormalizedUserName).HasMaxLength(256);
-
-                entity.Property(e => e.UserName).HasMaxLength(256);
-            });
-
             modelBuilder.Entity<UserInformation>(entity =>
             {
                 entity.HasKey(e => e.IdUser);
@@ -278,13 +263,8 @@ namespace GeekCoding.Data.Models
                 entity.Property(e => e.Scoala).IsRequired();
 
                 entity.Property(e => e.Username).IsRequired();
-
-                entity.HasOne(d => d.IdUserNavigation)
-                    .WithOne(p => p.UserInformation)
-                    .HasForeignKey<UserInformation>(d => d.IdUser)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__UserInfor__IdUse__160F4887");
             });
+
         }
     }
 }
