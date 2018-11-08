@@ -8,5 +8,6 @@ namespace GeekCoding.Repository.Interfaces
     public interface IUserInformationRepository : IRepositoryBase<UserInformation>
     {
         UserInformation GetUserInformationByUsername(string username);
+        UserInformation GetUserById(string id);
     }
 }

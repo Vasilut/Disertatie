@@ -18,10 +18,10 @@ namespace GeekCoding.MainApplication.Controllers
     {
         private IUserInformationRepository _userInformationRepository;
         private UserManager<User> _userManager;
-        private IUserRegistration _userRegistration;
+        private IUserInformationService _userRegistration;
 
         public AdminController(IUserInformationRepository userInformationRepository, UserManager<User> userManager,
-                               IUserRegistration userRegistration)
+                               IUserInformationService userRegistration)
         {
             _userInformationRepository = userInformationRepository;
             _userManager = userManager;
@@ -77,7 +77,8 @@ namespace GeekCoding.MainApplication.Controllers
         [HttpGet]
         public IActionResult Details(string id)
         {
-            return View();
+            var userInformation = _userInformationRepository.GetUserById(id);
+            return View(userInformation);
         }
 
         [HttpGet]

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GeekCoding.MainApplication.Utilities.Services
 {
-    public interface IUserRegistration
+    public interface IUserInformationService
     {
         Task<bool> RegisterUser(UserInformationViewModel userInformation);
     }

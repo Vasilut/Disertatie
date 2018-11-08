@@ -9,12 +9,12 @@ using Microsoft.AspNetCore.Identity;
 
 namespace GeekCoding.MainApplication.Utilities.Services
 {
-    public class UserRegistration : IUserRegistration
+    public class UserInformationService : IUserInformationService
     {
         private IUserInformationRepository _userInformationRepository;
         private UserManager<User> _userManager;
 
-        public UserRegistration(IUserInformationRepository userInformationRepository, UserManager<User> userManager)
+        public UserInformationService(IUserInformationRepository userInformationRepository, UserManager<User> userManager)
         {
             _userInformationRepository = userInformationRepository;
             _userManager = userManager;

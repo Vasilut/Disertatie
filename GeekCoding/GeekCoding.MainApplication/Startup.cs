@@ -57,7 +57,7 @@ namespace GeekCoding.MainApplication
             services.AddScoped<IAnnouncementRepository, AnnouncementRepository>();
             services.AddScoped<ISerializeTests, SerializeTests>();
             services.AddScoped<IUserInformationRepository, UserInformationRepository>();
-            services.AddScoped<IUserRegistration, UserRegistration>();
+            services.AddScoped<IUserInformationService, UserInformationService>();
             services.AddTransient<SubmissionHub>();
 
             services.AddSignalR();

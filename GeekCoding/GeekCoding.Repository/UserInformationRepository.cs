@@ -13,9 +13,15 @@ namespace GeekCoding.Repository
         {
         }
 
+        public UserInformation GetUserById(string id)
+        {
+            return RepositoryContext.UserInformation.Where(usrInf => usrInf.IdUser == id).FirstOrDefault();
+        }
+
         public UserInformation GetUserInformationByUsername(string username)
         {
             return RepositoryContext.UserInformation.Where(usrInf => usrInf.Username == username).FirstOrDefault();
         }
+        
     }
 }
