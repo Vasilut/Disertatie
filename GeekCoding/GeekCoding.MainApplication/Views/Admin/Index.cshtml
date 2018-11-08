@@ -1,7 +1,69 @@
-﻿
-@{
-    ViewData["Title"] = "Index";
-}
+﻿@model List<GeekCoding.MainApplication.Utilities.DTO.UserDto>
 
-<h2>Index Admin</h2>
+<div class="row" style="margin-top:25px;">
+    <div class="col-md-1" style="margin-right:20px">
+        <font style="vertical-align: inherit;">
+            <font style="vertical-align: inherit;">
+                <a class="btn btn-info" asp-controller="Admin" asp-action="Add">Create User</a>
+            </font>
+        </font>
+    </div>
 
+    &nbsp;
+    <div class="col-md-1">
+        <font style="vertical-align: inherit;">
+            <font style="vertical-align: inherit;">
+                <a class="btn btn-info" asp-controller="Admin" asp-action="ImportUsers">Import files with users</a>
+            </font>
+        </font>
+    </div>
+</div>
+
+
+
+<table class="table table-hover" style="margin-top:50px;">
+    <thead>
+
+        <tr>
+            <th>
+                <font style="vertical-align: inherit;">
+                    <font style="vertical-align: inherit;">
+                        Username
+                    </font>
+                </font>
+            </th>
+        </tr>
+    </thead>
+    <tbody class="reactable-data">
+        @foreach (var item in Model)
+        {
+            <tr>
+                <th scope="row">
+                    <font style="vertical-align: inherit;">
+                        <font style="vertical-align: inherit;">
+                            <a asp-action="Details" asp-route-id="@item.Id">  @item.Username  </a>
+                        </font>
+                    </font>
+                </th>
+
+                <td>
+                    <font style="vertical-align: inherit;">
+                        <font style="vertical-align: inherit;">
+                            <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                        </font>
+                    </font>
+                </td>
+
+
+                <td>
+                    <font style="vertical-align: inherit;">
+                        <font style="vertical-align: inherit;">
+                            <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">Remove user</a>
+                        </font>
+                    </font>
+                </td>
+            </tr>
+            
+        }
+    </tbody>
+</table>

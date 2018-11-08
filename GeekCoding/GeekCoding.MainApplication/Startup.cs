@@ -16,6 +16,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.SignalR;
 using GeekCoding.MainApplication.Hubs;
 using GeekCoding.MainApplication.Utilities;
+using GeekCoding.MainApplication.Utilities.Services;
 
 namespace GeekCoding.MainApplication
 {
@@ -56,12 +57,13 @@ namespace GeekCoding.MainApplication
             services.AddScoped<IAnnouncementRepository, AnnouncementRepository>();
             services.AddScoped<ISerializeTests, SerializeTests>();
             services.AddScoped<IUserInformationRepository, UserInformationRepository>();
+            services.AddScoped<IUserRegistration, UserRegistration>();
             services.AddTransient<SubmissionHub>();
 
             services.AddSignalR();
         }
 
-       
+
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
@@ -93,7 +95,7 @@ namespace GeekCoding.MainApplication
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
 
-            
+
         }
     }
 }
