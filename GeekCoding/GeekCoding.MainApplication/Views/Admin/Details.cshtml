@@ -6,48 +6,55 @@
 
 <h2>Details</h2>
 
-<div>
-    <h4>UserInformation</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Nume)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Nume)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Prenume)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Prenume)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Profesor)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Profesor)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Clasa)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Clasa)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Scoala)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Scoala)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Username)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Username)
-        </dd>
-    </dl>
-</div>
+@if (Model == null)
+{
+    <h3>We don't have any information for this user</h3>
+}
+else
+{
+    <div>
+        <h4>UserInformation</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.Nume)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Nume)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Prenume)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Prenume)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Profesor)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Profesor)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Clasa)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Clasa)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Scoala)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Scoala)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Username)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Username)
+            </dd>
+        </dl>
+    </div>
+}
 <div>
     <a asp-action="Index"> <i class="glyphicon glyphicon-arrow-left"></i> &nbsp; Back to List</a>
 </div>
