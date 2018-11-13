@@ -85,8 +85,69 @@ namespace GeekCoding.MainApplication.Controllers
         [HttpGet]
         public IActionResult Edit(string id)
         {
-            return View();
+            var usrInformation = _userInformationRepository.GetUserById(id);
+            if(usrInformation == null)
+            {
+                return View(new UserInformationDto());
+            }
+            return View(new UserInformationDto
+            {
+                IdUser = usrInformation.IdUser,
+                Clasa = usrInformation.Clasa,
+                Nume = usrInformation.Nume,
+                Password = string.Empty,
+                Prenume = usrInformation.Prenume,
+                Profesor = usrInformation.Profesor,
+                Scoala = usrInformation.Scoala,
+                Username = usrInformation.Username
+            });
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit([FromForm] UserInformationViewModel userInformationViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var userToUpdate = _userInformationRepository.GetUserById(userInformationViewModel.IdUser);
+                if (userToUpdate == null)
+                {
+                    return BadRequest("No entity to update");
+                }
+
+                userToUpdate.Clasa = userInformationViewModel.Clasa;
+                userToUpdate.Nume = userInformationViewModel.Nume;
+                userToUpdate.Prenume = userInformationViewModel.Prenume;
+                userToUpdate.Profesor = userInformationViewModel.Profesor;
+                userToUpdate.Scoala = userInformationViewModel.Scoala;
+                userToUpdate.Username = userInformationViewModel.Username;
+
+                //see if we need to update the password
+                if (!string.IsNullOrEmpty(userInformationViewModel.Password))
+                {
+                    var userToUpdatePassword = await _userManager.FindByIdAsync(userInformationViewModel.IdUser);
+                    if(userToUpdatePassword == null)
+                    {
+                        return BadRequest("No user to update");
+                    }
+
+                    //update password
+                    var newPasswordHash = _userManager.PasswordHasher.HashPassword(userToUpdatePassword, userInformationViewModel.Password);
+                    userToUpdatePassword.PasswordHash = newPasswordHash;
+                    var resultPasswordUpdated = await _userManager.UpdateAsync(userToUpdatePassword);
+                    if(!resultPasswordUpdated.Succeeded)
+                    {
+                        return BadRequest("Failed to update password");
+                    }
+                }
+
+                _userInformationRepository.Update(userToUpdate);
+                _userInformationRepository.Save();
+
+                return RedirectToAction(nameof(Index));
+            }
+            return RedirectToAction(nameof(Edit), new { id = userInformationViewModel.IdUser });
+        }
+
 
         [HttpGet]
         public IActionResult Delete(string id)
