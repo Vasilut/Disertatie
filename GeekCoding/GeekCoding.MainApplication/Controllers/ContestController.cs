@@ -52,7 +52,7 @@ namespace GeekCoding.MainApplication.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-        public IActionResult Index()
+        public IActionResult Index(int? page)
         {
             var lst = _contestRepository.GetAll().ToList();
             var goodList = lst.Select(prop =>
@@ -61,7 +61,8 @@ namespace GeekCoding.MainApplication.Controllers
                 return prop;
             }).ToList();
 
-            return View(goodList);
+            int pageSize = 4;
+            return View(PaginatedList<Contest>.CreateAsync(goodList, page ?? 1, pageSize));
         }
 
         [HttpGet]
