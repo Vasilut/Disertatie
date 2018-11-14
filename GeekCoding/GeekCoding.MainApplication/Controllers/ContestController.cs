@@ -63,6 +63,38 @@ namespace GeekCoding.MainApplication.Controllers
             return View(goodList);
         }
 
+        [HttpGet]
+        public IActionResult Edit(Guid id)
+        {
+            var contestToEdit = _contestRepository.GetItem(id);
+            if (contestToEdit == null)
+            {
+                return BadRequest("Nothing to edit");
+            }
+            return View(contestToEdit);
+        }
+
+        [HttpPost]
+        public IActionResult Edit([FromForm] ContestViewModel contest)
+        {
+            var contestToEdit = _contestRepository.GetItem(contest.ContestId);
+            if(contestToEdit == null)
+            {
+                return BadRequest("Nothing to edit");
+            }
+
+            contestToEdit.Title = contest.Title;
+            contestToEdit.Content = contest.Content;
+            contestToEdit.StartDate = contest.StartDate;
+            contestToEdit.EndDate = contest.EndDate;
+
+            _contestRepository.Update(contestToEdit);
+            _contestRepository.Save();
+
+            return RedirectToAction(nameof(Index));
+
+        }
+
         [Authorize]
         [HttpPost]
         public IActionResult RegisterUser([FromForm] UserContestViewModel model)
