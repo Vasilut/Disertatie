@@ -246,7 +246,7 @@ namespace GeekCoding.MainApplication.Controllers
         public IActionResult Announcement(Guid id)
         {
 
-            var announcements = _announcementRepository.GetAll().OrderByDescending(ann => ann.DateAdded).ToList();
+            var announcements = _announcementRepository.GetAll().Where(ann => ann.ContestId == id).OrderByDescending(ann => ann.DateAdded).ToList();
             var announcementWithContestId = new Tuple<List<Announcement>, Guid>(announcements, id);
             return View(announcementWithContestId);
         }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GeekCoding.Data.Models;
+using GeekCoding.MainApplication.Pagination;
 using GeekCoding.MainApplication.Utilities.DTO;
 using GeekCoding.MainApplication.Utilities.Services;
 using GeekCoding.MainApplication.ViewModels;
@@ -16,7 +17,7 @@ namespace GeekCoding.MainApplication.Controllers
     [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
-        string[] _rolesNames = {"Member", "Proponent" };
+        string[] _rolesNames = { "Member", "Proponent" };
         private IUserInformationRepository _userInformationRepository;
         private UserManager<User> _userManager;
         private IUserInformationService _userInformationService;
@@ -31,7 +32,7 @@ namespace GeekCoding.MainApplication.Controllers
 
 
         [HttpGet]
-        public IActionResult Index()
+        public IActionResult Index(string searchString, int? page)
         {
             var allUsers = _userManager.Users.ToList();
             var usersToShow = new List<UserDto>();
@@ -43,7 +44,13 @@ namespace GeekCoding.MainApplication.Controllers
                     Username = user.UserName
                 });
             }
-            return View(usersToShow);
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                usersToShow = usersToShow.Where(usr => usr.Username.Contains(searchString)).ToList();
+            }
+
+            int pageSize = 15;
+            return View(PaginatedList<UserDto>.CreateAsync(usersToShow, page ?? 1, pageSize));
         }
 
         [HttpGet]
@@ -60,7 +67,7 @@ namespace GeekCoding.MainApplication.Controllers
                 var result = await _userInformationService.RegisterUser(userInformation);
                 if (result == true)
                 {
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Index", new { searchString = string.Empty });
                 }
 
                 ModelState.AddModelError("", "Something bad happened.");
@@ -86,7 +93,7 @@ namespace GeekCoding.MainApplication.Controllers
         public IActionResult Edit(string id)
         {
             var usrInformation = _userInformationRepository.GetUserById(id);
-            if(usrInformation == null)
+            if (usrInformation == null)
             {
                 return View(new UserInformationDto());
             }
@@ -125,7 +132,7 @@ namespace GeekCoding.MainApplication.Controllers
                 if (!string.IsNullOrEmpty(userInformationViewModel.Password))
                 {
                     var userToUpdatePassword = await _userManager.FindByIdAsync(userInformationViewModel.IdUser);
-                    if(userToUpdatePassword == null)
+                    if (userToUpdatePassword == null)
                     {
                         return BadRequest("No user to update");
                     }
@@ -134,7 +141,7 @@ namespace GeekCoding.MainApplication.Controllers
                     var newPasswordHash = _userManager.PasswordHasher.HashPassword(userToUpdatePassword, userInformationViewModel.Password);
                     userToUpdatePassword.PasswordHash = newPasswordHash;
                     var resultPasswordUpdated = await _userManager.UpdateAsync(userToUpdatePassword);
-                    if(!resultPasswordUpdated.Succeeded)
+                    if (!resultPasswordUpdated.Succeeded)
                     {
                         return BadRequest("Failed to update password");
                     }
@@ -143,7 +150,7 @@ namespace GeekCoding.MainApplication.Controllers
                 _userInformationRepository.Update(userToUpdate);
                 _userInformationRepository.Save();
 
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index), new { searchString = string.Empty });
             }
             return RedirectToAction(nameof(Edit), new { id = userInformationViewModel.IdUser });
         }
@@ -153,7 +160,7 @@ namespace GeekCoding.MainApplication.Controllers
         public IActionResult Delete(string id)
         {
             var userInformation = _userInformationRepository.GetUserById(id);
-            if(userInformation == null)
+            if (userInformation == null)
             {
                 //that means we don't have any information in userinformation for this user
                 //assign the id from the user
@@ -161,12 +168,12 @@ namespace GeekCoding.MainApplication.Controllers
             }
             return View(userInformation);
         }
-        
+
         [HttpPost]
         public async Task<IActionResult> DeleteConfirmed(string idUser)
         {
             //if the role is admin, do not delete the user
-            if(String.IsNullOrEmpty(idUser))
+            if (String.IsNullOrEmpty(idUser))
             {
                 //it is not in the user information
                 ModelState.AddModelError("", "You cannot delete an null user");
@@ -178,14 +185,14 @@ namespace GeekCoding.MainApplication.Controllers
             if (isAdmin == true)
             {
                 ModelState.AddModelError("", "You cannot delete an admin");
-                return RedirectToAction(nameof(Delete), new { id = idUser});
+                return RedirectToAction(nameof(Delete), new { id = idUser });
             }
 
             //the user is not an admin
             foreach (var role in _rolesNames)
             {
                 var isInRole = await _userManager.IsInRoleAsync(userToDelete, role);
-                if(isInRole)
+                if (isInRole)
                 {
                     await _userManager.RemoveFromRoleAsync(userToDelete, role);
                 }
@@ -199,7 +206,7 @@ namespace GeekCoding.MainApplication.Controllers
             _userInformationRepository.Delete(userInformationBasedOnId);
             _userInformationRepository.Save();
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index), new { searchString = string.Empty });
         }
 
     }

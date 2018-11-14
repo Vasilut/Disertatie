@@ -1,4 +1,4 @@
-﻿@model List<GeekCoding.MainApplication.Utilities.DTO.UserDto>
+﻿@model GeekCoding.MainApplication.Pagination.PaginatedList<GeekCoding.MainApplication.Utilities.DTO.UserDto>
 
 <div class="row" style="margin-top:25px;">
     <div class="col-md-1" style="margin-right:20px">
@@ -19,6 +19,17 @@
     </div>
 </div>
 
+<div class="row" style="margin-top:20px">
+    <div class="col-md-1" style="margin-right:20px">
+        <form asp-controller="Admin" asp-action="Index" method="get">
+            <p>
+                Username: <input type="text" name="SearchString">
+                <input type="submit" value="Search" />
+            </p>
+        </form>
+    </div>
+
+</div>
 
 
 <table class="table table-hover" style="margin-top:50px;">
@@ -63,7 +74,23 @@
                     </font>
                 </td>
             </tr>
-            
+
         }
     </tbody>
 </table>
+
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+
+<a asp-action="Index"
+   asp-route-page="@(Model.PageIndex - 1)"
+   class="btn btn-default @prevDisabled">
+    Previous
+</a>
+<a asp-action="Index"
+   asp-route-page="@(Model.PageIndex + 1)"
+   class="btn btn-default @nextDisabled">
+    Next
+</a>

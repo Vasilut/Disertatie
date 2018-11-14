@@ -64,7 +64,6 @@ namespace GeekCoding.MainApplication.Controllers
 
             int pageSize = 20;
             return View(PaginatedList<Problem>.CreateAsync(goodList, page ?? 1, pageSize));
-            //return View(goodList);
         }
 
         [Authorize(Roles = "Admin")]
