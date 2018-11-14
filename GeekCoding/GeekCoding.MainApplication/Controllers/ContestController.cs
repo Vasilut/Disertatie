@@ -270,6 +270,33 @@ namespace GeekCoding.MainApplication.Controllers
             return RedirectToAction(nameof(Announcement), new { id = announcement.Contestid });
         }
 
+        [HttpGet]
+        public IActionResult EditAnnouncement(Guid id)
+        {
+            var announcementToEdit = _announcementRepository.GetItem(id);
+            if (announcementToEdit == null)
+            {
+                return BadRequest("Nothing to edit");
+            }
+            return View(announcementToEdit);
+        }
+
+        [HttpPost]
+        public IActionResult EditAnnouncement([FromForm]ContestAnnouncementViewModel announcement)
+        {
+            var announcementToUpdate = _announcementRepository.GetItem(announcement.AnnouncementId);
+            if (announcementToUpdate == null)
+            {
+                return BadRequest("Nothing to update");
+            }
+            announcementToUpdate.AnnouncementContent = announcement.AnnouncementContent;
+            announcementToUpdate.DateAdded = DateTime.Now;
+            _announcementRepository.Update(announcementToUpdate);
+            _announcementRepository.Save();
+
+            return RedirectToAction(nameof(Announcement), new { id = announcement.Contestid });
+        }
+
         [AllowAnonymous]
         [HttpGet]
         public IActionResult Overview(Guid id)
