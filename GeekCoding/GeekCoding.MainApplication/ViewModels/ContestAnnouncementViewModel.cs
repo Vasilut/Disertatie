@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace GeekCoding.Data.Models
+namespace GeekCoding.MainApplication.ViewModels
 {
-    public partial class Announcement
+    public class ContestAnnouncementViewModel
     {
+        public Guid Contestid { get; set; }
         public Guid AnnouncementId { get; set; }
         public string AnnouncementContent { get; set; }
         public DateTime DateAdded { get; set; }
-        public Guid ContestId { get; set; }
-
-        public Contest Contest { get; set; }
     }
 }

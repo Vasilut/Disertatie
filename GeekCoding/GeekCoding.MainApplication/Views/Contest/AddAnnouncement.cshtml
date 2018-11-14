@@ -1,0 +1,31 @@
+﻿@model GeekCoding.MainApplication.ViewModels.ContestAnnouncementViewModel
+
+@{
+    ViewData["Title"] = "AddAnnouncement";
+}
+
+<h2>AddAnnouncement</h2>
+
+<h4>Announcement</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="AddAnnouncement">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="AnnouncementContent" class="control-label"></label>
+                <textarea asp-for="AnnouncementContent"></textarea>
+                <span asp-validation-for="AnnouncementContent" class="text-danger"></span>
+            </div>
+            <input type="hidden" name="ContestId" value="@Model.Contestid" />
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

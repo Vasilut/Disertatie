@@ -147,7 +147,7 @@ namespace GeekCoding.MainApplication.Controllers
                 _contestRepository.Save();
 
                 //send mail to all the registered user with the contest
-                InformUsersNewContest(contest.Title);
+                //InformUsersNewContest(contest.Title);
 
                 return RedirectToAction(nameof(Index));
             }
@@ -156,14 +156,14 @@ namespace GeekCoding.MainApplication.Controllers
 
         private void InformUsersNewContest(string contestName)
         {
-            //var lstUsers = _userManager.Users.ToList();
-            //foreach (var item in lstUsers)
-            //{
-            //    _emailSender.AddReceiver(item.Email)
-            //                        .AddSubject($"Contest {contestName} ")
-            //                        .AddBody("A new contest will start soon!. Please check our page")
-            //                        .BuildAndSend();
-            //}
+            var lstUsers = _userManager.Users.ToList();
+            foreach (var item in lstUsers)
+            {
+                _emailSender.AddReceiver(item.Email)
+                                    .AddSubject($"Contest {contestName} ")
+                                    .AddBody("A new contest will start soon!. Please check our page")
+                                    .BuildAndSend();
+            }
         }
 
         [Authorize(Roles = "Admin")]
@@ -209,6 +209,46 @@ namespace GeekCoding.MainApplication.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [AllowAnonymous]
+        [HttpGet]
+        public IActionResult Announcement(Guid id)
+        {
+
+            var announcements = _announcementRepository.GetAll().OrderByDescending(ann => ann.DateAdded).ToList();
+            var announcementWithContestId = new Tuple<List<Announcement>, Guid>(announcements, id);
+            return View(announcementWithContestId);
+        }
+
+        [HttpGet]
+        public IActionResult AddAnnouncement(Guid id)
+        {
+            var announcement = new ContestAnnouncementViewModel
+            {
+                Contestid = id
+            };
+            return View(announcement);
+        }
+
+        [HttpPost]
+        public IActionResult AddAnnouncement([FromForm] ContestAnnouncementViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var announcement = new Announcement
+                {
+                    AnnouncementContent = model.AnnouncementContent,
+                    ContestId = model.Contestid,
+                    DateAdded = DateTime.Now,
+                    AnnouncementId = Guid.NewGuid()
+                };
+
+                _announcementRepository.Create(announcement);
+                _announcementRepository.Save();
+
+                return RedirectToAction(nameof(Announcement), new { id = model.Contestid });
+            }
+            return BadRequest("Something bad happened");
+        }
 
         [AllowAnonymous]
         [HttpGet]

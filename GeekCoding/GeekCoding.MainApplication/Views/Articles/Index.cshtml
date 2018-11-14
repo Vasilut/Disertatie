@@ -11,39 +11,40 @@
 <body>
     <div row style="margin-top:50px;">
 
-    <table class="table table-hover" style="margin-top:50px;">
-        @foreach (var item in Model)
-        {
-            <div class="row">
-                <a asp-action="Details" asp-route-id="@item.SolutionId">
-                    <div class="col-md-10 col-md-push-1">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h3 class="panel-title">
-                                    @item.Name
-                                    <p class="pull-right">@item.DateAdded</p>
-                                </h3>
-                            </div>
-                            <div class="panel-body">
-                                <div class="well well-sm">
-                                    <ul class="list-unstyled list-inline">
-                                        <li>
-                                            <span class="label label-default">
-                                                <span class="glyphicon glyphicon-user">
+        <table class="table table-hover" style="margin-top:50px;">
+            @foreach (var item in Model)
+            {
+                <div class="row">
+                    <a asp-action="Details" asp-route-id="@item.SolutionId">
+                        <div class="col-md-10 col-md-push-1">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">
+                                        @item.Name
+                                        <p class="pull-right">@item.DateAdded</p>
+                                    </h3>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="well well-sm">
+                                        <ul class="list-unstyled list-inline">
+                                            <li>
+                                                <span class="label label-default">
+                                                    <span class="glyphicon glyphicon-user">
+                                                    </span>
+                                                    by @item.Author
                                                 </span>
-                                                by @item.Author
-                                            </span>
-                                        </li>
-                                    </ul>
+                                            </li>
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </a>
-            </div>
-        }
+                    </a>
+                </div>
+            }
 
-    </table>
+        </table>
+    </div>
     @{
         var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
         var nextDisabled = !Model.HasNextPage ? "disabled" : "";
