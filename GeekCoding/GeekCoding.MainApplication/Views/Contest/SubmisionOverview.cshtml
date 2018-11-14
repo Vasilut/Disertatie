@@ -1,101 +1,117 @@
-﻿@model Tuple<List<GeekCoding.Data.Models.Submision>, Guid>
+﻿@model Tuple<GeekCoding.MainApplication.Pagination.PaginatedList<GeekCoding.Data.Models.Submision>, Guid>
 
-    <div class="row">
-        <table class="table table-hover" style="margin-top:50px;">
-            <thead>
+<div class="row">
+    <table class="table table-hover" style="margin-top:50px;">
+        <thead>
 
-                <tr>
-                    <th>
+            <tr>
+                <th>
+                    <font style="vertical-align: inherit;">
+                        <font style="vertical-align: inherit;">
+                            UserName
+                        </font>
+                    </font>
+                </th>
+                <th>
+                    <font style="vertical-align: inherit;">
+                        <font style="vertical-align: inherit;">
+                            Problema
+                        </font>
+                    </font>
+                </th>
+                <th>
+                    <font style="vertical-align: inherit;">
+                        <font style="vertical-align: inherit;">
+                            Data
+                        </font>
+                    </font>
+                </th>
+                <th>
+                    <font style="vertical-align: inherit;">
+                        <font style="vertical-align: inherit;">
+                            State of submission
+                        </font>
+                    </font>
+                </th>
+                <th>
+                    <font style="vertical-align: inherit;">
+                        <font style="vertical-align: inherit;">
+                            Score
+                        </font>
+                    </font>
+                </th>
+            </tr>
+        </thead>
+        <tbody class="reactable-data">
+            @foreach (var item in Model.Item1)
+            {
+
+                <tr id="@item.SubmisionId">
+                    <th scope="row">
                         <font style="vertical-align: inherit;">
                             <font style="vertical-align: inherit;">
-                                UserName
+                                @item.UserName
                             </font>
                         </font>
                     </th>
-                    <th>
+                    <td>
                         <font style="vertical-align: inherit;">
                             <font style="vertical-align: inherit;">
-                                Problema
+                                @item.Problem?.ProblemName
                             </font>
                         </font>
-                    </th>
-                    <th>
+                    </td>
+                    <td>
                         <font style="vertical-align: inherit;">
                             <font style="vertical-align: inherit;">
-                                Data
+                                @item.DataOfSubmision
                             </font>
                         </font>
-                    </th>
-                    <th>
+                    </td>
+                    <td id="stateSubmission">
                         <font style="vertical-align: inherit;">
                             <font style="vertical-align: inherit;">
-                                State of submission
+                                @item.StateOfSubmision
                             </font>
                         </font>
-                    </th>
-                    <th>
+                    </td>
+                    <td id="score">
                         <font style="vertical-align: inherit;">
                             <font style="vertical-align: inherit;">
-                                Score
+                                @item.Score
                             </font>
                         </font>
-                    </th>
+                    </td>
+                    <td>
+                        <font style="vertical-align: inherit;">
+                            <font style="vertical-align: inherit;">
+                                <a asp-action="Details" asp-controller="Submission" asp-route-id="@item.SubmisionId">Details</a>
+                            </font>
+                        </font>
+                    </td>
                 </tr>
-            </thead>
-            <tbody class="reactable-data">
-                @foreach (var item in Model.Item1)
-                {
-
-                    <tr id="@item.SubmisionId">
-                        <th scope="row">
-                            <font style="vertical-align: inherit;">
-                                <font style="vertical-align: inherit;">
-                                    @item.UserName
-                                </font>
-                            </font>
-                        </th>
-                        <td>
-                            <font style="vertical-align: inherit;">
-                                <font style="vertical-align: inherit;">
-                                    @item.Problem?.ProblemName
-                                </font>
-                            </font>
-                        </td>
-                        <td>
-                            <font style="vertical-align: inherit;">
-                                <font style="vertical-align: inherit;">
-                                    @item.DataOfSubmision
-                                </font>
-                            </font>
-                        </td>
-                        <td id="stateSubmission">
-                            <font style="vertical-align: inherit;">
-                                <font style="vertical-align: inherit;">
-                                    @item.StateOfSubmision
-                                </font>
-                            </font>
-                        </td>
-                        <td id="score">
-                            <font style="vertical-align: inherit;">
-                                <font style="vertical-align: inherit;">
-                                    @item.Score
-                                </font>
-                            </font>
-                        </td>
-                        <td>
-                            <font style="vertical-align: inherit;">
-                                <font style="vertical-align: inherit;">
-                                    <a asp-action="Details" asp-controller="Submission" asp-route-id="@item.SubmisionId">Details</a>
-                                </font>
-                            </font>
-                        </td>
-                    </tr>
 
 
-                }
-            </tbody>
-        </table>
-    </div>
-    <div>
-        <a asp-action="Details" asp-route-Id="@Model.Item2"> <i class="glyphicon glyphicon-arrow-left"></i> &nbsp; Back to contest</a>
-    </div>
+            }
+        </tbody>
+    </table>
+</div>
+<div>
+    <a asp-action="Details" asp-route-Id="@Model.Item2"> <i class="glyphicon glyphicon-arrow-left"></i> &nbsp; Back to contest</a>
+</div>
+
+@{
+    var prevDisabled = !Model.Item1.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.Item1.HasNextPage ? "disabled" : "";
+}
+
+<a asp-action="SubmisionOverview" asp-route-Id="@Model.Item2"
+   asp-route-page="@(Model.Item1.PageIndex - 1)"
+   class="btn btn-default @prevDisabled">
+    Previous
+</a>
+<a asp-action="SubmisionOverview" asp-route-Id="@Model.Item2"
+   asp-route-page="@(Model.Item1.PageIndex + 1)"
+   class="btn btn-default @nextDisabled">
+    Next
+</a>

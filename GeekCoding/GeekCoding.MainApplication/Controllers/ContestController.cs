@@ -2,6 +2,7 @@
 using GeekCoding.Common.Helpers;
 using GeekCoding.Compilation.Api.Model;
 using GeekCoding.Data.Models;
+using GeekCoding.MainApplication.Pagination;
 using GeekCoding.MainApplication.Utilities;
 using GeekCoding.MainApplication.Utilities.DTO;
 using GeekCoding.MainApplication.Utilities.Enum;
@@ -467,7 +468,7 @@ namespace GeekCoding.MainApplication.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-        public IActionResult SubmisionOverview(Guid id)
+        public IActionResult SubmisionOverview(Guid id, int? page)
         {
             //list with submission
             var contestSubmissionList = _submisionContestRepository.GetListOfSubmisionForSpecificContest(id).ToList();
@@ -476,7 +477,9 @@ namespace GeekCoding.MainApplication.Controllers
             {
                 submisions.Add(item.Submision);
             }
-            var submissionWithContestId = new Tuple<List<Submision>, Guid>(submisions, id);
+
+            int pageSize = 10;
+            var submissionWithContestId = new Tuple<PaginatedList<Submision>, Guid>(PaginatedList<Submision>.CreateAsync(submisions, page ?? 1, pageSize), id);
             return View(submissionWithContestId);
         }
 
