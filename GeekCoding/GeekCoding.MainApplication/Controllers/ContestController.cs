@@ -250,6 +250,26 @@ namespace GeekCoding.MainApplication.Controllers
             return BadRequest("Something bad happened");
         }
 
+        [HttpGet]
+        public IActionResult DeleteAnnouncement(Guid id, Guid contest)
+        {
+            var announcementToDelete = _announcementRepository.GetItem(id);
+            if (announcementToDelete == null)
+            {
+                RedirectToAction(nameof(Announcement), new { id = contest });
+            }
+            return View(announcementToDelete);
+        }
+
+        [HttpPost]
+        public IActionResult DeleteAnnouncement([FromForm]ContestAnnouncementViewModel announcement)
+        {
+            _announcementRepository.Delete(announcement.AnnouncementId);
+            _announcementRepository.Save();
+
+            return RedirectToAction(nameof(Announcement), new { id = announcement.Contestid });
+        }
+
         [AllowAnonymous]
         [HttpGet]
         public IActionResult Overview(Guid id)
