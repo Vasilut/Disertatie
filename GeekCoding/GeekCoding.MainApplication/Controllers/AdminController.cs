@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using GeekCoding.Common.Helpers;
 using GeekCoding.Data.Models;
 using GeekCoding.MainApplication.Pagination;
 using GeekCoding.MainApplication.Utilities.DTO;
@@ -81,6 +84,42 @@ namespace GeekCoding.MainApplication.Controllers
         {
             return View();
         }
+
+        [HttpPost]
+        public async Task<IActionResult> ImportFileExecute([FromForm]FileExecutionViewModel file)
+        {
+            var reader = new StreamReader(file.File.OpenReadStream());
+            string line;
+            while ((line = reader.ReadLine()) != null)
+            {
+                var userToBeRegistered = line.Split(';');
+                if (userToBeRegistered.Length < 7)
+                {
+                    continue;
+                }
+                var userToRegister = new UserInformationViewModel
+                {
+                    Nume = userToBeRegistered[0],
+                    Prenume = userToBeRegistered[1],
+                    Profesor = userToBeRegistered[2],
+                    Clasa = userToBeRegistered[3],
+                    Scoala = userToBeRegistered[4],
+                    Username = userToBeRegistered[5],
+                    Password = userToBeRegistered[6]
+                };
+
+                var result = await _userInformationService.RegisterUser(userToRegister);
+                if (result == false)
+                {
+                    //log the errors
+                    ModelState.AddModelError("", $"Something bad happened for user + {userToRegister.Nume}");
+                }
+
+            }
+
+            return RedirectToAction(nameof(Index), new { searchString = string.Empty });
+        }
+
 
         [HttpGet]
         public IActionResult Details(string id)
