@@ -28,10 +28,38 @@ namespace GeekCoding.MainApplication
 
             //prepare admin user
             string userName = configuration.GetSection("UserSettings")["UserName"];
+            string password = configuration.GetSection("UserSettings")["Password"];
             var user = await _userManager.FindByNameAsync(userName);
             if (user != null)
             {
                 await _userManager.AddToRoleAsync(user, _rolesNames[0]);
+            }
+            else
+            {
+                user = new User
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    UserName = userName,
+                    Email = userName
+                };
+
+                var isCreated = await _userManager.CreateAsync(user, password);
+                if(isCreated.Succeeded)
+                {
+                    var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    var userToConfirm = await _userManager.FindByEmailAsync(user.Email);
+
+                    if (userToConfirm != null)
+                    {
+                        var resultFromConfirmation = await _userManager.ConfirmEmailAsync(user, token);
+
+                        if (resultFromConfirmation.Succeeded)
+                        {
+                            //add admin role
+                            await _userManager.AddToRoleAsync(user, _rolesNames[0]);
+                        }
+                    }
+                }
             }
 
         }
