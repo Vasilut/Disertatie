@@ -29,7 +29,6 @@ namespace GeekCoding.MainApplication.Controllers
         private ISolutionRepository _solutionRepository;
         private IConfiguration _configuration;
         private List<SelectListItem> _compilers = new List<SelectListItem>();
-        public object lockOBj = new object();
 
         private string _compilationApi;
         private string _executionApi;
