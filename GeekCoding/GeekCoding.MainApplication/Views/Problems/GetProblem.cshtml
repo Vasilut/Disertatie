@@ -37,40 +37,40 @@
         </tr>
     </thead>
     <tbody>
-       <tr>
-                <td>
+        <tr>
+            <td>
+                <font style="vertical-align: inherit;">
                     <font style="vertical-align: inherit;">
-                        <font style="vertical-align: inherit;">
-                            @Model.Problem.TimeLimit s
-                        </font>
+                        @Model.Problem.TimeLimit s
                     </font>
-                </td>
-                <td>
+                </font>
+            </td>
+            <td>
+                <font style="vertical-align: inherit;">
                     <font style="vertical-align: inherit;">
-                        <font style="vertical-align: inherit;">
-                            @Model.Problem.MemoryLimit kb
-                        </font>
+                        @Model.Problem.MemoryLimit kb
                     </font>
-                </td>
-                <td>
+                </font>
+            </td>
+            <td>
+                <font style="vertical-align: inherit;">
                     <font style="vertical-align: inherit;">
-                        <font style="vertical-align: inherit;">
-                            @Model.Problem.Dificulty
-                        </font>
+                        @Model.Problem.Dificulty
                     </font>
-                </td>
-                <td>
+                </font>
+            </td>
+            <td>
+                <font style="vertical-align: inherit;">
                     <font style="vertical-align: inherit;">
-                        <font style="vertical-align: inherit;">
-                            @Model.Score
-                        </font>
+                        @Model.Score
                     </font>
-                </td>
-            </tr>
-        </tbody>
+                </font>
+            </td>
+        </tr>
+    </tbody>
 </table>
 
-<div class="panel panel-default" >
+<div class="panel panel-default">
     <div class="panel-body">
         @Model.Problem.ProblemName
     </div>
@@ -93,7 +93,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
-                                <input type="file" name="file" />
+                                <input type="file" name="file" onchange="FileSelected(this)" />
                             </div>
                         </div>
                         <div class="col-md-12">
@@ -254,6 +254,23 @@
 
 
 @section script_variables{
+    <script type="text/javascript">
+
+        function FileSelected(sender) {
+            if (check(sender.value)) //check is you function to check extension
+            {
+            }
+            else {
+                alert('You need to select .cpp extension. Please choose another file')
+                sender.value = null;
+            }
+        }
+
+        function check(a) {
+            return a.indexOf('.cpp') > -1
+        }
+
+    </script>
     <script type="text/javascript">
     var id = '@Model.Problem.ProblemId';
     var confirmUrl = '@Html.Raw(@Url.Action("Submissions", "Problems"))';

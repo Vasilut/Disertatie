@@ -11,10 +11,7 @@ namespace GeekCoding.MainApplication.ViewModels
             {
                 return new List<SelectListItem>()
                 {
-                    new SelectListItem {Text="C++",Value="C++"},
-                    new SelectListItem {Text="Java",Value="Java"},
-                    new SelectListItem {Text="C#",Value="C#"},
-                    new SelectListItem {Text="py",Value="py"},
+                    new SelectListItem {Text="C++",Value="C++"}
                     
                 };
             }
