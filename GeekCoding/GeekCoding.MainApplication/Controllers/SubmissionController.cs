@@ -31,8 +31,6 @@ namespace GeekCoding.MainApplication.Controllers
         private ITestsRepository _testRepository;
         private string _compilationApi;
         private string _executionApi;
-        static readonly object _locker = new object();
-        //static SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1, 1);
 
         public SubmissionController(ISubmisionRepository submisionRepository, IConfiguration configuration,
                                     IProblemRepository problemRepository, IEvaluationRepository evaluationRepository,
@@ -68,34 +66,32 @@ namespace GeekCoding.MainApplication.Controllers
             //need to get all the submission that have queed flag set to 0
             foreach (var submission in submissionListOrderedAsc)
             {
-                lock (_locker)
-                {
-                    if (submission.JobQueued == false)
-                    {
-                        //start a job for this submission
-                        var problem = _problemRepository.GetItem(submission.ProblemId);
-                        string problemName = problem.ProblemName;
-                        var tests = _testRepository.GetTestsByProblemId(problem.ProblemId).ToList();
-                        int nrOfTests = tests.Count;
-                        string nameOfFile = problemName.ToLower();
 
-                        var submissionDtoModel = new SubmisionDto
-                        {
-                            Compilator = submission.Compilator,
-                            ProblemName = problemName,
-                            Content = submission.SourceCode,
-                            SubmissionId = submission.SubmisionId,
-                            UserName = User.Identity.Name,
-                            MemoryLimit = problem.MemoryLimit,
-                            TimeLimit = problem.TimeLimit,
-                            NumberOfTests = nrOfTests,
-                            FileName = nameOfFile
-                        };
-                        BackgroundJob.Enqueue<SubmissionRequest>(x => x.MakeSubmissionRequestAsync(submissionDtoModel, _compilationApi, _executionApi));
-                        submission.JobQueued = true;
-                    }
+                if (submission.JobQueued == false)
+                {
+                    //start a job for this submission
+                    var problem = _problemRepository.GetItem(submission.ProblemId);
+                    string problemName = problem.ProblemName;
+                    var tests = _testRepository.GetTestsByProblemId(problem.ProblemId).ToList();
+                    int nrOfTests = tests.Count;
+                    string nameOfFile = problemName.ToLower();
+
+                    var submissionDtoModel = new SubmisionDto
+                    {
+                        Compilator = submission.Compilator,
+                        ProblemName = problemName,
+                        Content = submission.SourceCode,
+                        SubmissionId = submission.SubmisionId,
+                        UserName = User.Identity.Name,
+                        MemoryLimit = problem.MemoryLimit,
+                        TimeLimit = problem.TimeLimit,
+                        NumberOfTests = nrOfTests,
+                        FileName = nameOfFile
+                    };
+                    BackgroundJob.Enqueue<SubmissionRequest>(x => x.MakeSubmissionRequestAsync(submissionDtoModel, _compilationApi, _executionApi));
+                    submission.JobQueued = true;
                 }
-                
+
             }
             _submisionRepository.Save();
             int pageSize = 20;
@@ -121,7 +117,7 @@ namespace GeekCoding.MainApplication.Controllers
             var problem = submision.Problem;
             var evaluationResult = _evaluationRepository.GetItemBySubmission(id);
             var lstEvaluationResult = EvaluationList(evaluationResult);
-           
+
             SubmisionDetailsViewModel sd = new SubmisionDetailsViewModel
             {
                 UserName = submision.UserName,
@@ -135,7 +131,7 @@ namespace GeekCoding.MainApplication.Controllers
                 Scor = submision.Score,
                 EvaluationResult = lstEvaluationResult,
                 MessageOfSubmission = submision.MessageOfSubmision
-                
+
             };
 
             return View(sd);
@@ -143,7 +139,7 @@ namespace GeekCoding.MainApplication.Controllers
 
         private List<TestModelDto> EvaluationList(Evaluation evaluation)
         {
-            if(evaluation == null)
+            if (evaluation == null)
             {
                 return new List<TestModelDto>();
             }
