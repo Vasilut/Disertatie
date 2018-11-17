@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using GeekCoding.Compilation.Api.Model;
 using GeekCoding.Data.Models;
@@ -30,6 +31,8 @@ namespace GeekCoding.MainApplication.Controllers
         private ITestsRepository _testRepository;
         private string _compilationApi;
         private string _executionApi;
+        static readonly object _locker = new object();
+        //static SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1, 1);
 
         public SubmissionController(ISubmisionRepository submisionRepository, IConfiguration configuration,
                                     IProblemRepository problemRepository, IEvaluationRepository evaluationRepository,
@@ -50,27 +53,47 @@ namespace GeekCoding.MainApplication.Controllers
         [HttpGet]
         public async Task<IActionResult> Index(int? page)
         {
-            
+
+            /*
+             *
+             static SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1, 1);
+                    semaphoreSlim.Wait();
+                    code to execute
+                    semaphoreSlim.Release();
+
+             */
+
             var submisionList = await _submisionRepository.GetAllAsync();
             var submissionListOrderedAsc = submisionList.OrderBy(x => x.DataOfSubmision).ToList();
             //need to get all the submission that have queed flag set to 0
             foreach (var submission in submissionListOrderedAsc)
             {
-                if(submission.JobQueued == false)
+                lock (_locker)
                 {
-                    //start a job for this submission
-                    var problem = _problemRepository.GetItem(submission.ProblemId);
-                    string problemName = problem.ProblemName;
-                    var tests = _testRepository.GetTestsByProblemId(problem.ProblemId).ToList();
-                    int nrOfTests = tests.Count;
-                    string nameOfFile = problemName.ToLower();
+                    if (submission.JobQueued == false)
+                    {
+                        //start a job for this submission
+                        var problem = _problemRepository.GetItem(submission.ProblemId);
+                        string problemName = problem.ProblemName;
+                        var tests = _testRepository.GetTestsByProblemId(problem.ProblemId).ToList();
+                        int nrOfTests = tests.Count;
+                        string nameOfFile = problemName.ToLower();
 
-                    var submissionDtoModel = new SubmisionDto { Compilator = submission.Compilator, ProblemName = problemName, Content = submission.SourceCode,
-                                                                SubmissionId = submission.SubmisionId, UserName = User.Identity.Name, MemoryLimit = problem.MemoryLimit,
-                                                                TimeLimit = problem.TimeLimit, NumberOfTests = nrOfTests, FileName = nameOfFile
-                                                                };
-                    BackgroundJob.Enqueue<SubmissionRequest>(x => x.MakeSubmissionRequestAsync(submissionDtoModel, _compilationApi,_executionApi));
-                    submission.JobQueued = true;
+                        var submissionDtoModel = new SubmisionDto
+                        {
+                            Compilator = submission.Compilator,
+                            ProblemName = problemName,
+                            Content = submission.SourceCode,
+                            SubmissionId = submission.SubmisionId,
+                            UserName = User.Identity.Name,
+                            MemoryLimit = problem.MemoryLimit,
+                            TimeLimit = problem.TimeLimit,
+                            NumberOfTests = nrOfTests,
+                            FileName = nameOfFile
+                        };
+                        BackgroundJob.Enqueue<SubmissionRequest>(x => x.MakeSubmissionRequestAsync(submissionDtoModel, _compilationApi, _executionApi));
+                        submission.JobQueued = true;
+                    }
                 }
                 
             }
