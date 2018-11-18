@@ -49,8 +49,11 @@
                     <li><a asp-area="" asp-controller="Problems" asp-action="Index">Problems</a></li>
                     <li><a asp-area="" asp-controller="Contest" asp-action="Index">Contest</a></li>
                     <li><a asp-area="" asp-controller="Articles" asp-action="Index">Articles</a></li>
-                    <li><a asp-area="" asp-controller="Discuss" asp-action="Index">Discuss</a></li>
-                    <li><a asp-area="" asp-controller="Interview" asp-action="Index">Interview</a></li>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <li><a asp-area="" asp-controller="Discuss" asp-action="Index">Discuss</a></li>
+                        <li><a asp-area="" asp-controller="Interview" asp-action="Index">Interview</a></li>
+                    }
                     <li><a asp-area="" asp-controller="Submission" asp-action="Index">Submission</a></li>
                     @if (User.IsInRole("Admin"))
                     {
@@ -69,8 +72,15 @@
         <div class="footerg">
             <div class="panel-footer">
                 <p>&copy; 2018 - GeekCoding</p>
+                <p>
+                    @DateTime.Now
+                </p>
+                <p>
+                    @DateTime.UtcNow
+                </p>
             </div>
         </div>
+        <hr />
     </div>
 
     <environment include="Development">
