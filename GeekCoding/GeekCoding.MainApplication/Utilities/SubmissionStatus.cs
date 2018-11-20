@@ -12,5 +12,6 @@ namespace GeekCoding.MainApplication.Utilities
         Compiling,
         CompilationError,
         Executed,
+        ServerError
     }
 }

@@ -87,6 +87,11 @@ namespace GeekCoding.MainApplication.Jobs
                     await NotifyResponse(MessageType.CompilationMessage, SubmissionStatus.CompilationError.ToString(), submision.SubmissionId.ToString(), "0");
                 }
             }
+            else
+            {
+                //server error
+                UpdateSubmissionStatus(submision.SubmissionId, SubmissionStatus.ServerError, response.ReasonPhrase, 0);
+            }
         }
 
         private async Task ExecuteSubmission(SubmisionDto submision, string _executionApi)
@@ -127,6 +132,11 @@ namespace GeekCoding.MainApplication.Jobs
                 await NotifyResponse(MessageType.ExecutionMessage, SubmissionStatus.Executed.ToString(), submision.SubmissionId.ToString(), serializedData.Item2.ToString());
 
                 var x = 2;
+            }
+            else
+            {
+                //server error
+                UpdateSubmissionStatus(submision.SubmissionId, SubmissionStatus.ServerError, responseExecution.ReasonPhrase, 0);
             }
         }
 
