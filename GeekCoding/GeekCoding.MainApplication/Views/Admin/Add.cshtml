@@ -44,6 +44,12 @@
                 <input asp-for="Password" class="form-control" />
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
+
+            <div class="form-group">
+                <label for="@Model.SelectListItems">Roles: </label>
+                <select asp-items="@Model.SelectListItems" class="control-label" name="Role"></select>
+            </div>
+
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-default" />
             </div>

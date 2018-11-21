@@ -19,8 +19,12 @@ namespace GeekCoding.MainApplication.Utilities.Services
             _userInformationRepository = userInformationRepository;
             _userManager = userManager;
         }
-        public async Task<bool> RegisterUser(UserInformationViewModel userInformation)
+        public async Task<bool> RegisterUser(UserInformationViewModel userInformation, string role)
         {
+            if(string.IsNullOrEmpty(role))
+            {
+                role = "Member";
+            }
             var user = await _userManager.FindByNameAsync(userInformation.Username);
             if (user == null)
             {
@@ -43,7 +47,7 @@ namespace GeekCoding.MainApplication.Utilities.Services
 
                         if (resultFromConfirmation.Succeeded)
                         {
-                            await _userManager.AddToRoleAsync(user, "Member");
+                            await _userManager.AddToRoleAsync(user, role);
 
                             //add user information
                             var userInformationToCurrentUser = new UserInformation

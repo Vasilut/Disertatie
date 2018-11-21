@@ -14,16 +14,18 @@ using GeekCoding.Repository.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace GeekCoding.MainApplication.Controllers
 {
     [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
-        string[] _rolesNames = { "Member", "Proponent" };
+        string[] _rolesNames = { "Admin", "Member", "Proponent" };
         private IUserInformationRepository _userInformationRepository;
         private UserManager<User> _userManager;
         private IUserInformationService _userInformationService;
+        private List<SelectListItem> _roles = new List<SelectListItem>();
 
         public AdminController(IUserInformationRepository userInformationRepository, UserManager<User> userManager,
                                IUserInformationService userRegistration)
@@ -31,6 +33,9 @@ namespace GeekCoding.MainApplication.Controllers
             _userInformationRepository = userInformationRepository;
             _userManager = userManager;
             _userInformationService = userRegistration;
+
+
+            _roles = Membership.Roles;
         }
 
 
@@ -59,7 +64,9 @@ namespace GeekCoding.MainApplication.Controllers
         [HttpGet]
         public IActionResult Add()
         {
-            return View();
+            var model = new UserInformationViewModel();
+            model.SelectListItems = _roles;
+            return View(model);
         }
 
         [HttpPost]
@@ -67,7 +74,7 @@ namespace GeekCoding.MainApplication.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await _userInformationService.RegisterUser(userInformation);
+                var result = await _userInformationService.RegisterUser(userInformation,userInformation.Role);
                 if (result == true)
                 {
                     return RedirectToAction("Index", new { searchString = string.Empty });
@@ -108,7 +115,7 @@ namespace GeekCoding.MainApplication.Controllers
                     Password = userToBeRegistered[6]
                 };
 
-                var result = await _userInformationService.RegisterUser(userToRegister);
+                var result = await _userInformationService.RegisterUser(userToRegister,string.Empty);
                 if (result == false)
                 {
                     //log the errors
@@ -145,7 +152,8 @@ namespace GeekCoding.MainApplication.Controllers
                 Prenume = usrInformation.Prenume,
                 Profesor = usrInformation.Profesor,
                 Scoala = usrInformation.Scoala,
-                Username = usrInformation.Username
+                Username = usrInformation.Username,
+                SelectListItems = _roles
             });
         }
 
@@ -185,6 +193,22 @@ namespace GeekCoding.MainApplication.Controllers
                         return BadRequest("Failed to update password");
                     }
                 }
+
+                //update role
+                var userToUpdateRole = await _userManager.FindByIdAsync(userInformationViewModel.IdUser);
+                //delete user from all the roles
+                foreach (var role in _rolesNames)
+                {
+                    var isInRole = await _userManager.IsInRoleAsync(userToUpdateRole, role);
+                    if (isInRole)
+                    {
+                        await _userManager.RemoveFromRoleAsync(userToUpdateRole, role);
+                    }
+                }
+
+                //asign the new role
+                await _userManager.AddToRoleAsync(userToUpdateRole, userInformationViewModel.Role);
+
 
                 _userInformationRepository.Update(userToUpdate);
                 _userInformationRepository.Save();

@@ -8,6 +8,6 @@ namespace GeekCoding.MainApplication.Utilities.Services
 {
     public interface IUserInformationService
     {
-        Task<bool> RegisterUser(UserInformationViewModel userInformation);
+        Task<bool> RegisterUser(UserInformationViewModel userInformation, string role);
     }
 }
