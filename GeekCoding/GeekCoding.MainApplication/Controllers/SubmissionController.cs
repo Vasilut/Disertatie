@@ -64,36 +64,36 @@ namespace GeekCoding.MainApplication.Controllers
             var submisionList = await _submisionRepository.GetAllAsync();
             var submissionListOrderedAsc = submisionList.OrderBy(x => x.DataOfSubmision).ToList();
             //need to get all the submission that have queed flag set to 0
-            foreach (var submission in submissionListOrderedAsc)
-            {
+            //foreach (var submission in submissionListOrderedAsc)
+            //{
 
-                if (submission.JobQueued == false)
-                {
-                    //start a job for this submission
-                    var problem = _problemRepository.GetItem(submission.ProblemId);
-                    string problemName = problem.ProblemName;
-                    var tests = _testRepository.GetTestsByProblemId(problem.ProblemId).ToList();
-                    int nrOfTests = tests.Count;
-                    string nameOfFile = problemName.ToLower();
+            //    if (submission.JobQueued == false)
+            //    {
+            //        //start a job for this submission
+            //        var problem = _problemRepository.GetItem(submission.ProblemId);
+            //        string problemName = problem.ProblemName;
+            //        var tests = _testRepository.GetTestsByProblemId(problem.ProblemId).ToList();
+            //        int nrOfTests = tests.Count;
+            //        string nameOfFile = problemName.ToLower();
 
-                    var submissionDtoModel = new SubmisionDto
-                    {
-                        Compilator = submission.Compilator,
-                        ProblemName = problemName,
-                        Content = submission.SourceCode,
-                        SubmissionId = submission.SubmisionId,
-                        UserName = User.Identity.Name,
-                        MemoryLimit = problem.MemoryLimit,
-                        TimeLimit = problem.TimeLimit,
-                        NumberOfTests = nrOfTests,
-                        FileName = nameOfFile
-                    };
-                    BackgroundJob.Enqueue<SubmissionRequest>(x => x.MakeSubmissionRequestAsync(submissionDtoModel, _compilationApi, _executionApi));
-                    submission.JobQueued = true;
-                }
+            //        var submissionDtoModel = new SubmisionDto
+            //        {
+            //            Compilator = submission.Compilator,
+            //            ProblemName = problemName,
+            //            Content = submission.SourceCode,
+            //            SubmissionId = submission.SubmisionId,
+            //            UserName = User.Identity.Name,
+            //            MemoryLimit = problem.MemoryLimit,
+            //            TimeLimit = problem.TimeLimit,
+            //            NumberOfTests = nrOfTests,
+            //            FileName = nameOfFile
+            //        };
+            //        BackgroundJob.Enqueue<SubmissionRequest>(x => x.MakeSubmissionRequestAsync(submissionDtoModel, _compilationApi, _executionApi));
+            //        submission.JobQueued = true;
+            //    }
 
-            }
-            _submisionRepository.Save();
+            //}
+            //_submisionRepository.Save();
             int pageSize = 20;
             var submissionListOrdered = submisionList.OrderByDescending(sub => sub.DataOfSubmision).ToList();
             return View(PaginatedList<Submision>.CreateAsync(submissionListOrdered, page ?? 1, pageSize));

@@ -35,13 +35,16 @@
                     </font>
                 </font>
             </th>
-            @*<th>
-                <font style="vertical-align: inherit;">
+            @if (User.IsInRole("Admin"))
+            {
+                <th>
                     <font style="vertical-align: inherit;">
-                        AverageAcceptance
+                        <font style="vertical-align: inherit;">
+                            IsVisible
+                        </font>
                     </font>
-                </font>
-            </th>*@
+                </th>
+            }
 
         </tr>
     </thead>
@@ -49,73 +52,74 @@
         @foreach (var item in Model)
         {
 
-        <tr>
-            <th scope="row">
-                <font style="vertical-align: inherit;">
+            <tr>
+                <th scope="row">
                     <font style="vertical-align: inherit;">
-                        <a asp-action="GetProblem" asp-route-id="@item.ProblemId">  @item.ProblemName  </a>
+                        <font style="vertical-align: inherit;">
+                            <a asp-action="GetProblem" asp-route-id="@item.ProblemId">  @item.ProblemName  </a>
+                        </font>
                     </font>
-                </font>
-            </th>
-            <td>
-                <font style="vertical-align: inherit;">
-                    <font style="vertical-align: inherit;">
-                        <span class="label label-info"> @item.Dificulty </span>
-                    </font>
-                </font>
-            </td>
-            @*<td>
-                <font style="vertical-align: inherit;">
-                    <font style="vertical-align: inherit;">
-                        @item.AverageAcceptance
-                    </font>
-                </font>
-            </td>*@
-            @if (User.IsInRole("Admin"))
-            {
+                </th>
                 <td>
                     <font style="vertical-align: inherit;">
                         <font style="vertical-align: inherit;">
-                            <a class="btn btn-info" asp-controller="Tests" asp-action="Index" asp-route-id="@item.ProblemId">Tests</a>
+                            <span class="label label-info"> @item.Dificulty </span>
                         </font>
                     </font>
                 </td>
 
-                <td>
-                    <font style="vertical-align: inherit;">
+                @if (User.IsInRole("Admin"))
+                {
+                    <td>
                         <font style="vertical-align: inherit;">
-                            <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.ProblemId">Edit</a>
+                            <font style="vertical-align: inherit;">
+                                @item.Visible
+                            </font>
                         </font>
-                    </font>
-                </td>
+                    </td>
+                    <td>
+                        <font style="vertical-align: inherit;">
+                            <font style="vertical-align: inherit;">
+                                <a class="btn btn-info" asp-controller="Tests" asp-action="Index" asp-route-id="@item.ProblemId">Tests</a>
+                            </font>
+                        </font>
+                    </td>
 
-            }
-            <td>
-                <font style="vertical-align: inherit;">
-                    <font style="vertical-align: inherit;">
-                        <a class="btn btn-success" asp-action="GetProblem" asp-route-id="@item.ProblemId">Rezolva</a>
-                    </font>
-                </font>
-            </td>
-            @if (User.IsInRole("Admin"))
-            {
-                <td>
-                    <font style="vertical-align: inherit;">
+                    <td>
                         <font style="vertical-align: inherit;">
-                            <a class="btn btn-danger" asp-controller="Problems" asp-action="Delete" asp-route-id="@item.ProblemId">Delete</a>
+                            <font style="vertical-align: inherit;">
+                                <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.ProblemId">Edit</a>
+                            </font>
                         </font>
-                    </font>
-                </td>
+                    </td>
 
+                }
                 <td>
                     <font style="vertical-align: inherit;">
                         <font style="vertical-align: inherit;">
-                            <a class="btn btn-primary" asp-controller="Articles" asp-action="ProblemSolution" asp-route-id="@item.ProblemId">Add solution</a>
+                            <a class="btn btn-success" asp-action="GetProblem" asp-route-id="@item.ProblemId">Rezolva</a>
                         </font>
                     </font>
                 </td>
-            }
-        </tr>
+                @if (User.IsInRole("Admin"))
+                {
+                    <td>
+                        <font style="vertical-align: inherit;">
+                            <font style="vertical-align: inherit;">
+                                <a class="btn btn-danger" asp-controller="Problems" asp-action="Delete" asp-route-id="@item.ProblemId">Delete</a>
+                            </font>
+                        </font>
+                    </td>
+
+                    <td>
+                        <font style="vertical-align: inherit;">
+                            <font style="vertical-align: inherit;">
+                                <a class="btn btn-primary" asp-controller="Articles" asp-action="ProblemSolution" asp-route-id="@item.ProblemId">Add solution</a>
+                            </font>
+                        </font>
+                    </td>
+                }
+            </tr>
 
 
         }

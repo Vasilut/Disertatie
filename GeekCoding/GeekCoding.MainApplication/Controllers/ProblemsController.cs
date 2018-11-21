@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using GeekCoding.Common.Helpers;
 using GeekCoding.Compilation.Api.Model;
 using GeekCoding.Data.Models;
+using GeekCoding.MainApplication.Hubs;
 using GeekCoding.MainApplication.Jobs;
 using GeekCoding.MainApplication.Pagination;
 using GeekCoding.MainApplication.Utilities;
@@ -16,6 +18,7 @@ using Hangfire;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 
@@ -25,21 +28,35 @@ namespace GeekCoding.MainApplication.Controllers
     public class ProblemsController : Controller
     {
         private IProblemRepository _problemRepository;
+        private SubmissionHub _submissionHub;
         private ISubmisionRepository _submisionRepository;
         private ISolutionRepository _solutionRepository;
         private IConfiguration _configuration;
+        private ITestsRepository _testRepository;
+        private IEvaluationRepository _evaluationRepository;
+        private IHubContext<SubmissionHub> _hubContext;
+        private ISerializeTests _serializeTests;
         private List<SelectListItem> _compilers = new List<SelectListItem>();
+        static SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1, 1);
 
         private string _compilationApi;
         private string _executionApi;
 
         public ProblemsController(IProblemRepository problemRepository, ISubmisionRepository submisionRepository,
-                                  ISolutionRepository solutionRepository, IConfiguration configuration)
+                                  ISolutionRepository solutionRepository, IConfiguration configuration,
+                                  ITestsRepository testsRepository, SubmissionHub submissionHub,
+                                 IHubContext<SubmissionHub> hubContext, ISerializeTests serializeTests,
+                                 IEvaluationRepository evaluationRepository)
         {
             _problemRepository = problemRepository;
             _submisionRepository = submisionRepository;
             _solutionRepository = solutionRepository;
             _configuration = configuration;
+            _testRepository = testsRepository;
+            _submissionHub = submissionHub;
+            _evaluationRepository = evaluationRepository;
+            _hubContext = hubContext;
+            _serializeTests = serializeTests;
             _compilers = Compilator.Compilers;
 
             //intialize compilation and running api
@@ -52,14 +69,17 @@ namespace GeekCoding.MainApplication.Controllers
         public async Task<IActionResult> Index(int? page)
         {
             var problemList = await _problemRepository.GetAllAsync();
-            var goodList = problemList.Where(prob => prob.Visible == true).Select(prop =>
+            var goodList = new List<Problem>();
+
+            if (User.Identity.Name == null || !User.IsInRole("Admin"))
             {
-                if (prop.BadSubmission > 0)
-                {
-                    prop.AverageAcceptance = ((prop.GoodSubmision * 100) / prop.BadSubmission);
-                }
-                return prop;
-            }).ToList();
+                //we don't have an admin, show only the visible problem
+                goodList = problemList.Where(prob => prob.Visible == true).ToList();
+            }
+            else
+            {
+                goodList = problemList.ToList();
+            }
 
             int pageSize = 20;
             return View(PaginatedList<Problem>.CreateAsync(goodList, page ?? 1, pageSize));
@@ -104,7 +124,7 @@ namespace GeekCoding.MainApplication.Controllers
         public IActionResult Edit(Guid id)
         {
             var problem = _problemRepository.GetItem(id);
-            if(problem == null)
+            if (problem == null)
             {
                 return RedirectToAction("Index");
             }
@@ -115,7 +135,7 @@ namespace GeekCoding.MainApplication.Controllers
         [HttpPost]
         public IActionResult Edit([FromForm] Problem problem)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 //update the entity;
                 _problemRepository.Update(problem);
@@ -125,7 +145,7 @@ namespace GeekCoding.MainApplication.Controllers
 
             return View();
         }
-        
+
         [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> GetProblem(Guid id)
@@ -196,12 +216,49 @@ namespace GeekCoding.MainApplication.Controllers
                 SourceCode = fileContent.Item1
             };
 
+
+
+            //build the submission dto
+            var problem = _problemRepository.GetItem(submission.ProblemId);
+            string problemName = problem.ProblemName;
+            var tests = _testRepository.GetTestsByProblemId(problem.ProblemId).ToList();
+            int nrOfTests = tests.Count;
+
+            var submissionDtoModel = new SubmisionDto
+            {
+                Compilator = submission.Compilator,
+                ProblemName = problemName,
+                Content = submission.SourceCode,
+                SubmissionId = submission.SubmisionId,
+                UserName = User.Identity.Name,
+                MemoryLimit = problem.MemoryLimit,
+                TimeLimit = problem.TimeLimit,
+                NumberOfTests = nrOfTests,
+                FileName = problemName.ToLower()
+            };
+
             await _submisionRepository.AddAsync(submission);
+            await Task.Run(() => VerificaThread(submissionDtoModel));
 
             ViewData["subbmited"] = true;
             return RedirectToAction("GetProblem", new { id = Guid.Parse(model.ProblemId) });
         }
-        
+
+
+        private async Task VerificaThread(SubmisionDto submissionDtoModel)
+        {
+            semaphoreSlim.Wait();
+            try
+            {
+                var submRequest = new SubmissionRequest(_submissionHub, _submisionRepository, _hubContext,
+                                                        _serializeTests, _evaluationRepository);
+                await submRequest.MakeSubmissionRequestAsync(submissionDtoModel, _compilationApi, _executionApi);
+            }
+            finally
+            {
+                semaphoreSlim.Release();
+            }
+        }
 
         [Authorize(Roles = "Admin")]
         [HttpGet]
@@ -215,7 +272,7 @@ namespace GeekCoding.MainApplication.Controllers
             return View(problem);
         }
 
-        [Authorize(Roles =("Admin"))]
+        [Authorize(Roles = ("Admin"))]
         [HttpPost]
         public IActionResult DeleteConfirmed(Guid problemId)
         {

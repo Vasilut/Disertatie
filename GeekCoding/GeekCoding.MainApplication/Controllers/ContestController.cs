@@ -2,6 +2,8 @@
 using GeekCoding.Common.Helpers;
 using GeekCoding.Compilation.Api.Model;
 using GeekCoding.Data.Models;
+using GeekCoding.MainApplication.Hubs;
+using GeekCoding.MainApplication.Jobs;
 using GeekCoding.MainApplication.Pagination;
 using GeekCoding.MainApplication.Utilities;
 using GeekCoding.MainApplication.Utilities.DTO;
@@ -13,9 +15,12 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace GeekCoding.MainApplication.Controllers
@@ -33,10 +38,22 @@ namespace GeekCoding.MainApplication.Controllers
         private List<SelectListItem> _compilers = new List<SelectListItem>();
         private IMessageBuilder _emailSender;
         private UserManager<User> _userManager;
+        private IConfiguration _configuration;
+        private ITestsRepository _testRepository;
+        private SubmissionHub _submissionHub;
+        private IEvaluationRepository _evaluationRepository;
+        private IHubContext<SubmissionHub> _hubContext;
+        private ISerializeTests _serializeTests;
+        static SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1, 1);
+
+        private string _compilationApi;
+        private string _executionApi;
 
         public ContestController(IContestRepository contestRepository, IUserContestRepository userContestRepository, IProblemContestRepository problemContestRepository,
                                  ISubmisionContestRepository submisionContestRepository, IAnnouncementRepository announcementRepository, IProblemRepository problemRepository,
-                                 ISubmisionRepository submisionRepository, IMessageBuilder emailSender, UserManager<User> userManager)
+                                 ISubmisionRepository submisionRepository, IMessageBuilder emailSender, UserManager<User> userManager,
+                                 IConfiguration configuration, ITestsRepository testsRepository, SubmissionHub submissionHub,
+                                 IHubContext<SubmissionHub> hubContext, ISerializeTests serializeTests, IEvaluationRepository evaluationRepository)
         {
             _contestRepository = contestRepository;
             _userContestRepository = userContestRepository;
@@ -48,6 +65,18 @@ namespace GeekCoding.MainApplication.Controllers
             _compilers = Compilator.Compilers;
             _emailSender = emailSender;
             _userManager = userManager;
+
+
+            _configuration = configuration;
+            _testRepository = testsRepository;
+            _submissionHub = submissionHub;
+            _evaluationRepository = evaluationRepository;
+            _hubContext = hubContext;
+            _serializeTests = serializeTests;
+
+            //intialize compilation and running api
+            _compilationApi = _configuration.GetSection("Api")["CompilationApi"];
+            _executionApi = _configuration.GetSection("Api")["ExecutionApi"];
         }
 
         [AllowAnonymous]
@@ -446,9 +475,45 @@ namespace GeekCoding.MainApplication.Controllers
 
             await _submisionContestRepository.AddAsync(submissionContest);
 
+
+            //build the submission dto
+            var problem = _problemRepository.GetItem(submission.ProblemId);
+            string problemName = problem.ProblemName;
+            var tests = _testRepository.GetTestsByProblemId(problem.ProblemId).ToList();
+            int nrOfTests = tests.Count;
+
+            var submissionDtoModel = new SubmisionDto
+            {
+                Compilator = submission.Compilator,
+                ProblemName = problemName,
+                Content = submission.SourceCode,
+                SubmissionId = submission.SubmisionId,
+                UserName = User.Identity.Name,
+                MemoryLimit = problem.MemoryLimit,
+                TimeLimit = problem.TimeLimit,
+                NumberOfTests = nrOfTests,
+                FileName = problemName.ToLower()
+            };
+
+            await Task.Run(() => VerificaThread(submissionDtoModel));
+
             return RedirectToAction(nameof(ProblemsOverview), new { id = model.ContestId });
         }
 
+        private async Task VerificaThread(SubmisionDto submissionDtoModel)
+        {
+            semaphoreSlim.Wait();
+            try
+            {
+                var submRequest = new SubmissionRequest(_submissionHub, _submisionRepository, _hubContext,
+                                                        _serializeTests, _evaluationRepository);
+                await submRequest.MakeSubmissionRequestAsync(submissionDtoModel, _compilationApi, _executionApi);
+            }
+            finally
+            {
+                semaphoreSlim.Release();
+            }
+        }
 
         [AllowAnonymous]
         [HttpGet]
