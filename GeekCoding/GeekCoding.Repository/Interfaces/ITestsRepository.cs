@@ -8,5 +8,6 @@ namespace GeekCoding.Repository.Interfaces
     public interface ITestsRepository : IRepositoryBase<Tests>
     {
         ICollection<Tests> GetTestsByProblemId(Guid problemId);
+        int GetNumberOfTestForProblem(Guid problemId);
     }
 }

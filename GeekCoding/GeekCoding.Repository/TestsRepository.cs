@@ -30,5 +30,10 @@ namespace GeekCoding.Repository
         {
             return RepositoryContext.Tests.Include(tst => tst.Problem).Where(tst => tst.ProblemId == problemId).ToList();
         }
+
+        public int GetNumberOfTestForProblem(Guid problemId)
+        {
+            return RepositoryContext.Tests.Where(tst => tst.ProblemId == problemId).FirstOrDefault().TestNumber;
+        }
     }
 }

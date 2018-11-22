@@ -479,8 +479,7 @@ namespace GeekCoding.MainApplication.Controllers
             //build the submission dto
             var problem = _problemRepository.GetItem(submission.ProblemId);
             string problemName = problem.ProblemName;
-            var tests = _testRepository.GetTestsByProblemId(problem.ProblemId).ToList();
-            int nrOfTests = tests.Count;
+            int nrOfTests = _testRepository.GetNumberOfTestForProblem(problem.ProblemId);
 
             var submissionDtoModel = new SubmisionDto
             {

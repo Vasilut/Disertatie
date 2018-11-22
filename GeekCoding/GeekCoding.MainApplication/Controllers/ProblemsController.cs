@@ -213,14 +213,11 @@ namespace GeekCoding.MainApplication.Controllers
                 JobQueued = false,
                 SourceCode = fileContent.Item1
             };
-
-
-
+            
             //build the submission dto
             var problem = _problemRepository.GetItem(submission.ProblemId);
             string problemName = problem.ProblemName;
-            var tests = _testRepository.GetTestsByProblemId(problem.ProblemId).ToList();
-            int nrOfTests = tests.Count;
+            int nrOfTests = _testRepository.GetNumberOfTestForProblem(problem.ProblemId);
 
             var submissionDtoModel = new SubmisionDto
             {
@@ -237,8 +234,7 @@ namespace GeekCoding.MainApplication.Controllers
 
             await _submisionRepository.AddAsync(submission);
             await Task.Run(() => VerificaThread(submissionDtoModel));
-
-            ViewData["subbmited"] = true;
+            
             return RedirectToAction("GetProblem", new { id = Guid.Parse(model.ProblemId) });
         }
 
