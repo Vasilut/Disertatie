@@ -1,4 +1,4 @@
-﻿@model GeekCoding.Data.Models.Tests
+﻿@model GeekCoding.MainApplication.ViewModels.TestsViewModel
 
 
 <!DOCTYPE html>
@@ -14,7 +14,7 @@
 <hr />
 <div class="row">
     <div class="col-md-8">
-        <form asp-action="Add">
+        <form asp-action="Add" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="TestNumber" class="control-label"></label>
@@ -35,13 +35,26 @@
                 <label asp-for="TestInput" class="control-label"></label>
                 <br />
                 <textarea asp-for="TestInput"></textarea>
-
             </div>
+
+            <div class="col-md-12">
+                <div class="form-group">
+                    <input type="file" name="fileInput" />
+                </div>
+            </div>
+
             <div class="form-group">
                 <label asp-for="TestOutput" class="control-label"></label>
                 <br />
                 <textarea asp-for="TestOutput"></textarea>
             </div>
+
+            <div class="col-md-12">
+                <div class="form-group">
+                    <input type="file" name="fileOutput" />
+                </div>
+            </div>
+
             <div class="form-group">
                 <label asp-for="Scor" class="control-label"></label>
                 <input asp-for="Scor" class="form-control" />

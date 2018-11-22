@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using GeekCoding.Common.Helpers;
 using GeekCoding.Compilation.Api.Model;
 using GeekCoding.Data.Models;
 using GeekCoding.MainApplication.ViewModels;
@@ -63,10 +64,19 @@ namespace GeekCoding.MainApplication.Controllers
         // POST: Tests/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Add([FromForm]Tests test)
+        public async Task<IActionResult> Add([FromForm]TestsViewModel test)
         {
             if (ModelState.IsValid)
             {
+                string testInputContent = string.Empty;
+                string testOutputContent = string.Empty;
+
+                Tuple<string, long> fileContentInput = await FileHelpers.ProcessFormFile(test.FileInput, ModelState);
+                Tuple<string,long> fileContentOutput = await FileHelpers.ProcessFormFile(test.FileOutput, ModelState);
+
+                testInputContent = fileContentInput.Item1;
+                testOutputContent = fileContentOutput.Item1;
+
                 var newTest = new Tests
                 {
                     TestNumber = test.TestNumber,
@@ -75,8 +85,8 @@ namespace GeekCoding.MainApplication.Controllers
                     FisierOk = test.FisierOk,
                     TestId = Guid.NewGuid(),
                     ProblemId = test.ProblemId,
-                    TestInput = test.TestInput,
-                    TestOutput = test.TestOutput
+                    TestInput = testInputContent,
+                    TestOutput = testOutputContent
                 };
 
                 //save to server the test.
