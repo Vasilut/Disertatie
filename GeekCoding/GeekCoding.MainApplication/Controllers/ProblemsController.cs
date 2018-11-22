@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -151,12 +152,11 @@ namespace GeekCoding.MainApplication.Controllers
         public async Task<IActionResult> GetProblem(Guid id)
         {
             var problem = await _problemRepository.GetAsync(id);
-            var listOfSubmission = await _submisionRepository.GetAllAsync();
-            var submisionList = listOfSubmission.Where(sub => sub.ProblemId == id && sub.UserName == User.Identity.Name)
-                                                .OrderByDescending(sub => sub.DataOfSubmision).ToList();
+            var solution = _solutionRepository.GetSolutionByProblem(id);
 
-            var solutions = await _solutionRepository.GetAllAsync();
-            var solution = solutions.Where(sol => sol.ProblemId == id).FirstOrDefault();
+            var submisionList = _submisionRepository.GetSubmisionByProblemIdAndUserName(id, User.Identity.Name)
+                                                    .OrderByDescending(sub => sub.DataOfSubmision).ToList();
+            
             var score = submisionList.FirstOrDefault() == null ? 0 : submisionList.First().Score;
 
             ProblemDetailsViewModel problemDetailsViewModel = new ProblemDetailsViewModel
@@ -185,9 +185,7 @@ namespace GeekCoding.MainApplication.Controllers
         [HttpGet]
         public async Task<IActionResult> Solution(Guid id)
         {
-            var solutions = await _solutionRepository.GetAllAsync();
-            var solution = solutions.Where(sol => sol.ProblemId == id).FirstOrDefault();
-
+            var solution = _solutionRepository.GetSolutionByProblem(id);
             return View(solution);
         }
 

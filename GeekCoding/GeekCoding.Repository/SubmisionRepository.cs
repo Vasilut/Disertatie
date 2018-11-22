@@ -31,5 +31,10 @@ namespace GeekCoding.Repository
             return await RepositoryContext.Submision.Include(prob => prob.Problem).ToListAsync();
         }
 
+        public IQueryable<Submision> GetSubmisionByProblemIdAndUserName(Guid problemId, string userName)
+        {
+            return RepositoryContext.Submision.Include(sbm => sbm.Problem).Where(sub => sub.ProblemId == problemId &&
+                                                                           sub.UserName == userName);
+        }
     }
 }
