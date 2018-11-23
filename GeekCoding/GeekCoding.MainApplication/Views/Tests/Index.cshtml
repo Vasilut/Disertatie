@@ -93,18 +93,23 @@
                     </font>
                 </td>
                 <td>
-                    <font style="vertical-align: inherit;">
-                        <font style="vertical-align: inherit;">
-                            @item.TestInput
-                        </font>
-                    </font>
+                    <a asp-action="TestDownload" asp-route-id="@item.TestId" asp-route-download="Input">
+                        <li class="list-group-item">
+                            <span class="glyphicon glyphicon-download">
+                            </span>
+                            Download input file
+                        </li>
+                    </a>
+
                 </td>
                 <td>
-                    <font style="vertical-align: inherit;">
-                        <font style="vertical-align: inherit;">
-                            @item.TestOutput
-                        </font>
-                    </font>
+                    <a asp-action="TestDownload" asp-route-id="@item.TestId" asp-route-download="Output">
+                        <li class="list-group-item">
+                            <span class="glyphicon glyphicon-download">
+                            </span>
+                            Download output file
+                        </li>
+                    </a>
                 </td>
                 <td>
                     <font style="vertical-align: inherit;">
@@ -145,4 +150,23 @@
 <div>
     <a asp-action="Index" asp-controller="Problems"> <i class="glyphicon glyphicon-arrow-left"></i> &nbsp; Back to List</a>
 </div>
+@section Scripts {
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $(function () {
+
+                /*var myBtn = document.getElementById('btnSubmit');
+                myBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    alert('Hello');
+                });*/
+
+                
+            });
+        });
+    </script>
+
+
+}
 

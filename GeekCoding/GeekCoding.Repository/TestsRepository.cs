@@ -33,7 +33,17 @@ namespace GeekCoding.Repository
 
         public int GetNumberOfTestForProblem(Guid problemId)
         {
-            return RepositoryContext.Tests.Where(tst => tst.ProblemId == problemId).FirstOrDefault().TestNumber;
+            return RepositoryContext.Tests.Where(tst => tst.ProblemId == problemId).ToList().Count;
+        }
+
+        public ICollection<Tests> GetSomePropertyForTests(Guid problemId)
+        {
+            return RepositoryContext.Tests.Where(tst => tst.ProblemId == problemId).Select(tst => new Tests{ ProblemId = tst.ProblemId,
+                                                                                           Scor = tst.Scor,
+                                                                                           TestId = tst.TestId,
+                                                                                           TestNumber = tst.TestNumber,
+                                                                                           FisierIn = tst.FisierIn,
+                                                                                           FisierOk = tst.FisierOk}).ToList();
         }
     }
 }

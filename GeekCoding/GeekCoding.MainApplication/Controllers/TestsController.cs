@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using GeekCoding.Common.Helpers;
 using GeekCoding.Compilation.Api.Model;
 using GeekCoding.Data.Models;
+using GeekCoding.MainApplication.Utilities.Enum;
 using GeekCoding.MainApplication.ViewModels;
 using GeekCoding.Repository.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -38,10 +39,12 @@ namespace GeekCoding.MainApplication.Controllers
         [HttpGet]
         public IActionResult Index(Guid id)
         {
-            var tests = _testRepository.GetTestsByProblemId(id).ToList();
+            var someProperty = _testRepository.GetSomePropertyForTests(id);
+
+           // var tests = _testRepository.GetTestsByProblemId(id).ToList();
             var testViewModel = new TestViewModel
             {
-                ListModel = tests,
+                ListModel = someProperty.ToList(),
                 ProblemId = id,
             };
 
@@ -59,6 +62,29 @@ namespace GeekCoding.MainApplication.Controllers
         {
             ViewBag.ProblemId = id;
             return View();
+        }
+
+        [HttpGet]
+        public IActionResult TestDownload(Guid id, string Download)
+        {
+            var test = _testRepository.GetItem(id);
+            if(test != null)
+            {
+                string testToDownload = string.Empty;
+                if(Download == TestType.Input.ToString())
+                {
+                    testToDownload = test.TestInput;
+                }
+                else
+                if(Download == TestType.Output.ToString())
+                {
+                    testToDownload = test.TestOutput;
+                }
+
+                return Ok(testToDownload);
+
+            }
+            return Ok("Test is null!");
         }
 
         // POST: Tests/Create

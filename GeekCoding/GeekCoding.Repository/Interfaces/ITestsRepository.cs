@@ -9,5 +9,6 @@ namespace GeekCoding.Repository.Interfaces
     {
         ICollection<Tests> GetTestsByProblemId(Guid problemId);
         int GetNumberOfTestForProblem(Guid problemId);
+        ICollection<Tests> GetSomePropertyForTests(Guid problemId);
     }
 }
