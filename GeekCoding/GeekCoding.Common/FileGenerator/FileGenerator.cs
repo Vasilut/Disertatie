@@ -36,7 +36,7 @@ namespace GeekCoding.Common
                 {
                     content = content.Trim();
                     StreamWriter writer = new StreamWriter(fs, Encoding.ASCII);
-                    writer.WriteLine(content);
+                    writer.Write(content);
                     writer.Flush();
                 }
             }
@@ -51,7 +51,7 @@ namespace GeekCoding.Common
                 {
                     content = content.Trim();
                     StreamWriter writer = new StreamWriter(fs, Encoding.ASCII);
-                    writer.WriteLine(content);
+                    writer.Write(content);
                     writer.Flush();
                 }
             }

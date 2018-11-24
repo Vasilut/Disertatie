@@ -33,11 +33,11 @@ namespace GeekCoding.MainApplication
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton(Configuration);
-            var hangfireConnectionString = Configuration.GetConnectionString("HangfireDatabase");
-            services.AddHangfire(configuration =>
-            {
-                configuration.UseSqlServerStorage(hangfireConnectionString);
-            });
+            //var hangfireConnectionString = Configuration.GetConnectionString("HangfireDatabase");
+            //services.AddHangfire(configuration =>
+            //{
+            //    configuration.UseSqlServerStorage(hangfireConnectionString);
+            //});
             services.AddMvc();
 
             var connectionString = Configuration.GetConnectionString("EvaluatorDatabase");
@@ -67,8 +67,8 @@ namespace GeekCoding.MainApplication
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            app.UseHangfireServer();
-            app.UseHangfireDashboard();
+            //app.UseHangfireServer();
+            //app.UseHangfireDashboard();
 
             if (env.IsDevelopment())
             {
