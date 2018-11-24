@@ -25,6 +25,7 @@ namespace GeekCoding.MainApplication.Controllers
         private IConfiguration _configuration;
         private IProblemRepository _problemRepository;
         private string _testApi;
+        private string _deleteTestApi;
 
         public TestsController(ITestsRepository testsRepository, IConfiguration configuration,
                               IProblemRepository problemRepository)
@@ -33,6 +34,7 @@ namespace GeekCoding.MainApplication.Controllers
             _configuration = configuration;
             _problemRepository = problemRepository;
             _testApi = _configuration.GetSection("Api")["TestsApi"];
+            _deleteTestApi = _testApi + "/deleteTest";
         }
         // GET: Tests
         [Authorize(Roles = "Admin")]
@@ -221,15 +223,54 @@ namespace GeekCoding.MainApplication.Controllers
         // POST: Tests/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Delete([FromForm] TestProblemsIdViewModel test)
+        public async Task<IActionResult> Delete([FromForm] TestProblemsIdViewModel test)
         {
+            var testToDelete = _testRepository.GetItem(test.TestId);
+            if(testToDelete == null)
+            {
+                return BadRequest("No test to delete");
+            }
+
+            var problem = _problemRepository.GetItem(test.ProblemId);
+            var problemName = problem?.ProblemName;
 
             //delete from linux server first
+            TestDeleteModel testToDeleteModel = new TestDeleteModel
+            {
+                ProblemName = problemName,
+                FisierIn = testToDelete.FisierIn,
+                FisierOk = testToDelete.FisierOk
+            };
 
-            _testRepository.Delete(test.TestId);
-            _testRepository.Save();
+            var testWasDeleted = await DeleteTest(testToDeleteModel);
+            if (testWasDeleted == true)
+            {
+                _testRepository.Delete(test.TestId);
+                _testRepository.Save();
 
-            return RedirectToAction(nameof(Index), new { id = test.ProblemId });
+                return RedirectToAction(nameof(Index), new { id = test.ProblemId });
+            }
+            return RedirectToAction(nameof(Delete), new { id = test.TestId });
+        }
+
+        private async Task<bool> DeleteTest(TestDeleteModel testToDeleteModel)
+        {
+            var client = new HttpClient();
+            var serializedInputData = JsonConvert.SerializeObject(testToDeleteModel);
+            var httpContent = new StringContent(serializedInputData, Encoding.UTF8, "application/json");
+            var response = await client.PostAsync(_deleteTestApi, httpContent);
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                var result = await response.Content.ReadAsStringAsync();
+                var resultDeserialized = JsonConvert.DeserializeObject(result);
+                if (result.Contains("File deleted"))
+                {
+                    //we delete successfuly the input and the output file
+                    return true;
+                }
+                return false;
+            }
+            return false;
         }
     }
 }

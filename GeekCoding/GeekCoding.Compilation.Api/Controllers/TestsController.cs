@@ -23,7 +23,7 @@ namespace GeekCoding.Compilation.Api.Controllers
         [HttpGet]
         public IEnumerable<string> Get()
         {
-            return new string[] { "testapigoodye2bunaziuaaa", "testapibadye2bunaziuaa" };
+            return new string[] { "testapigoodye2bunaziuaaavv", "testapibadye2bunaziuaavv" };
         }
 
         [HttpPost]
@@ -35,6 +35,21 @@ namespace GeekCoding.Compilation.Api.Controllers
                 return Json("File generated");
             }
             return Json("Failed Response");
+        }
+
+        [HttpPost("deleteTest")]
+        public JsonResult DeleteTestFiles([FromBody] TestDeleteModel item)
+        {
+            if(ModelState.IsValid)
+            {
+                var deleted = _testGenerator.DeleteTestFile(item.FisierIn, item.FisierOk, item.ProblemName);
+                if (deleted == true)
+                {
+                    return Json("File deleted");
+                }
+                return Json("Failed to delete files");
+            }
+            return Json("Failed response");
         }
     }
 }

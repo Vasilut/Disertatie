@@ -82,6 +82,24 @@ namespace GeekCoding.Common
             return fileToCreate;
         }
 
+        private string GetTestDirectory(string problemName)
+        {
+
+            var goodDirectory = GetCurrentDirectory();
+            if (!Directory.Exists(goodDirectory))
+            {
+                return string.Empty;
+            }
+
+            var testDirectory = Path.Combine(goodDirectory, problemName);
+            if (!Directory.Exists(testDirectory))
+            {
+                return string.Empty;
+            }
+
+            return testDirectory;
+        }
+
         public string GetCurrentDirectory()
         {
             var myDoc = "/usr/local/etc/";
@@ -125,6 +143,30 @@ namespace GeekCoding.Common
                 }
             }
             return executionResult.ToString();
+        }
+
+        public bool DeleteFile(string fileInput, string fileOk, string problem)
+        {
+            var testDirectoryForCurrentProblem = GetTestDirectory(problem);
+            if(string.IsNullOrEmpty(testDirectoryForCurrentProblem))
+            {
+                return false;
+            }
+
+            string fileInputFullPath = Path.Combine(testDirectoryForCurrentProblem, fileInput);
+            string fileOutputFullPath = Path.Combine(testDirectoryForCurrentProblem, fileOk);
+
+            if (File.Exists(fileInputFullPath))
+            {
+                File.Delete(fileInputFullPath);
+            }
+
+            if(File.Exists(fileOutputFullPath))
+            {
+                File.Delete(fileOutputFullPath);
+            }
+
+            return true;
         }
     }
 }
