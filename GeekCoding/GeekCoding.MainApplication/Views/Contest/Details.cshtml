@@ -122,14 +122,16 @@
                         Submissions
                     </li>
                 </a>
-                <a asp-action="Ranking" asp-route-id="@Model.Contest.ContestId">
-                    <li class="list-group-item">
-                        <span class="glyphicon glyphicon-time">
-                        </span>
-                        Ranking
-                    </li>
-                </a>
-
+                @if (DateTime.Now > Model.Contest.StartDate)
+                {
+                    <a asp-action="Ranking" asp-route-id="@Model.Contest.ContestId">
+                        <li class="list-group-item">
+                            <span class="glyphicon glyphicon-time">
+                            </span>
+                            Ranking
+                        </li>
+                    </a>
+                }
             </ul>
         </div>
     </div>
