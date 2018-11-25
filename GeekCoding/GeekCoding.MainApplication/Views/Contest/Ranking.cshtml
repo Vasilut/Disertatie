@@ -17,7 +17,23 @@
                         <th>
                             <font style="vertical-align: inherit;">
                                 <font style="vertical-align: inherit;">
-                                    Name
+                                    UserName
+                                </font>
+                            </font>
+                        </th>
+
+                        <th>
+                            <font style="vertical-align: inherit;">
+                                <font style="vertical-align: inherit;">
+                                    Nume
+                                </font>
+                            </font>
+                        </th>
+
+                        <th>
+                            <font style="vertical-align: inherit;">
+                                <font style="vertical-align: inherit;">
+                                    Prenume
                                 </font>
                             </font>
                         </th>
@@ -54,6 +70,8 @@
                         var participant = Model.Item1[i].Participant;
                         var scores = Model.Item1[i].Scores;
                         var totalScore = Model.Item1[i].Total;
+                        var nume = Model.Item1[i].ParticipantInformation.Nume;
+                        var prenume = Model.Item1[i].ParticipantInformation.Prenume;
 
                 <tr>
 
@@ -72,6 +90,22 @@
                         <font style="vertical-align: inherit;">
                             <font style="vertical-align: inherit;">
                                 @participant
+                            </font>
+                        </font>
+                    </td>
+
+                    <td>
+                        <font style="vertical-align: inherit;">
+                            <font style="vertical-align: inherit;">
+                                @nume
+                            </font>
+                        </font>
+                    </td>
+
+                    <td>
+                        <font style="vertical-align: inherit;">
+                            <font style="vertical-align: inherit;">
+                                @prenume
                             </font>
                         </font>
                     </td>

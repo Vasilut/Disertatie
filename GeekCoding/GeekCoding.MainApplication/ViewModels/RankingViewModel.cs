@@ -15,6 +15,7 @@ namespace GeekCoding.MainApplication.ViewModels
         public string Participant { get; set; }
         public List<string> ProblemList { get; set; }
         public List<int> Scores { get; set; }
+        public ParticipantInformation ParticipantInformation{get;set;}
         public int Total { get; set; }
     }
 }

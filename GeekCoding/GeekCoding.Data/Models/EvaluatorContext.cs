@@ -224,8 +224,7 @@ namespace GeekCoding.Data.Models
                 entity.Property(e => e.DataOfSubmision).HasColumnType("datetime");
 
                 entity.Property(e => e.MessageOfSubmision)
-                    .IsRequired()
-                    .HasMaxLength(500);
+                    .IsRequired();
 
                 entity.Property(e => e.SourceSize)
                     .IsRequired()

@@ -8,6 +8,7 @@ using GeekCoding.MainApplication.Pagination;
 using GeekCoding.MainApplication.Utilities;
 using GeekCoding.MainApplication.Utilities.DTO;
 using GeekCoding.MainApplication.Utilities.Enum;
+using GeekCoding.MainApplication.Utilities.Services;
 using GeekCoding.MainApplication.ViewModels;
 using GeekCoding.Repository.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -44,6 +45,7 @@ namespace GeekCoding.MainApplication.Controllers
         private IEvaluationRepository _evaluationRepository;
         private IHubContext<SubmissionHub> _hubContext;
         private ISerializeTests _serializeTests;
+        private IUserInformationRepository _userInformation;
         static SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1, 1);
 
         private string _compilationApi;
@@ -53,7 +55,8 @@ namespace GeekCoding.MainApplication.Controllers
                                  ISubmisionContestRepository submisionContestRepository, IAnnouncementRepository announcementRepository, IProblemRepository problemRepository,
                                  ISubmisionRepository submisionRepository, IMessageBuilder emailSender, UserManager<User> userManager,
                                  IConfiguration configuration, ITestsRepository testsRepository, SubmissionHub submissionHub,
-                                 IHubContext<SubmissionHub> hubContext, ISerializeTests serializeTests, IEvaluationRepository evaluationRepository)
+                                 IHubContext<SubmissionHub> hubContext, ISerializeTests serializeTests,
+                                 IEvaluationRepository evaluationRepository, IUserInformationRepository userInformation)
         {
             _contestRepository = contestRepository;
             _userContestRepository = userContestRepository;
@@ -73,6 +76,7 @@ namespace GeekCoding.MainApplication.Controllers
             _evaluationRepository = evaluationRepository;
             _hubContext = hubContext;
             _serializeTests = serializeTests;
+            _userInformation = userInformation;
 
             //intialize compilation and running api
             _compilationApi = _configuration.GetSection("Api")["CompilationApi"];
@@ -599,9 +603,19 @@ namespace GeekCoding.MainApplication.Controllers
                     total = total + score;
                 }
 
+                var participantInformation = _userInformation.GetUserInformationByUsername(participants.UserName);
+
                 rankingModel.ProblemList = lstProblems;
                 rankingModel.Scores = scores;
                 rankingModel.Total = total;
+                rankingModel.ParticipantInformation = new ParticipantInformation
+                {
+                    Nume = participantInformation?.Nume,
+                    Prenume = participantInformation?.Prenume,
+                    Clasa = participantInformation?.Clasa,
+                    Profesor = participantInformation?.Profesor,
+                    Scoala = participantInformation?.Scoala
+                };
                 rankingList.Add(rankingModel);
             }
 
