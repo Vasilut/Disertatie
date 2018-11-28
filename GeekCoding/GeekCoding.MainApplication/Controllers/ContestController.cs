@@ -104,7 +104,12 @@ namespace GeekCoding.MainApplication.Controllers
             }
 
             var userInformation = _userInformation.GetUserInformationByUsername(currentUserLoggedIn);
-            var clasa = userInformation.Clasa;
+            var clasa = string.Empty;
+            if(userInformation != null)
+            {
+
+                clasa = userInformation.Clasa;
+            }
 
             var contestForThisClass = goodList.Where(cst => cst.Content.Contains(clasa)).FirstOrDefault();
             if (contestForThisClass != null)
