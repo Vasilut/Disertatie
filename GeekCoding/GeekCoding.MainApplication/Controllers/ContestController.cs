@@ -88,13 +88,30 @@ namespace GeekCoding.MainApplication.Controllers
         public IActionResult Index(int? page)
         {
             var lst = _contestRepository.GetAll().ToList();
+            int pageSize = 4;
             var goodList = lst.Select(prop =>
             {
                 prop.Duration = (prop.EndDate - prop.StartDate).TotalHours;
                 return prop;
             }).ToList();
 
-            int pageSize = 4;
+            
+            var currentUserLoggedIn = User.Identity.Name;
+            if (User.Identity.Name == null || User.IsInRole("Admin"))
+            {
+                //admin or not registered, see all contest
+                return View(PaginatedList<Contest>.CreateAsync(goodList, page ?? 1, pageSize));
+            }
+
+            var userInformation = _userInformation.GetUserInformationByUsername(currentUserLoggedIn);
+            var clasa = userInformation.Clasa;
+
+            var contestForThisClass = goodList.Where(cst => cst.Content.Contains(clasa)).FirstOrDefault();
+            if (contestForThisClass != null)
+            {
+                return View(PaginatedList<Contest>.CreateAsync(new List<Contest>() { contestForThisClass}, page ?? 1, pageSize));
+            }
+
             return View(PaginatedList<Contest>.CreateAsync(goodList, page ?? 1, pageSize));
         }
 
@@ -381,9 +398,9 @@ namespace GeekCoding.MainApplication.Controllers
             if (User.Identity.Name == null || !User.IsInRole("Admin"))
             {
                 //not registered or not an admin user
-                if (DateTime.Now < currentContest.StartDate)
+                if (DateTime.Now < currentContest.StartDate || User.Identity.Name == null)
                 {
-                    //showing nothing if the contest didn't started
+                    //showing nothing if the contest didn't started or you're not logged in
                     return View(new ProblemsOverviewViewModel { ContestId = id, ContestProblemList = new List<Problem>() });
                 }
             }
