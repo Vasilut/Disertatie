@@ -1,2 +1,2 @@
-# Disertatie
-Proiectul de disertatie
+# Online Judge
+Online Judge
